@@ -1,4 +1,4 @@
-export class MCQ {
+export class questMulti {
 	cronbachAlpha: number = NaN;
 	sem: number = NaN;
 	mean: number = NaN;
@@ -36,11 +36,15 @@ export class MCQ {
 	private itemList: any;
 	// Array booleano con los items activos
 	private activeItems: any;
+	// Array booleano con los items modificados
+	private modifiedItems: any;
 
 	// Array de objetos Usuario
 	private userList: any;
 	// Array booleano con los usuarios activos
 	private activeUsers: any;
+	// Array booleano con los usuarios modificados
+	private modifiedUsers: any;
 
 
 	constructor(

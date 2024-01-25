@@ -1,9 +1,9 @@
 import { DeactivatedElements } from "./DeactivatedElements";
 import { Panel } from "./Sidebar";
-import { MCQ } from "./domain/mcq";
+import { questMulti } from "../../domain/quests/questMulti";
 
 type AnalysisProps = {
-  test: MCQ
+  test: questMulti
 }
 export function Analysis({ test }: AnalysisProps) {
   console.log(test)
