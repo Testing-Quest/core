@@ -1,135 +1,364 @@
+import { ItemMulti } from "../items/itemsMulti";
+import { DirectVsBlank } from "../plots/directVsBlank";
+import { DirectVsCoherency } from "../plots/directVsCoherency";
+import { DirectVsMCI } from "../plots/directVsMci";
+import { DirectVsWeighted } from "../plots/directVsWeighted";
+import { HealthProblemsGradu } from "../plots/healthProblemsGradu";
+import { ItemFrequency } from "../plots/itemFrequency";
+import { ItemMap } from "../plots/itemsMap";
+import { Reliability } from "../plots/reliability";
+import { ScoreDistribution } from "../plots/scoreDistribution";
+import { UserMulti } from "../users/usersMulti";
+
 export class questMulti {
-	cronbachAlpha: number = NaN;
-	sem: number = NaN;
-	mean: number = NaN;
-	variance: number = NaN;
-	standardDeviation: number = NaN;
+	// Rows: Users
+	// Columns: Items
+	private cronbachAlpha: number = undefined!;
+	private sem: number = undefined!;
+	private mean: number = undefined!;
+	private variance: number = undefined!;
+	private standardDeviation: number = undefined!;
 
-	reliability: number = NaN;
-	discrimination: number = NaN;
-	keyConflict: number = NaN;
-	choice: number = NaN;
-	coherency: number = NaN;
+	private reliability: number = undefined!;
+	private discrimination: number = undefined!;
+	private keyConflict: number = undefined!;
+	private choice: number = undefined!;
+	private coherency: number = undefined!;
 
-	difficulty: number = NaN;
-	testHealth: number = NaN;
+	private difficulty: number = undefined!;
+	private testHealth: number = undefined!;
 
-	// Matriz de respuestas de los usuarios
-	private matrixResponses: any;
+	private originalMatrix: string[][];
+	private matrix: string[][] = undefined!;
+	private correctedMatrix: number[][] = undefined!;
+	private originalKeys: string[];
+	private keys: string[];
+	private scale: number;
+	private numberOfAnswers: number[];
+	private items: ItemMulti;
+	private users: UserMulti;
+	private activeItems: boolean[];
+	private activeUsers: boolean[];
 
-	// array con las respuestas correctas (1xNumero de Items)
-	private correctAnswers: any;
-
-	// array con las respuestas de la escala (1xNumero de Items)
-	private escaleAnswers: any;
-
-	// array con el numero de respuestas por item (1xNumero de Items)
-	private numberOfAnswers: any;
-
-	// array con el id del autor que ha hecho la pregunta (1xNumero de Items)
-	private authorAnswers: any;
-
-	// array con los atributos de los usuarios (MxNumero de Usuarios)
-	private userAtributes: any;
-
-	// Array de objetos Item
-	private itemList: any;
-	// Array booleano con los items activos
-	private activeItems: any;
-	// Array booleano con los items modificados
-	private modifiedItems: any;
-
-	// Array de objetos Usuario
-	private userList: any;
-	// Array booleano con los usuarios activos
-	private activeUsers: any;
-	// Array booleano con los usuarios modificados
-	private modifiedUsers: any;
 
 
 	constructor(
-		matrix: any = NaN,
-		correctAnswers: any = NaN,
-		escaleAnswers: any = NaN,
-		numberOfAnswers: any = NaN,
-		authorAnswers: any = NaN,
-		userList: any = NaN,
-		userAtributes: any = NaN
+		matrix: string[][],
+		correctAnswers: string[],
+		scale: number,
+		numberOfAnswers: number[]
 	) {
+		matrix = matrix.map(row => row.map(answer => answer.toUpperCase()));
+		correctAnswers = correctAnswers.map(answer => answer.toUpperCase());
 
-		this.matrixResponses = matrix;
-		this.correctAnswers = correctAnswers;
-		this.escaleAnswers = escaleAnswers;
+		this.originalMatrix = matrix;
+		this.originalKeys = correctAnswers;
+		this.keys = correctAnswers;
+		this.scale = scale;
 		this.numberOfAnswers = numberOfAnswers;
-		this.authorAnswers = authorAnswers;
-		this.userList = userList;
-		this.userAtributes = userAtributes;
+		this.activeUsers = Array.from({ length: matrix[0].length }, () => true);
+		this.activeItems = Array.from({ length: matrix.length }, () => true);
 
-		this.generateItemsList();
-		this.calculateHealth();
+		this.createMatrix();
+
+		this.items = new ItemMulti(this.matrix, this.correctedMatrix, numberOfAnswers, correctAnswers);
+		this.users = new UserMulti(this.matrix, this.correctedMatrix);
+		this.calculate();
 	}
 
-	private generateItemsList(): void {
-		this.itemList = [];
+	private createMatrix(): void {
+
+		const originalMatrix = this.originalMatrix;
+
+		const filteredColumnsMatrix = originalMatrix.map(row =>
+			row.filter((_, columnIndex) => this.activeItems[columnIndex])
+		);
+
+		const filteredMatrix = filteredColumnsMatrix.filter((_, rowIndex) => this.activeUsers[rowIndex]);
+
+		this.matrix = filteredMatrix;
+		this.correctedMatrix = this.correctMatrix(this.matrix);
 	}
 
-	private calculateHealth(): void {
-		this.cronbachAlpha = 0;
-		this.sem = 0;
-		this.mean = 0;
-		this.variance = 0;
-		this.standardDeviation = 0;
-
-		this.reliability = 0;
-		this.discrimination = 0;
-		this.keyConflict = 0;
-		this.choice = 0;
-		this.coherency = 0;
-
-		this.difficulty = 0;
-		this.testHealth = 0;
+	private correctMatrix(matrix: string[][]): number[][] {
+		// TODO: check 1 si el usuario acierta, 0 si no responde o falla
+		const correctedMatrix = matrix.map(row =>
+			row.map((answer, columnIndex) => {
+				const correctAnswer = this.keys[columnIndex];
+				if (answer === correctAnswer) {
+					return 1;
+				} else {
+					return 0;
+				}
+			})
+		);
+		return correctedMatrix;
 	}
 
-	public calculateReliability(): number {
+	private calculate(): void {
+		this.users.calculate();
+
+		this.calculateMean()
+		this.calculateVariance();
+
+		this.items.calculate(this.users.directScoreValue, this.variance);
+
+		this.calculateStandardDeviation();
+		this.calculateCronbachAlpha();
+		this.calculateSEM();
+		this.calculateReliabilityValue();
+		this.calculateDiscrimination();
+		this.calculateKeyConflict();
+		this.calculateChoice();
+		this.calculateCoherency();
+		this.calculateDifficulty();
+		this.calculateTestHealth();
+
+
+	}
+
+	private calculateMean(): void {
+		this.mean = this.users.meanValue;
+
+	}
+
+	private calculateVariance(): void {
+		const score: number[] = this.users.directScoreValue;
+		this.variance = score.reduce((acc, value) => acc + (value - this.mean) ** 2, 0) / (score.length - 1);
+	}
+
+	private calculateStandardDeviation(): void {
+		this.standardDeviation = Math.sqrt(this.variance);
+	}
+
+
+	private calculateCronbachAlpha(): number {
+		const nItems = this.correctedMatrix[0].length;
+		const itemVar = this.items.varianceValue.reduce((acc, value) => acc + value, 0);
+
+		if (nItems > 1) {
+			return (nItems / (nItems - 1)) * (1 - itemVar / this.variance);
+		} else {
+			return 0;
+		}
+	}
+
+	private calculateSEM(): void {
+		this.sem = this.standardDeviation / Math.sqrt(1 - this.cronbachAlpha);
+	}
+
+	private calculateReliabilityValue(): void {
+		this.reliability = this.cronbachAlpha;	
+	}
+
+	private calculateDiscrimination(): void {
+		// obtiene el valor de discriminacion de los items, calcula el numero cuya discriminacion es > 0.3 y lo divide entre el numero total de items
+		this.discrimination = this.items.discriminationValue.filter(value => value > 0.3).length / this.items.discriminationValue.length;
+	}
+
+	private calculateKeyConflict(): void {
+		// obtiene el valor de conflicto de los items, calcula el numero de veces que aparece un false y lo divide entre el numero total de items
+		this.keyConflict = this.items.conflictValue.filter(value => value === true).length / this.items.conflictValue.length;
+	}
+
+	private calculateChoice(): void {
+		// obtiene el valor de eleccion de los items, calcula el numero de veces que aparece un true y lo divide entre el numero total de items
+		if (this.numberOfAnswers[0] > 2) {
+			this.choice = this.items.choiceValue.filter(value => value === true).length / this.items.choiceValue.length;
+		}
+	}
+
+	private calculateCoherency(): void {
+		// obtiene el valor de MCI de los sujetos, calcula el numero de veces que MCI < 0.5 y lo divide entre el numero total de sujetos)
+		this.coherency = this.users.mciValue.filter(value => value < 0.5).length / this.users.mciValue.length;
+	}
+
+	private calculateDifficulty(): void {
+		// calcula la media de dificultad de los items y la multiplica por 100
+		this.difficulty = this.items.difficultyValue.reduce((acc, value) => acc + value, 0) / this.items.difficultyValue.length;
+	}
+
+	private calculateTestHealth(): void {
+		// calcula la media de salud del test y la multiplica por 100
+		if (this.numberOfAnswers[0] > 2) {
+			this.testHealth = (this.reliability + this.discrimination + this.keyConflict + this.choice + this.coherency) / 5;
+		} else {
+			this.testHealth = (this.reliability + this.discrimination + this.keyConflict + this.coherency) / 4;
+		}
+	}
+
+	public get originalKeysValue(): string[] {
+		return this.originalKeys;
+	}
+
+	public get keysValue(): string[] {
+		return this.keys;
+	}
+
+	public get cronbachAlphaValue(): number {
+		return this.cronbachAlpha;
+	}
+
+	public get semValue(): number {
+		return this.sem;
+	}
+
+	public get meanValue(): number {
+		return this.mean;
+	}
+
+	public get varianceValue(): number {
+		return this.variance;
+	}
+
+	public get standardDeviationValue(): number {
+		return this.standardDeviation;
+	}
+
+	public get reliabilityValue(): number {
 		return this.reliability;
 	}
 
-	public getItemsMap(): Map<string, any> {
-		return new Map<string, any>();
+	public get discriminationValue(): number {
+		return this.discrimination;
 	}
 
-	public directVsWeighted(): void {
+	public get keyConflictValue(): number {
+		return this.keyConflict;
 	}
 
-	public directVsBlankAnswer(): void {
+	public get choiceValue(): number {
+		return this.choice;
 	}
 
-	public directVsCoherency(): void {
+	public get coherencyValue(): number {
+		return this.coherency;
 	}
 
-	public directVsMCI(): void {
+	public get difficultyValue(): number {
+		return this.difficulty;
 	}
 
-	public scoreDistribution(): void {
+	public get testHealthValue(): number {
+		return this.testHealth;
 	}
 
-	public getItemsTable(): any {
-		return {};
+	public get scaleValue(): number {
+		return this.scale;
 	}
 
-	public getExamineesTable(): any {
-		return {};
+	public calculateReliability(): Reliability {
+		return new Reliability();
 	}
 
-	public deactiveItems(): void {
+	public getItemsMap(): ItemMap {
+		return new ItemMap();
 	}
 
-	public activateItems(): void {
+	public directVsWeighted(): DirectVsWeighted {
+		return new DirectVsWeighted();
 	}
 
-	public deactiveExaminees(): void {
+	public directVsBlankAnswer(): DirectVsBlank {
+		return new DirectVsBlank();
 	}
 
-	public activateExaminees(): void {
+	public directVsCoherency(): DirectVsCoherency {
+		return new DirectVsCoherency();
+	}
+
+	public directVsMCI(): DirectVsMCI {
+		return new DirectVsMCI();
+	}
+
+	public scoreDistribution(): ScoreDistribution {
+		return new ScoreDistribution();
+
+	}
+
+	public getHealthProblems(): HealthProblemsGradu {
+		return new HealthProblemsGradu();
+	}
+
+	public getItemsTable(): Map<string, any> {
+		const itemsTable = new Map<string, any>();
+		itemsTable.set("id", this.items.idValue);
+		itemsTable.set("Conflict", this.items.conflictValue);
+		itemsTable.set("Graph", this.items.idValue);
+		itemsTable.set("Deactivate", this.items.idValue);
+		itemsTable.set("Key", this.items.keyValue);
+		if (this.numberOfAnswers[0] > 2) {
+			itemsTable.set("Choice", this.items.choiceValue);
+		}
+		itemsTable.set("Difficulty", this.items.difficultyValue);
+		itemsTable.set("Variance", this.items.varianceValue);
+		itemsTable.set("Discrimination", this.items.discriminationValue);
+		itemsTable.set("Corr Disc", this.items.correctDiscriminationValue);
+		const alternativeDiscrimination = this.items.alternativeDiscriminationValue;
+		alternativeDiscrimination.forEach((value, key) => itemsTable.set(key, value));
+		const alternativeDifficulty = this.items.alternativeDifficultyValue;
+		alternativeDifficulty.forEach((value, key) => itemsTable.set(key, value));
+
+		return itemsTable;
+	}
+
+	public getExamineesTable(): Map<string, any> {
+		const usersTable = new Map<string, any>();
+		usersTable.set("id", this.users.idValue);
+		usersTable.set("Deactivate", this.users.idValue);
+		usersTable.set("Direct Score", this.users.directScoreValue);
+		usersTable.set("Weighted Score", this.users.weightedScoreValue);
+		usersTable.set("Coherence", this.users.coherenceValue);
+		usersTable.set("Mean", this.users.meanValue);
+		usersTable.set("TotalScore", this.users.totalScoreValue);
+		usersTable.set("Blank Answer", this.users.blankAnswersValue);
+		usersTable.set("MCI", this.users.mciValue);
+
+		return usersTable;
+	}
+
+	public getItemFrequency(id: number): ItemFrequency {
+		return this.items.calculateFrequency(id);
+	}
+
+	public getItemProfile(id: number): any {
+		return this.items.calculateProfile(id);
+	}
+
+	public getItemDiscrimination(id: number): any {
+		return this.items.calculateDiscrimination(id);
+	}
+
+	public updateItemsKey(id: number, key: string): void {
+		this.keys[id] = key.toUpperCase();
+		this.items.update(this.matrix, this.correctedMatrix, this.keys);
+	}
+
+	public deactivateItems(id: number): void {
+		this.activeItems[id] = false;
+		this.createMatrix();
+		this.items.update(this.matrix, this.correctedMatrix, this.keys);
+		this.users.update(this.matrix, this.correctedMatrix);
+	}
+
+	public activateItems(id: number): void {
+		this.activeItems[id] = true;
+		this.createMatrix();
+		this.items.update(this.matrix, this.correctedMatrix, this.keys);
+		this.users.update(this.matrix, this.correctedMatrix);
+	}
+
+	public deactivateExaminees(id: number): void {
+		this.activeUsers[id] = false;
+		this.createMatrix();
+		this.items.update(this.matrix, this.correctedMatrix, this.keys);
+		this.users.update(this.matrix, this.correctedMatrix);
+	}
+
+	public activateExaminees(id: number): void {
+		this.activeUsers[id] = true;
+		this.createMatrix();
+		this.items.update(this.matrix, this.correctedMatrix, this.keys);
+		this.users.update(this.matrix, this.correctedMatrix);
 	}
 }
