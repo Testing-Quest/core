@@ -3,7 +3,7 @@ import { ItemFrequency } from "../plots/itemFrequency";
 import { ItemProfile } from "../plots/itemProfile";
 
 
-const Alternatives = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U"];
+const Alternatives: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U"];
 
 const DiccionarioTablaChiCuadrado: Map<number, number> = new Map([
 	[3, 5.99],
@@ -24,7 +24,7 @@ export class ItemMulti {
 	private mean: number[] = undefined!;
 	private conflict: boolean[] = undefined!;
 	private key: string[] = undefined!;
-	private choice: boolean[] = undefined!; // YES | NO
+	private choice: boolean[] = undefined!;
 	private difficulty: number[] = undefined!;
 	private variance: number[] = undefined!;
 	private discrimination: number[] = undefined!;
@@ -241,14 +241,26 @@ export class ItemMulti {
 	}
 
 	public calculateFrequency(id: number): ItemFrequency {
-		return new ItemFrequency();
+		const alternativeDifficulty: Map<string, number> = new Map(
+			Array.from(this.alternativeDifficulty.entries()).map(([key, value]) => [
+				key.split(" ")[1],
+				value[id]
+			])
+		);
+		return new ItemFrequency(alternativeDifficulty);
 	}
 
 	public calculateDiscrimination(id: number): ItemDiscrimination {
-		return new ItemDiscrimination();
+		const alternativeDiscrimination: Map<string, number> = new Map(
+			Array.from(this.alternativeDiscrimination.entries()).map(([key, value]) => [
+				key.split(" ")[1],
+				value[id]
+			])
+		);
+		return new ItemDiscrimination(alternativeDiscrimination);
 	}
 
 	public calculateProfile(id: number): ItemProfile {
-		return new ItemProfile();
+		return new ItemProfile(this.matrix.map(row => row[id]), this.usersDirectScore);
 	}
 }
