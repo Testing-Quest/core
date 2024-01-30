@@ -189,22 +189,46 @@ export class ItemMulti {
 	}
 
 	private calculateChoice(): void {
-		// TODO: Check this Probablemente mal.
-		if (this.alternatives === 2) {
+		// TODO: Check this 
+		if (this.alternatives <= 3) {
 			return;
 		}
-		const alternativeDifficulty: number[][] = Array.from(this.alternativeDifficulty.values());
-		const chiSquare = (observed: number[], expected: number[]) =>
-			observed.reduce((prev, curr, index) => prev + (curr - expected[index]) ** 2 / expected[index], 0);
+		this.choice = [];
 
-		this.choice = alternativeDifficulty.map(row => {
-			const expected = Array.from({ length: this.alternatives }, () => 1 / this.alternatives);
-			const observed = row;
-			const chiSquareValue = chiSquare(observed, expected);
-			const degreesOfFreedom = this.alternatives - 1;
-			const criticalValue = DiccionarioTablaChiCuadrado.get(degreesOfFreedom)!;
-			return chiSquareValue < criticalValue;
-		});
+		const frequencies: Map<string, number[]> = new Map();
+
+		for (const [difficulty, freqs] of this.alternativeDifficulty) {
+			frequencies.set(difficulty, Array.from(freqs, freq => freq * this.usersDirectScore.length));
+		}
+
+		const getFrequencies = (key: string, index: number) => {
+			const result: number[] = [];
+			for (const [difficulty, freqs] of frequencies) {
+				if (difficulty !== 'Difficulty X' && difficulty !== `Difficulty ${key}`) {
+					result.push(freqs[index]);
+				}
+			}
+			return result;
+		};
+
+		const calculateChiCuadrado = (itemFrequencies: number[], freqEsperada: number): number => {
+			return itemFrequencies.reduce((acc, freq) => acc + Math.pow(freq - freqEsperada, 2) / freqEsperada, 0);
+		};
+
+		for (let i = 0; i < this.key.length; i++) {
+			const itemKey: string = this.key[i];
+			const itemFrequencies: number[] = getFrequencies(itemKey, i);
+			const numRespuestas: number = itemFrequencies.reduce((a, b) => a + b, 0);
+
+			// Calcula la frecuencia esperada para alternativas incorrectas
+			const freqEsperada: number = numRespuestas / (this.alternatives - 1);
+
+			// Calcula el estadístico de chi-cuadrado para cada alternativa incorrecta
+			const chiCuadrado: number = calculateChiCuadrado(itemFrequencies, freqEsperada);
+
+			// Compara con el valor de chi-cuadrado de las tablas
+			this.choice.push(chiCuadrado < DiccionarioTablaChiCuadrado.get(this.alternatives - 1)!);
+		}
 	}
 
 	public get idValue(): number[] {
