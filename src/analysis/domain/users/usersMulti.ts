@@ -73,7 +73,6 @@ export class UserMulti{
 		return this.blankAnswers;
 	}
 
-
 	public get meanValue(): number {
 		return this.mean;
 	}

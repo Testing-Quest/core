@@ -13,6 +13,7 @@ import { UserMulti } from "../users/usersMulti";
 export class questMulti {
 	// Rows: Users
 	// Columns: Items
+	private omissions: Set<string> = new Set(['*', '']);
 	private cronbachAlpha: number = undefined!;
 	private sem: number = undefined!;
 	private mean: number = undefined!;
@@ -48,7 +49,9 @@ export class questMulti {
 		scale: number,
 		numberOfAnswers: number[]
 	) {
-		matrix = matrix.map(row => row.map(answer => answer.toUpperCase()));
+		matrix = matrix.map(row =>
+			row.map(answer => (this.omissions.has(answer) ? 'X' : answer.toUpperCase()))
+		);
 		correctAnswers = correctAnswers.map(answer => answer.toUpperCase());
 
 		this.originalMatrix = matrix;
@@ -148,7 +151,7 @@ export class questMulti {
 	}
 
 	private calculateReliabilityValue(): void {
-		this.reliability = this.cronbachAlpha;	
+		this.reliability = this.cronbachAlpha;
 	}
 
 	private calculateDiscrimination(): void {
