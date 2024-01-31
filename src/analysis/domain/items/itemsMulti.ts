@@ -231,38 +231,25 @@ export class ItemMulti {
 		}
 	}
 
-	public get idValue(): number[] {
-		return this.id;
-	}
+	public get idValue(): number[] { return this.id }
 
-	public get conflictValue(): boolean[] {
-		return this.conflict;
-	}
-	public get keyValue(): string[] {
-		return this.key;
-	}
+	public get conflictValue(): boolean[] { return this.conflict }
 
-	public get choiceValue(): boolean[] {
-		return this.choice;
-	}
-	public get difficultyValue(): number[] {
-		return this.difficulty;
-	}
-	public get varianceValue(): number[] {
-		return this.variance;
-	}
-	public get discriminationValue(): number[] {
-		return this.discrimination;
-	}
-	public get correctDiscriminationValue(): number[] {
-		return this.correctDiscrimination;
-	}
-	public get alternativeDiscriminationValue(): Map<string, number[]> {
-		return this.alternativeDiscrimination;
-	}
-	public get alternativeDifficultyValue(): Map<string, number[]> {
-		return this.alternativeDifficulty;
-	}
+	public get keyValue(): string[] { return this.key }
+
+	public get choiceValue(): boolean[] { return this.choice }
+
+	public get difficultyValue(): number[] { return this.difficulty }
+
+	public get varianceValue(): number[] { return this.variance }
+
+	public get discriminationValue(): number[] { return this.discrimination }
+
+	public get correctDiscriminationValue(): number[] { return this.correctDiscrimination }
+
+	public get alternativeDiscriminationValue(): Map<string, number[]> { return this.alternativeDiscrimination }
+
+	public get alternativeDifficultyValue(): Map<string, number[]> { return this.alternativeDifficulty }
 
 	public calculateFrequency(id: number): ItemFrequency {
 		const alternativeDifficulty: Map<string, number> = new Map(
