@@ -207,97 +207,92 @@ export class questMulti {
 		}
 	}
 
-	public get originalKeysValue(): string[] {
-		return this.originalKeys;
-	}
+	public get originalKeysValue(): string[] {return this.originalKeys}
 
-	public get keysValue(): string[] {
-		return this.keys;
-	}
+	public get keysValue(): string[] {return this.keys}
 
-	public get cronbachAlphaValue(): number {
-		return this.cronbachAlpha;
-	}
+	public get cronbachAlphaValue(): number {return this.cronbachAlpha}
 
-	public get semValue(): number {
-		return this.sem;
-	}
+	public get semValue(): number {return this.sem}
 
-	public get meanValue(): number {
-		return this.mean;
-	}
+	public get meanValue(): number {return this.mean}
 
-	public get varianceValue(): number {
-		return this.variance;
-	}
+	public get varianceValue(): number {return this.variance}
 
-	public get standardDeviationValue(): number {
-		return this.standardDeviation;
-	}
+	public get standardDeviationValue(): number {return this.standardDeviation}
 
-	public get reliabilityValue(): number {
-		return this.reliability;
-	}
+	public get reliabilityValue(): number {return this.reliability}
 
-	public get discriminationValue(): number {
-		return this.discrimination;
-	}
+	public get discriminationValue(): number {return this.discrimination}
 
-	public get keyConflictValue(): number {
-		return this.keyConflict;
-	}
+	public get keyConflictValue(): number {return this.keyConflict}
 
-	public get choiceValue(): number {
-		return this.choice;
-	}
+	public get choiceValue(): number {return this.choice}
 
-	public get coherencyValue(): number {
-		return this.coherency;
-	}
+	public get coherencyValue(): number {return this.coherency}
 
-	public get difficultyValue(): number {
-		return this.difficulty;
-	}
+	public get difficultyValue(): number {return this.difficulty}
 
-	public get testHealthValue(): number {
-		return this.testHealth;
-	}
+	public get testHealthValue(): number {return this.testHealth}
 
-	public get scaleValue(): number {
-		return this.scale;
-	}
+	public get scaleValue(): number {return this.scale}
 
 	public calculateReliability(): Reliability {
-		return new Reliability();
+		const x: number[] = Array.from({ length: 11 }, (_, i) => 0.5 + i * 0.1);
+		return new Reliability(x.map((k) => (k * this.cronbachAlpha) / (1 + (k - 1) * this.cronbachAlpha)));
 	}
 
 	public getItemsMap(): ItemMap {
-		return new ItemMap();
+		return new ItemMap(
+			this.items.idValue,
+			this.items.discriminationValue,
+			this.items.difficultyValue,
+		);
 	}
 
 	public directVsWeighted(): DirectVsWeighted {
-		return new DirectVsWeighted();
+		return new DirectVsWeighted(
+			this.users.directScoreValue,
+			this.weightScore,
+		);
 	}
 
 	public directVsBlankAnswer(): DirectVsBlank {
-		return new DirectVsBlank();
+		return new DirectVsBlank(
+			this.users.directScoreValue,
+			this.users.blankAnswersValue,
+		);
 	}
 
 	public directVsCoherency(): DirectVsCoherency {
-		return new DirectVsCoherency();
+		return new DirectVsCoherency(
+			this.users.directScoreValue,
+			this.users.coherenceValue,
+		);
 	}
 
 	public directVsMCI(): DirectVsMCI {
-		return new DirectVsMCI();
+		return new DirectVsMCI(
+			this.users.directScoreValue,
+			this.users.mciValue,
+		);
 	}
 
 	public scoreDistribution(): ScoreDistribution {
-		return new ScoreDistribution();
+		return new ScoreDistribution(
+			this.users.directScoreValue,
+		);
 
 	}
 
 	public getHealthProblems(): HealthProblemsGradu {
-		return new HealthProblemsGradu();
+		return new HealthProblemsGradu(
+			this.choice,
+			this.discrimination,
+			this.cronbachAlpha,
+			this.coherency,
+			this.keyConflict,
+		);
 	}
 
 	public getItemsTable(): Map<string, any> {
