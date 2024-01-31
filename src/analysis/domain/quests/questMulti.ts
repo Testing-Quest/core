@@ -26,6 +26,9 @@ export class questMulti {
 	private choice: number = undefined!;
 	private coherency: number = undefined!;
 
+	// TODO: check move this to userMulti
+	private weightScore: number[] = undefined!;
+
 	private difficulty: number = undefined!;
 	private testHealth: number = undefined!;
 
@@ -106,6 +109,8 @@ export class questMulti {
 
 		this.items.calculate(this.users.directScoreValue, this.variance);
 
+		this.calculateWeightScore();
+
 		this.calculateStandardDeviation();
 		this.calculateCronbachAlpha();
 		this.calculateSEM();
@@ -120,8 +125,20 @@ export class questMulti {
 
 	}
 
+	private calculateWeightScore(): void {
+		this.weightScore = []
+
+		for (const vector of this.correctedMatrix) {
+			const puntuacionSujeto = vector.reduce((acumulado, valor, indice) => {
+				return acumulado + (valor === 0 ? 0 : this.items.discriminationValue[indice]);
+			}, 0);
+
+			this.weightScore.push(puntuacionSujeto);
+		}
+	}
+
 	private calculateMean(): void {
-		this.mean = this.users.meanValue;
+		this.mean = this.users.directScoreValue.reduce((acc, value) => acc + value, 0) / this.users.directScoreValue.length;
 
 	}
 
@@ -310,7 +327,7 @@ export class questMulti {
 		usersTable.set("id", this.users.idValue);
 		usersTable.set("Deactivate", this.users.idValue);
 		usersTable.set("Direct Score", this.users.directScoreValue);
-		usersTable.set("Weighted Score", this.users.weightedScoreValue);
+		usersTable.set("Weighted Score", this.weightScore);
 		usersTable.set("Coherence", this.users.coherenceValue);
 		usersTable.set("Mean", this.users.meanValue);
 		usersTable.set("TotalScore", this.users.totalScoreValue);
