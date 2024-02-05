@@ -62,8 +62,8 @@ export class questMulti {
 		this.keys = correctAnswers;
 		this.scale = scale;
 		this.numberOfAnswers = numberOfAnswers;
-		this.activeUsers = Array.from({ length: matrix[0].length }, () => true);
-		this.activeItems = Array.from({ length: matrix.length }, () => true);
+		this.activeUsers = Array.from({ length: matrix.length }, () => true);
+		this.activeItems = Array.from({ length: matrix[0].length }, () => true);
 
 		this.createMatrix();
 
