@@ -15,7 +15,7 @@ export class UserMulti {
 		matrix: string[][],
 		correctedMatrix: number[][],
 	) {
-		this.id = Array.from({ length: matrix[0].length }, (_, i) => i);
+		this.id = Array.from({ length: matrix.length }, (_, i) => i);
 		this.matrix = matrix;
 		this.correctedMatrix = correctedMatrix;
 		this.calculate();
@@ -26,7 +26,7 @@ export class UserMulti {
 		matrix: string[][],
 		correctedMatrix: number[][],
 	): void {
-		this.id = Array.from({ length: matrix[0].length }, (_, i) => i);
+		this.id = Array.from({ length: matrix.length }, (_, i) => i);
 		this.matrix = matrix;
 		this.correctedMatrix = correctedMatrix;
 	}

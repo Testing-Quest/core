@@ -2,13 +2,21 @@ import { useState } from "react";
 import { Button, Upload, message, List, Collapse, Spin } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { UploadChangeParam } from "antd/lib/upload";
-import loadQuest, { QuestData, QuestType } from "../../../domain/services/loadQuest";
+import loadQuest, {
+  QuestData,
+  QuestType,
+} from "../../../domain/services/loadQuest";
 import { questMulti } from "../../../domain/quests/questMulti";
 import { questGradu } from "../../../domain/quests/questGradu";
 
+type Quests = questMulti | questGradu;
+
 interface UploadedFile {
   name: string;
-  response: QuestData[];
+  quest: Quests[];
+  scale: number[];
+  users: number[];
+  items: number[];
 }
 
 const UploadFile = () => {
@@ -19,9 +27,35 @@ const UploadFile = () => {
     try {
       setLoading(true);
       const response = await loadQuest(file);
+      const quests = (quest: QuestData) => {
+        if (quest.type === QuestType.multi) {
+          return new questMulti(
+            quest.matrix,
+            quest.keys,
+            quest.scale,
+            quest.alternatives,
+          );
+        } else if (quest.type === QuestType.gradu) {
+          return new questGradu(
+            quest.matrix,
+            quest.keys,
+            quest.scale,
+            quest.alternatives,
+          );
+        } else {
+          throw new Error("Invalid quest type");
+        }
+      };
+
       setUploadedFiles((prevFiles) => [
+        {
+          name: file.name,
+          quest: response.map(quests),
+          scale: response.map((quest) => quest.scale),
+          users: response.map((quest) => quest.rows),
+          items: response.map((quest) => quest.columns),
+        },
         ...prevFiles,
-        { name: file.name, response },
       ]);
       onSuccess();
     } catch (error) {
@@ -53,7 +87,7 @@ const UploadFile = () => {
         customRequest={customRequest}
         showUploadList={false}
         onChange={handleChange}
-        accept=".xls, .xlsx"
+        accept=".xls, .xlsx, .ods,"
       >
         <div
           style={{
@@ -71,60 +105,31 @@ const UploadFile = () => {
         </div>
       </Upload>
 
-      {loading ? (
-        <Spin size="large" />
-      ) : (
-        <div style={{ width: "400px" }}>
-          <List
-            dataSource={uploadedFiles}
-            renderItem={(item) => (
-              <List.Item key={item.name}>{handleQuest(item)}</List.Item>
-            )}
-          />
-        </div>
-      )}
+      {loading ? <Spin size="large" /> : null}
+      <div style={{ width: "400px" }}>
+        <List
+          dataSource={uploadedFiles}
+          renderItem={(item) => (
+            <List.Item key={item.name}>
+              <Collapse>
+                <Collapse.Panel header={item.name} key={item.name}>
+                  <List
+                    dataSource={item.quest}
+                    renderItem={(quest, index) => (
+                      <List.Item key={`${item.name}-${index}`}>
+                        <Button type="link" onClick={() => console.log(quest)}>
+                          {`Scale: ${quest.scaleValue}  (Users: ${item.users[index]}  Items: ${item.items[index]})`}
+                        </Button>
+                      </List.Item>
+                    )}
+                  />
+                </Collapse.Panel>
+              </Collapse>
+            </List.Item>
+          )}
+        />
+      </div>
     </div>
-  );
-};
-
-const handleQuest = (item: UploadedFile) => {
-  const quests = item.response.map((quest) => {
-    if (quest.type === QuestType.multi) {
-      return new questMulti(
-        quest.matrix,
-        quest.keys,
-        quest.scale,
-        quest.alternatives,
-      );
-    } else if (quest.type === QuestType.gradu) {
-      return new questGradu(
-        quest.matrix,
-        quest.keys,
-        quest.scale,
-        quest.alternatives,
-      );
-    } else {
-      throw new Error("Invalid quest type");
-    }
-  });
-
-  return (
-    <>
-      <Collapse>
-        <Collapse.Panel header={item.name} key={item.name}>
-          <List
-            dataSource={quests}
-            renderItem={(quest, index) => (
-              <List.Item key={`${item.name}-${index}`}>
-                <Button type="link" onClick={() => console.log(quest)}>
-                  {`Scale: ${quest.scaleValue}   (Users: ${item.response[index].rows}  Items: ${item.response[index].columns})`}
-                </Button>
-              </List.Item>
-            )}
-          />
-        </Collapse.Panel>
-      </Collapse>
-    </>
   );
 };
 

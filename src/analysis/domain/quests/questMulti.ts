@@ -164,7 +164,7 @@ export class questMulti {
 	}
 
 	private calculateSEM(): void {
-		this.sem = this.standardDeviation / Math.sqrt(1 - this.cronbachAlpha);
+		this.sem = this.standardDeviation * Math.sqrt(1 - this.cronbachAlpha);
 	}
 
 	private calculateReliabilityValue(): void {
