@@ -3,6 +3,7 @@ import { Button, Upload, message, List } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { UploadChangeParam } from 'antd/lib/upload';
 import loadQuest, { QuestData } from '../../../domain/services/loadQuest';
+import { questMulti } from '../../../domain/quests/questMulti';
 
 interface UploadedFile {
   name: string;
@@ -59,7 +60,15 @@ const UploadFile = () => {
         dataSource={uploadedFiles}
         renderItem={(item) => (
           <List.Item>
-            <Button type="link" onClick={() => console.log(item.response)}>
+            <Button type="link" onClick={() => {
+              const quest = new questMulti(
+              item.response!.matrix,
+              item.response!.key,
+	      item.response!.scales[0],
+	      item.response!.alternatives,
+              );
+              console.log(quest)
+            }}>
               {item.name}
             </Button>
           </List.Item>

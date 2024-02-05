@@ -152,14 +152,14 @@ export class questMulti {
 	}
 
 
-	private calculateCronbachAlpha(): number {
+	private calculateCronbachAlpha(): void {
 		const nItems = this.correctedMatrix[0].length;
 		const itemVar = this.items.varianceValue.reduce((acc, value) => acc + value, 0);
 
 		if (nItems > 1) {
-			return (nItems / (nItems - 1)) * (1 - itemVar / this.variance);
+			this.cronbachAlpha = (nItems / (nItems - 1)) * (1 - itemVar / this.variance);
 		} else {
-			return 0;
+			this.cronbachAlpha = 0;
 		}
 	}
 
