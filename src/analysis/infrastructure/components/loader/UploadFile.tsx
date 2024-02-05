@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Upload, message, List, Collapse } from "antd";
+import { Button, Upload, message, List, Collapse, Spin } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { UploadChangeParam } from "antd/lib/upload";
 import loadQuest, { QuestData, QuestType } from "../../../domain/services/loadQuest";
@@ -13,9 +13,11 @@ interface UploadedFile {
 
 const UploadFile = () => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const customRequest = async ({ file, onSuccess, onError }: any) => {
     try {
+      setLoading(true);
       const response = await loadQuest(file);
       setUploadedFiles((prevFiles) => [
         ...prevFiles,
@@ -24,6 +26,8 @@ const UploadFile = () => {
       onSuccess();
     } catch (error) {
       onError(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,14 +71,18 @@ const UploadFile = () => {
         </div>
       </Upload>
 
-      <div style={{ width: "400px" }}>
-        <List
-          dataSource={uploadedFiles}
-          renderItem={(item) => (
-            <List.Item key={item.name}>{handleQuest(item)}</List.Item>
-          )}
-        />
-      </div>
+      {loading ? (
+        <Spin size="large" />
+      ) : (
+        <div style={{ width: "400px" }}>
+          <List
+            dataSource={uploadedFiles}
+            renderItem={(item) => (
+              <List.Item key={item.name}>{handleQuest(item)}</List.Item>
+            )}
+          />
+        </div>
+      )}
     </div>
   );
 };
