@@ -1,21 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Upload, message, List } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { UploadChangeParam } from 'antd/lib/upload';
-import { RcFile } from 'antd/lib/upload/interface';
-import loadQuest from '../../domain/services/loadQuest';
+import loadQuest, { QuestData } from '../../../domain/services/loadQuest';
 
 interface UploadedFile {
   name: string;
   response: QuestData | null;
-}
-
-interface QuestData {
-  usersID: string[]; // First column
-  key: string[]; // First row
-  scales: string[]; // Second row
-  alternatives: string[]; // Third row
-  matrix: string[][]; // Rest of the rows
 }
 
 const UploadFile = () => {
@@ -36,12 +27,8 @@ const UploadFile = () => {
       message.success(`${info.file.name} file uploaded successfully`);
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
+      // TODO: Add custom error handling 
     }
-  };
-
-  const beforeUpload = (file: RcFile) => {
-    // Add any custom validation logic here if needed
-    return true;
   };
 
   return (
@@ -49,12 +36,12 @@ const UploadFile = () => {
       <Upload
         customRequest={customRequest}
         showUploadList={false}
-        beforeUpload={beforeUpload}
         onChange={handleChange}
         accept=".xls, .xlsx"
       >
         <div
           style={{
+            cursor: "pointer",
             border: '2px dashed #1890ff', // Blue border
             borderRadius: '5px',
             padding: '20px',

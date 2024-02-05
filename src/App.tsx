@@ -1,4 +1,4 @@
-import UploadFile from "./analysis/infrastructure/components/UploadFile"
+import UploadFile from "./analysis/infrastructure/components/loader/UploadFile"
 
 function App() {
   return (

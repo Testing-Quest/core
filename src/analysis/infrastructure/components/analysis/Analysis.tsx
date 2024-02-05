@@ -1,6 +1,6 @@
 import { DeactivatedElements } from "./DeactivatedElements";
 import { Panel } from "./Sidebar";
-import { questMulti } from "../../domain/quests/questMulti";
+import { questMulti } from "../../../domain/quests/questMulti";
 
 type AnalysisProps = {
   test: questMulti
