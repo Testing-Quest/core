@@ -1,12 +1,9 @@
-import { Analysis } from "./analysis/multiChoice/Analysis"
-import { MCQ } from "./analysis/multiChoice/domain/mcq"
+import UploadFile from "./analysis/infrastructure/components/UploadFile"
 
 function App() {
-  const mcq = new MCQ()
-
   return (
     <>
-      <Analysis test={mcq} />
+      <UploadFile/>
     </>
   )
 }
