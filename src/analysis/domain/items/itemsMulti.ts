@@ -181,6 +181,9 @@ export class ItemMulti {
 
 	private calculateConflict(): void {
 		// TODO; Check this (si hay 2 alternativas aplica ?)
+		if (this.alternatives === 2) {
+			return;
+		}
 		const alternativeDiscrimination = Array.from(this.alternativeDiscrimination.values());
 		this.conflict = this.discrimination.map((value, index) => {
 			const alternativeDiscriminationItem: number[] = alternativeDiscrimination.map(row => row[index]);

@@ -178,6 +178,9 @@ export class questMulti {
 
 	private calculateKeyConflict(): void {
 		// obtiene el valor de conflicto de los items, calcula el numero de veces que aparece un false y lo divide entre el numero total de items
+		if (this.numberOfAnswers[0] === 2) {
+			return;
+		}
 		this.keyConflict = this.items.conflictValue.filter(value => value === true).length / this.items.conflictValue.length;
 	}
 

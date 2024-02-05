@@ -1,11 +1,22 @@
 import * as XLSX from 'xlsx';
 
-export interface QuestData {
+interface Quest {
 	usersID: number[];
-	key: string[];
+	keys: string[];
 	scales: number[];
 	alternatives: number[];
 	matrix: string[][];
+}
+
+export interface QuestData {
+	usersID: number[];
+	keys: string[];
+	scale: number;
+	alternatives: number[];
+	matrix: string[][];
+	type: string;
+	rows: number;
+	columns: number;
 }
 
 export class FirstColumnsThreeRowsNotEmptyError extends Error {
@@ -43,7 +54,7 @@ export class FirstColumnNotContainsNumbersError extends Error {
 	}
 }
 
-async function loadQuest(file: File): Promise<QuestData> {
+async function loadQuest(file: File): Promise<QuestData[]> {
 
 	const workbook = XLSX.read(await file.arrayBuffer());
 	const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -69,7 +80,7 @@ async function loadQuest(file: File): Promise<QuestData> {
 	}
 
 	var usersID: number[]
-	var key: string[]
+	var keys: string[]
 	var scales: number[]
 	var alternatives: number[]
 	var matrix: string[][]
@@ -78,21 +89,61 @@ async function loadQuest(file: File): Promise<QuestData> {
 		// usersID = lenght of the first columns - 3
 		const length = data.length - 3;
 		usersID = Array.from({ length }, (_, i) => i + 1);
-		key = data[0].map(cell => cell.trim());
+		keys = data[0].map(cell => cell.trim());
 		scales = data[1].map(Number);
 		alternatives = data[2].map(Number);
 		matrix = data.slice(3);
 	} else {
 		usersID = data.slice(3).map(row => parseInt(row[0]));
-		key = data[0].slice(1).map(cell => cell.trim());
+		keys = data[0].slice(1).map(cell => cell.trim());
 		scales = data[1].slice(1).map(Number);
 		alternatives = data[2].slice(1).map(Number);
 		matrix = data.slice(3).map(row => row.slice(1));
 	}
-	if (key.some(cell => !/^[A-z+ -]+$/.test(cell))) {
+
+	// drop undefined rows in the matrix
+	matrix = matrix.filter(row => row[0] !== undefined);
+	usersID = usersID.filter(user => !isNaN(user) && user !== undefined);
+	keys = keys.filter(key => key !== undefined);
+	scales = scales.filter(scale => !isNaN(scale) && scale !== undefined);
+	alternatives = alternatives.filter(alternative => !isNaN(alternative) && alternative !== undefined);
+
+	// check matrix length is equal to usersID length
+	if (matrix.length !== usersID.length) {
+		console.log(matrix.length, usersID.length);
+		throw new FirstColumnNotContainsNumbersError();
+	}
+
+	if (matrix[0].length !== keys.length) {
+		throw new Error('The matrix length is not equal to the keys length');
+	}
+
+	if (matrix[0].length !== scales.length) {
+		throw new Error('The matrix length is not equal to the scales length');
+	}
+
+	if (matrix[0].length !== alternatives.length) {
+		throw new Error('The matrix length is not equal to the alternatives length');
+	}
+
+	if (keys.some(cell => !/^[A-z+ -]+$/.test(cell))) {
 		throw new FirstRowNotContainsAlphabeticCharactersError();
 	}
-	return { usersID, key, scales, alternatives, matrix };
+	return generateQuestsData({ usersID, keys, scales, alternatives, matrix });
+}
+
+function generateQuestsData(data: Quest): QuestData[] {
+	const questsData: QuestData[] = [];
+	const scales = Array.from(new Set(data.scales));
+	scales.forEach(scale => {
+		const indexes = data.scales.map((s, i) => s === scale ? i : -1).filter(i => i !== -1);
+		const matrix = data.matrix.map(row => indexes.map(i => row[i]));
+		const keys = indexes.map(i => data.keys[i]);
+		const type = keys[0][0] === '+' || keys[0][0] === '-' ? 'gradu' : 'multi';
+		const alternatives = indexes.map(i => data.alternatives[i]);
+		questsData.push({ usersID: data.usersID, keys, scale, alternatives, matrix, type, rows: matrix.length, columns: matrix[0].length });
+	});
+	return questsData;
 }
 
 

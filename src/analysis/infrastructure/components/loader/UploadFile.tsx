@@ -1,13 +1,14 @@
-import { useState } from 'react';
-import { Button, Upload, message, List } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { UploadChangeParam } from 'antd/lib/upload';
-import loadQuest, { QuestData } from '../../../domain/services/loadQuest';
-import { questMulti } from '../../../domain/quests/questMulti';
+import { useState } from "react";
+import { Button, Upload, message, List, Collapse } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import { UploadChangeParam } from "antd/lib/upload";
+import loadQuest, { QuestData } from "../../../domain/services/loadQuest";
+import { questMulti } from "../../../domain/quests/questMulti";
+import { questGradu } from "../../../domain/quests/questGradu";
 
 interface UploadedFile {
   name: string;
-  response: QuestData | null;
+  response: QuestData[];
 }
 
 const UploadFile = () => {
@@ -16,7 +17,10 @@ const UploadFile = () => {
   const customRequest = async ({ file, onSuccess, onError }: any) => {
     try {
       const response = await loadQuest(file);
-      setUploadedFiles((prevFiles) => [...prevFiles, { name: file.name, response }]);
+      setUploadedFiles((prevFiles) => [
+        ...prevFiles,
+        { name: file.name, response },
+      ]);
       onSuccess();
     } catch (error) {
       onError(error);
@@ -24,16 +28,23 @@ const UploadFile = () => {
   };
 
   const handleChange = (info: UploadChangeParam) => {
-    if (info.file.status === 'done') {
+    if (info.file.status === "done") {
       message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === 'error') {
+    } else if (info.file.status === "error") {
       message.error(`${info.file.name} file upload failed.`);
-      // TODO: Add custom error handling 
+      // TODO: Add custom error handling
     }
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
+    >
       <Upload
         customRequest={customRequest}
         showUploadList={false}
@@ -43,12 +54,12 @@ const UploadFile = () => {
         <div
           style={{
             cursor: "pointer",
-            border: '2px dashed #1890ff', // Blue border
-            borderRadius: '5px',
-            padding: '20px',
-            textAlign: 'center',
-            width: '400px', // Adjust the width as needed
-            marginBottom: '20px',
+            border: "2px dashed #1890ff", // Blue border
+            borderRadius: "5px",
+            padding: "20px",
+            textAlign: "center",
+            width: "400px", // Adjust the width as needed
+            marginBottom: "20px",
           }}
         >
           <p>Click or drag file to this area to upload</p>
@@ -56,25 +67,54 @@ const UploadFile = () => {
         </div>
       </Upload>
 
-      <List
-        dataSource={uploadedFiles}
-        renderItem={(item) => (
-          <List.Item>
-            <Button type="link" onClick={() => {
-              const quest = new questMulti(
-              item.response!.matrix,
-              item.response!.key,
-	      item.response!.scales[0],
-	      item.response!.alternatives,
-              );
-              console.log(quest)
-            }}>
-              {item.name}
-            </Button>
-          </List.Item>
-        )}
-      />
+      <div style={{ width: "400px" }}>
+        <List
+          dataSource={uploadedFiles}
+          renderItem={(item) => (
+            <List.Item key={item.name}>{handleQuest(item)}</List.Item>
+          )}
+        />
+      </div>
     </div>
+  );
+};
+
+const handleQuest = (item: UploadedFile) => {
+  const quests = item.response.map((quest) => {
+    if (quest.type === "multi") {
+      return new questMulti(
+        quest.matrix,
+        quest.keys,
+        quest.scale,
+        quest.alternatives,
+      );
+    } else {
+      return new questGradu(
+        quest.matrix,
+        quest.keys,
+        quest.scale,
+        quest.alternatives,
+      );
+    }
+  });
+
+  return (
+    <>
+      <Collapse>
+        <Collapse.Panel header={item.name} key={item.name}>
+          <List
+            dataSource={quests}
+            renderItem={(quest, index) => (
+              <List.Item key={`${item.name}-${index}`}>
+                <Button type="link" onClick={() => console.log(quest)}>
+                  {`Scale: ${quest.scaleValue}   (Users: ${item.response[index].rows}  Items: ${item.response[index].columns})`}
+                </Button>
+              </List.Item>
+            )}
+          />
+        </Collapse.Panel>
+      </Collapse>
+    </>
   );
 };
 
