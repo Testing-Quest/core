@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Upload, message, List, Collapse } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { UploadChangeParam } from "antd/lib/upload";
-import loadQuest, { QuestData } from "../../../domain/services/loadQuest";
+import loadQuest, { QuestData, QuestType } from "../../../domain/services/loadQuest";
 import { questMulti } from "../../../domain/quests/questMulti";
 import { questGradu } from "../../../domain/quests/questGradu";
 
@@ -81,20 +81,22 @@ const UploadFile = () => {
 
 const handleQuest = (item: UploadedFile) => {
   const quests = item.response.map((quest) => {
-    if (quest.type === "multi") {
+    if (quest.type === QuestType.multi) {
       return new questMulti(
         quest.matrix,
         quest.keys,
         quest.scale,
         quest.alternatives,
       );
-    } else {
+    } else if (quest.type === QuestType.gradu) {
       return new questGradu(
         quest.matrix,
         quest.keys,
         quest.scale,
         quest.alternatives,
       );
+    } else {
+      throw new Error("Invalid quest type");
     }
   });
 

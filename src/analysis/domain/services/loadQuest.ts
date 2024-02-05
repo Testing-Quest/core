@@ -1,5 +1,10 @@
 import * as XLSX from 'xlsx';
 
+export const QuestType = {
+	gradu: 1,
+	multi: 2,
+}
+
 interface Quest {
 	usersID: number[];
 	keys: string[];
@@ -14,7 +19,7 @@ export interface QuestData {
 	scale: number;
 	alternatives: number[];
 	matrix: string[][];
-	type: string;
+	type: typeof QuestType[keyof typeof QuestType];
 	rows: number;
 	columns: number;
 }
@@ -139,7 +144,7 @@ function generateQuestsData(data: Quest): QuestData[] {
 		const indexes = data.scales.map((s, i) => s === scale ? i : -1).filter(i => i !== -1);
 		const matrix = data.matrix.map(row => indexes.map(i => row[i]));
 		const keys = indexes.map(i => data.keys[i]);
-		const type = keys[0][0] === '+' || keys[0][0] === '-' ? 'gradu' : 'multi';
+		const type = keys[0][0] === '+' || keys[0][0] === '-' ? QuestType.gradu : QuestType.multi;
 		const alternatives = indexes.map(i => data.alternatives[i]);
 		questsData.push({ usersID: data.usersID, keys, scale, alternatives, matrix, type, rows: matrix.length, columns: matrix[0].length });
 	});
