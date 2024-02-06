@@ -24,6 +24,7 @@ export class questMulti {
 	private discrimination: number = undefined!;
 	private keyConflict: number = undefined!;
 	private choice: number = undefined!;
+	private mci: number[] = undefined!;
 	private coherency: number = undefined!;
 
 	// TODO: check move this to userMulti
@@ -116,10 +117,11 @@ export class questMulti {
 		this.calculateSEM();
 		this.calculateReliabilityValue();
 		this.calculateDiscrimination();
-		this.calculateKeyConflict();  //TODO: BAD
+		this.calculateKeyConflict();
 		this.calculateChoice();
-		this.calculateCoherency();  //TODO: BAD
-		this.calculateDifficulty();  //TODO: BAD
+		this.calculateMCI();
+		this.calculateCoherency();
+		this.calculateDifficulty();
 		this.calculateTestHealth();  //TODO: BAD
 
 
@@ -191,9 +193,39 @@ export class questMulti {
 		}
 	}
 
+	private calculateMCI(): void {
+		const numFilas: number = this.correctedMatrix.length;
+		const numColumnas: number = this.correctedMatrix[0].length;
+
+		const puntuaciones: number[] = new Array(numFilas).fill(0);
+
+		for (let i = 0; i < numFilas; i++) {
+			for (let j = 0; j < numColumnas; j++) {
+				puntuaciones[i] += this.correctedMatrix[i][j] * this.items.difficultyValue[j];
+			}
+		}
+
+		const columnasOrdenadas: number[] = [...Array(numColumnas).keys()].sort((a, b) => this.items.difficultyValue[b] - this.items.difficultyValue[a]);
+
+		this.mci = [];
+
+		for (let i = 0; i < numFilas; i++) {
+			const totalAciertos: number = this.users.directScoreValue[i];
+			const pautaTotalmenteCorrecta: number = columnasOrdenadas.slice(0, totalAciertos).reduce((suma, idx) => suma + this.items.difficultyValue[idx], 0);
+			const pautaTotalmenteIncorrecta: number = columnasOrdenadas.slice(numColumnas - totalAciertos, numColumnas).reduce((suma, idx) => suma + this.items.difficultyValue[idx], 0);
+			const pautaObservada: number = puntuaciones[i];
+
+			const numerador: number = pautaTotalmenteCorrecta - pautaObservada;
+			const denominador: number = pautaTotalmenteCorrecta - pautaTotalmenteIncorrecta;
+
+			const mci: number = denominador !== 0 ? numerador / denominador : 0;
+			this.mci.push(mci);
+		}
+	}
+
 	private calculateCoherency(): void {
 		// obtiene el valor de MCI de los sujetos, calcula el numero de veces que MCI < 0.5 y lo divide entre el numero total de sujetos)
-		this.coherency = this.users.mciValue.filter(value => value < 0.5).length / this.users.mciValue.length;
+		this.coherency = this.mci.filter(value => value < 0.5).length / this.mci.length;
 	}
 
 	private calculateDifficulty(): void {
@@ -210,35 +242,35 @@ export class questMulti {
 		}
 	}
 
-	public get originalKeysValue(): string[] {return this.originalKeys}
+	public get originalKeysValue(): string[] { return this.originalKeys }
 
-	public get keysValue(): string[] {return this.keys}
+	public get keysValue(): string[] { return this.keys }
 
-	public get cronbachAlphaValue(): number {return this.cronbachAlpha}
+	public get cronbachAlphaValue(): number { return this.cronbachAlpha }
 
-	public get semValue(): number {return this.sem}
+	public get semValue(): number { return this.sem }
 
-	public get meanValue(): number {return this.mean}
+	public get meanValue(): number { return this.mean }
 
-	public get varianceValue(): number {return this.variance}
+	public get varianceValue(): number { return this.variance }
 
-	public get standardDeviationValue(): number {return this.standardDeviation}
+	public get standardDeviationValue(): number { return this.standardDeviation }
 
-	public get reliabilityValue(): number {return this.reliability}
+	public get reliabilityValue(): number { return this.reliability }
 
-	public get discriminationValue(): number {return this.discrimination}
+	public get discriminationValue(): number { return this.discrimination }
 
-	public get keyConflictValue(): number {return this.keyConflict}
+	public get keyConflictValue(): number { return this.keyConflict }
 
-	public get choiceValue(): number {return this.choice}
+	public get choiceValue(): number { return this.choice }
 
-	public get coherencyValue(): number {return this.coherency}
+	public get coherencyValue(): number { return this.coherency }
 
-	public get difficultyValue(): number {return this.difficulty}
+	public get difficultyValue(): number { return this.difficulty }
 
-	public get testHealthValue(): number {return this.testHealth}
+	public get testHealthValue(): number { return this.testHealth }
 
-	public get scaleValue(): number {return this.scale}
+	public get scaleValue(): number { return this.scale }
 
 	public calculateReliability(): Reliability {
 		const x: number[] = Array.from({ length: 11 }, (_, i) => 0.5 + i * 0.1);
@@ -277,7 +309,7 @@ export class questMulti {
 	public directVsMCI(): DirectVsMCI {
 		return new DirectVsMCI(
 			this.users.directScoreValue,
-			this.users.mciValue,
+			this.mci,
 		);
 	}
 
@@ -330,7 +362,7 @@ export class questMulti {
 		usersTable.set("Mean", this.users.meanValue);
 		usersTable.set("TotalScore", this.users.totalScoreValue);
 		usersTable.set("Blank Answer", this.users.blankAnswersValue);
-		usersTable.set("MCI", this.users.mciValue);
+		usersTable.set("MCI", this.mci);
 
 		return usersTable;
 	}

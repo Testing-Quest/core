@@ -73,7 +73,7 @@ export class ItemMulti {
 		this.calculateDiscriminationValue();  // OK
 		this.calculateDifficulty();  // OK
 		this.calculateCorrectDiscrimination(); // OK
-		this.calculateAlternativeDiscriminationDifficulty(); // TODO: BAD
+		this.calculateAlternativeDiscriminationDifficulty(); // OK
 		this.calculateConflict();  //TODO: BAD
 		this.calculateChoice();  //TODO: BAD
 	}
@@ -159,10 +159,11 @@ export class ItemMulti {
 		this.alternativeDiscrimination = new Map<string, number[]>();
 		this.alternativeDifficulty = new Map<string, number[]>();
 
-		const calculateDisrimination = (matrix: number[][], directScore: number[]) => {
+		const calculateDisrimination = (matrix: number[][]) => {
+			// print number of responses "A" in each import {  } from "";
 			return Array.from({ length: matrix[0].length }, (_, i) => {	
 				const item = matrix.map(row => row[i]);
-				return this.calculatePearson(item, directScore);
+				return this.calculatePearson(item, this.usersDirectScore);
 			});
 		};
 
@@ -174,9 +175,8 @@ export class ItemMulti {
 			const itemsDirectScore = Array.from({ length: correctedMatrix[0].length }, (_, colIndex) =>
 				correctedMatrix.reduce((acc, row) => acc + row[colIndex], 0)
 			);
-			const usersDirectScore = correctedMatrix.map(row => row.reduce((acc, item) => acc + item, 0));
 
-			this.alternativeDiscrimination.set(`Discrimination ${alternative}`, calculateDisrimination(correctedMatrix, usersDirectScore));
+			this.alternativeDiscrimination.set(`Discrimination ${alternative}`, calculateDisrimination(correctedMatrix));
 			this.alternativeDifficulty.set(`Difficulty ${alternative}`, calculateDifficulty(itemsDirectScore));
 		};
 
