@@ -116,11 +116,11 @@ export class questMulti {
 		this.calculateSEM();
 		this.calculateReliabilityValue();
 		this.calculateDiscrimination();
-		this.calculateKeyConflict();
+		this.calculateKeyConflict();  //TODO: BAD
 		this.calculateChoice();
-		this.calculateCoherency();
-		this.calculateDifficulty();
-		this.calculateTestHealth();
+		this.calculateCoherency();  //TODO: BAD
+		this.calculateDifficulty();  //TODO: BAD
+		this.calculateTestHealth();  //TODO: BAD
 
 
 	}

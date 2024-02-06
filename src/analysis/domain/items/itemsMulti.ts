@@ -67,15 +67,15 @@ export class ItemMulti {
 	): void {
 		this.usersDirectScore = usersDirectScore;
 		this.questVariance = questVariance;
-		this.calculateItemsDirectScore();
-		this.calculateMean();
-		this.calculateVariance();
-		this.calculateDiscriminationValue();
-		this.calculateDifficulty();
-		this.calculateCorrectDiscrimination();
-		this.calculateAlternativeDiscriminationDifficulty();
-		this.calculateConflict();
-		this.calculateChoice();
+		this.calculateItemsDirectScore(); 
+		this.calculateMean();  
+		this.calculateVariance();  // OK
+		this.calculateDiscriminationValue();  // OK
+		this.calculateDifficulty();  // OK
+		this.calculateCorrectDiscrimination(); // OK
+		this.calculateAlternativeDiscriminationDifficulty(); // TODO: BAD
+		this.calculateConflict();  //TODO: BAD
+		this.calculateChoice();  //TODO: BAD
 	}
 
 	private calculateItemsDirectScore(): void {
@@ -130,9 +130,8 @@ export class ItemMulti {
 
 
 	private calculateDifficulty(): void {
-		// TODO: Check this
-		this.difficulty = this.itemsDirectScore.map((item, index) => {
-			const numUsers = this.usersDirectScore[index];
+		this.difficulty = this.itemsDirectScore.map((item) => {
+			const numUsers = this.matrix.length;
 			if (numUsers === 0) {
 				return 0;
 			}
@@ -154,22 +153,31 @@ export class ItemMulti {
 		if (this.alternatives === 2) {
 			return;
 		}
+		
+		const totalUsers = this.matrix.length;
 
 		this.alternativeDiscrimination = new Map<string, number[]>();
 		this.alternativeDifficulty = new Map<string, number[]>();
 
-		const calculateScores = (matrix: number[][], directScore: number[]) =>
-			matrix[0].map((_, i) => this.calculatePearson(matrix.map(row => row[i]), directScore));
+		const calculateDisrimination = (matrix: number[][], directScore: number[]) => {
+			return Array.from({ length: matrix[0].length }, (_, i) => {	
+				const item = matrix.map(row => row[i]);
+				return this.calculatePearson(item, directScore);
+			});
+		};
 
 		const calculateDifficulty = (directScore: number[]) =>
-			directScore.map((item, index) => item / Math.max(directScore[index], 1));
+			directScore.map((item) => item / totalUsers);
 
 		const processAlternative = (alternative: string) => {
 			const correctedMatrix = this.matrix.map(row => row.map(item => +(item === alternative)));
-			const usersDirectScore = correctedMatrix.map(row => row.reduce((prev, curr) => prev + curr, 0));
+			const itemsDirectScore = Array.from({ length: correctedMatrix[0].length }, (_, colIndex) =>
+				correctedMatrix.reduce((acc, row) => acc + row[colIndex], 0)
+			);
+			const usersDirectScore = correctedMatrix.map(row => row.reduce((acc, item) => acc + item, 0));
 
-			this.alternativeDiscrimination.set(`Discrimination ${alternative}`, calculateScores(correctedMatrix, usersDirectScore));
-			this.alternativeDifficulty.set(`Difficulty ${alternative}`, calculateDifficulty(usersDirectScore));
+			this.alternativeDiscrimination.set(`Discrimination ${alternative}`, calculateDisrimination(correctedMatrix, usersDirectScore));
+			this.alternativeDifficulty.set(`Difficulty ${alternative}`, calculateDifficulty(itemsDirectScore));
 		};
 
 		for (let i = 0; i < this.alternatives; i++) {
