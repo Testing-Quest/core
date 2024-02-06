@@ -111,23 +111,32 @@ const UploadFile = () => {
           dataSource={uploadedFiles}
           renderItem={(item) => (
             <List.Item key={item.name}>
-              <Collapse>
-                <Collapse.Panel header={item.name} key={item.name}>
-                  <List
-                    dataSource={item.quest}
-                    renderItem={(quest, index) => (
-                      <List.Item key={`${item.name}-${index}`}>
-                        <Button type="link" onClick={() => { 
-                          quest.recalculate() // TODO: Remove this line
-                          console.log(quest)
-                        }}>
-                          {`Scale: ${quest.scaleValue}  (Users: ${item.users[index]}  Items: ${item.items[index]})`}
-                        </Button>
-                      </List.Item>
-                    )}
-                  />
-                </Collapse.Panel>
-              </Collapse>
+              <Collapse
+                items={[
+                  {
+                    label: item.name,
+                    key: item.name,
+                    children: (
+                      <List
+                        dataSource={item.quest}
+                        renderItem={(quest, index) => (
+                          <List.Item key={`${item.name}-${index}`}>
+                            <Button
+                              type="link"
+                              onClick={() => {
+                                quest.recalculate(); // TODO: Remove this line
+                                console.log(quest);
+                              }}
+                            >
+                              {`Scale: ${quest.scaleValue}  (Users: ${item.users[index]}  Items: ${item.items[index]})`}
+                            </Button>
+                          </List.Item>
+                        )}
+                      />
+                    ),
+                  },
+                ]}
+              />
             </List.Item>
           )}
         />
