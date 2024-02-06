@@ -375,7 +375,6 @@ export class questMulti {
 
 	public updateItemsKey(id: number, key: string): void {
 		this.keys[id] = key.toUpperCase();
-		this.items.update(this.matrix, this.correctedMatrix, this.keys);
 	}
 
 	public deactivateItems(id: number): void {
