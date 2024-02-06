@@ -27,7 +27,6 @@ export class questMulti {
 	private mci: number[] = undefined!;
 	private coherency: number = undefined!;
 
-	// TODO: check move this to userMulti
 	private weightScore: number[] = undefined!;
 
 	private difficulty: number = undefined!;
@@ -88,7 +87,6 @@ export class questMulti {
 	}
 
 	private correctMatrix(matrix: string[][]): number[][] {
-		// TODO: check 1 si el usuario acierta, 0 si no responde o falla
 		const correctedMatrix = matrix.map(row =>
 			row.map((answer, columnIndex) => {
 				const correctAnswer = this.keys[columnIndex];
@@ -122,7 +120,7 @@ export class questMulti {
 		this.calculateMCI();
 		this.calculateCoherency();
 		this.calculateDifficulty();
-		this.calculateTestHealth();  //TODO: BAD
+		this.calculateTestHealth(); 
 
 
 	}
@@ -174,12 +172,10 @@ export class questMulti {
 	}
 
 	private calculateDiscrimination(): void {
-		// obtiene el valor de discriminacion de los items, calcula el numero cuya discriminacion es > 0.3 y lo divide entre el numero total de items
 		this.discrimination = this.items.discriminationValue.filter(value => value > 0.3).length / this.items.discriminationValue.length;
 	}
 
 	private calculateKeyConflict(): void {
-		// obtiene el valor de conflicto de los items, calcula el numero de veces que aparece un false y lo divide entre el numero total de items
 		if (this.numberOfAnswers[0] === 2) {
 			return;
 		}
@@ -187,7 +183,6 @@ export class questMulti {
 	}
 
 	private calculateChoice(): void {
-		// obtiene el valor de eleccion de los items, calcula el numero de veces que aparece un true y lo divide entre el numero total de items
 		if (this.numberOfAnswers[0] > 2) {
 			this.choice = this.items.choiceValue.filter(value => value === true).length / this.items.choiceValue.length;
 		}
@@ -224,21 +219,18 @@ export class questMulti {
 	}
 
 	private calculateCoherency(): void {
-		// obtiene el valor de MCI de los sujetos, calcula el numero de veces que MCI < 0.5 y lo divide entre el numero total de sujetos)
 		this.coherency = this.mci.filter(value => value < 0.5).length / this.mci.length;
 	}
 
 	private calculateDifficulty(): void {
-		// calcula la media de dificultad de los items y la multiplica por 100
 		this.difficulty = this.items.difficultyValue.reduce((acc, value) => acc + value, 0) / this.items.difficultyValue.length;
 	}
 
 	private calculateTestHealth(): void {
-		// calcula la media de salud del test y la multiplica por 100
 		if (this.numberOfAnswers[0] > 2) {
-			this.testHealth = (this.reliability + this.discrimination + this.keyConflict + this.choice + this.coherency) / 5;
+			this.testHealth = (this.reliability + this.discrimination + 1 - this.keyConflict + this.choice + this.coherency) / 5;
 		} else {
-			this.testHealth = (this.reliability + this.discrimination + this.keyConflict + this.coherency) / 4;
+			this.testHealth = (this.reliability + this.discrimination + 1 - this.keyConflict + this.coherency) / 4;
 		}
 	}
 

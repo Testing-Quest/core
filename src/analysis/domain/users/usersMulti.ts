@@ -33,7 +33,7 @@ export class UserMulti {
 	public calculate(): void {
 		this.calculateDirectScore();
 		this.calculateMean();
-		this.calculateCoherence();  //TODO: BAD
+		this.calculateCoherence(); 
 		this.calculateBlankAnswers();
 	}
 

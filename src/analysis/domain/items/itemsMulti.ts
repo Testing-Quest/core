@@ -69,13 +69,13 @@ export class ItemMulti {
 		this.questVariance = questVariance;
 		this.calculateItemsDirectScore(); 
 		this.calculateMean();  
-		this.calculateVariance();  // OK
-		this.calculateDiscriminationValue();  // OK
-		this.calculateDifficulty();  // OK
-		this.calculateCorrectDiscrimination(); // OK
-		this.calculateAlternativeDiscriminationDifficulty(); // OK
-		this.calculateConflict();  //TODO: BAD
-		this.calculateChoice();  //TODO: BAD
+		this.calculateVariance();  
+		this.calculateDiscriminationValue(); 
+		this.calculateDifficulty();  
+		this.calculateCorrectDiscrimination(); 
+		this.calculateAlternativeDiscriminationDifficulty(); 
+		this.calculateConflict();  
+		this.calculateChoice();  
 	}
 
 	private calculateItemsDirectScore(): void {
@@ -104,14 +104,13 @@ export class ItemMulti {
 	}
 
 	private calculateDiscriminationValue(): void {
-		// TODO: Discrimination es la correlacion entre la respuesta de un item y el total score
 		this.discrimination = Array.from({ length: this.id.length }, (_, i) => {
 			const item = this.correctedMatrix.map(row => row[i]);
 			return this.calculatePearson(item, this.usersDirectScore);
 		});
 	}
 
-	private calculatePearson(item: number[], totalScore: number[]): number { // TODO: Check if this is correct
+	private calculatePearson(item: number[], totalScore: number[]): number { 
 		const n = item.length;
 		const sumItem = item.reduce((prev, curr) => prev + curr, 0);
 		const sumTotalScore = totalScore.reduce((prev, curr) => prev + curr, 0);
@@ -160,7 +159,6 @@ export class ItemMulti {
 		this.alternativeDifficulty = new Map<string, number[]>();
 
 		const calculateDisrimination = (matrix: number[][]) => {
-			// print number of responses "A" in each import {  } from "";
 			return Array.from({ length: matrix[0].length }, (_, i) => {	
 				const item = matrix.map(row => row[i]);
 				return this.calculatePearson(item, this.usersDirectScore);
@@ -188,7 +186,6 @@ export class ItemMulti {
 	}
 
 	private calculateConflict(): void {
-		// TODO; Check this (si hay 2 alternativas aplica ?)
 		if (this.alternatives === 2) {
 			return;
 		}
@@ -200,7 +197,6 @@ export class ItemMulti {
 	}
 
 	private calculateChoice(): void {
-		// TODO: Check this 
 		if (this.alternatives <= 3) {
 			return;
 		}
@@ -231,13 +227,10 @@ export class ItemMulti {
 			const itemFrequencies: number[] = getFrequencies(itemKey, i);
 			const numRespuestas: number = itemFrequencies.reduce((a, b) => a + b, 0);
 
-			// Calcula la frecuencia esperada para alternativas incorrectas
 			const freqEsperada: number = numRespuestas / (this.alternatives - 1);
 
-			// Calcula el estadístico de chi-cuadrado para cada alternativa incorrecta
 			const chiCuadrado: number = calculateChiCuadrado(itemFrequencies, freqEsperada);
 
-			// Compara con el valor de chi-cuadrado de las tablas
 			this.choice.push(chiCuadrado < DiccionarioTablaChiCuadrado.get(this.alternatives - 1)!);
 		}
 	}
