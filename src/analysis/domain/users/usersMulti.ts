@@ -17,7 +17,6 @@ export class UserMulti {
 		this.id = Array.from({ length: matrix.length }, (_, i) => i);
 		this.matrix = matrix;
 		this.correctedMatrix = correctedMatrix;
-		this.calculate();
 	}
 
 
@@ -35,6 +34,9 @@ export class UserMulti {
 		this.calculateMean();
 		this.calculateCoherence(); 
 		this.calculateBlankAnswers();
+
+		this.matrix = undefined!;
+		this.correctedMatrix = undefined!;
 	}
 
 	private calculateDirectScore(): void {

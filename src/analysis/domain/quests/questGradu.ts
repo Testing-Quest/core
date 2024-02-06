@@ -11,4 +11,7 @@ export class questGradu {
 	public get scaleValue(): number {
 		return 0;
 	}
+
+	public recalculate(): void {
+	}
 }

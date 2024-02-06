@@ -117,7 +117,10 @@ const UploadFile = () => {
                     dataSource={item.quest}
                     renderItem={(quest, index) => (
                       <List.Item key={`${item.name}-${index}`}>
-                        <Button type="link" onClick={() => console.log(quest)}>
+                        <Button type="link" onClick={() => { 
+                          quest.recalculate() // TODO: Remove this line
+                          console.log(quest)
+                        }}>
                           {`Scale: ${quest.scaleValue}  (Users: ${item.users[index]}  Items: ${item.items[index]})`}
                         </Button>
                       </List.Item>

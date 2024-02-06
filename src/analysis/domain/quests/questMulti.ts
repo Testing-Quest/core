@@ -4,7 +4,9 @@ import { DirectVsCoherency } from "../plots/directVsCoherency";
 import { DirectVsMCI } from "../plots/directVsMci";
 import { DirectVsWeighted } from "../plots/directVsWeighted";
 import { HealthProblemsGradu } from "../plots/healthProblemsGradu";
+import { ItemDiscrimination } from "../plots/itemDiscrimination";
 import { ItemFrequency } from "../plots/itemFrequency";
+import { ItemProfile } from "../plots/itemProfile";
 import { ItemMap } from "../plots/itemsMap";
 import { Reliability } from "../plots/reliability";
 import { ScoreDistribution } from "../plots/scoreDistribution";
@@ -179,7 +181,7 @@ export class questMulti {
 		if (this.numberOfAnswers[0] === 2) {
 			return;
 		}
-		this.keyConflict = this.items.conflictValue.filter(value => value === true).length / this.items.conflictValue.length;
+		this.keyConflict = 1- (this.items.conflictValue.filter(value => value === true).length / this.items.conflictValue.length);
 	}
 
 	private calculateChoice(): void {
@@ -228,9 +230,9 @@ export class questMulti {
 
 	private calculateTestHealth(): void {
 		if (this.numberOfAnswers[0] > 2) {
-			this.testHealth = (this.reliability + this.discrimination + 1 - this.keyConflict + this.choice + this.coherency) / 5;
+			this.testHealth = (this.reliability + this.discrimination + this.keyConflict + this.choice + this.coherency) / 5;
 		} else {
-			this.testHealth = (this.reliability + this.discrimination + 1 - this.keyConflict + this.coherency) / 4;
+			this.testHealth = (this.reliability + this.discrimination + this.keyConflict + this.coherency) / 4;
 		}
 	}
 
@@ -363,11 +365,11 @@ export class questMulti {
 		return this.items.calculateFrequency(id);
 	}
 
-	public getItemProfile(id: number): any {
-		return this.items.calculateProfile(id);
+	public getItemProfile(id: number): ItemProfile {
+		return this.items.calculateProfile(this.matrix.map(row => row[id]));
 	}
 
-	public getItemDiscrimination(id: number): any {
+	public getItemDiscrimination(id: number): ItemDiscrimination {
 		return this.items.calculateDiscrimination(id);
 	}
 
@@ -379,28 +381,26 @@ export class questMulti {
 	public deactivateItems(id: number): void {
 		this.activeItems[id] = false;
 		this.createMatrix();
-		this.items.update(this.matrix, this.correctedMatrix, this.keys);
-		this.users.update(this.matrix, this.correctedMatrix);
 	}
 
 	public activateItems(id: number): void {
 		this.activeItems[id] = true;
 		this.createMatrix();
-		this.items.update(this.matrix, this.correctedMatrix, this.keys);
-		this.users.update(this.matrix, this.correctedMatrix);
 	}
 
 	public deactivateExaminees(id: number): void {
 		this.activeUsers[id] = false;
 		this.createMatrix();
-		this.items.update(this.matrix, this.correctedMatrix, this.keys);
-		this.users.update(this.matrix, this.correctedMatrix);
 	}
 
 	public activateExaminees(id: number): void {
 		this.activeUsers[id] = true;
 		this.createMatrix();
+	}
+
+	public recalculate(): void {
 		this.items.update(this.matrix, this.correctedMatrix, this.keys);
 		this.users.update(this.matrix, this.correctedMatrix);
+		this.calculate();
 	}
 }

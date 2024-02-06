@@ -76,6 +76,9 @@ export class ItemMulti {
 		this.calculateAlternativeDiscriminationDifficulty(); 
 		this.calculateConflict();  
 		this.calculateChoice();  
+
+		this.matrix = undefined!;
+		this.correctedMatrix = undefined!;
 	}
 
 	private calculateItemsDirectScore(): void {
@@ -275,7 +278,7 @@ export class ItemMulti {
 		return new ItemDiscrimination(alternativeDiscrimination);
 	}
 
-	public calculateProfile(id: number): ItemProfile {
-		return new ItemProfile(this.matrix.map(row => row[id]), this.usersDirectScore);
+	public calculateProfile(row: string[]): ItemProfile {
+		return new ItemProfile(row, this.usersDirectScore);
 	}
 }
