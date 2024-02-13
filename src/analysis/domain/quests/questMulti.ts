@@ -21,12 +21,17 @@ export class questMulti {
 	private mean: number = undefined!;
 	private variance: number = undefined!;
 	private standardDeviation: number = undefined!;
-	private score: number = undefined!;
-	private variability: number = undefined!;
 
 	private reliability: number = undefined!;
 	private discrimination: number = undefined!;
+	private keyConflict: number = undefined!;
+	private choice: number = undefined!;
+	private mci: number[] = undefined!;
+	private coherency: number = undefined!;
 
+	private weightScore: number[] = undefined!;
+
+	private difficulty: number = undefined!;
 	private testHealth: number = undefined!;
 
 	private originalMatrix: string[][];
@@ -249,6 +254,14 @@ export class questMulti {
 
 	public get discriminationValue(): number { return this.discrimination }
 
+	public get keyConflictValue(): number { return this.keyConflict }
+
+	public get choiceValue(): number { return this.choice }
+
+	public get coherencyValue(): number { return this.coherency }
+
+	public get difficultyValue(): number { return this.difficulty }
+
 	public get testHealthValue(): number { return this.testHealth }
 
 	public get scaleValue(): number { return this.scale }
@@ -263,6 +276,34 @@ export class questMulti {
 			this.items.idValue,
 			this.items.discriminationValue,
 			this.items.difficultyValue,
+		);
+	}
+
+	public directVsWeighted(): DirectVsWeighted {
+		return new DirectVsWeighted(
+			this.users.directScoreValue,
+			this.weightScore,
+		);
+	}
+
+	public directVsBlankAnswer(): DirectVsBlank {
+		return new DirectVsBlank(
+			this.users.directScoreValue,
+			this.users.blankAnswersValue,
+		);
+	}
+
+	public directVsCoherency(): DirectVsCoherency {
+		return new DirectVsCoherency(
+			this.users.directScoreValue,
+			this.users.coherenceValue,
+		);
+	}
+
+	public directVsMCI(): DirectVsMCI {
+		return new DirectVsMCI(
+			this.users.directScoreValue,
+			this.mci,
 		);
 	}
 
