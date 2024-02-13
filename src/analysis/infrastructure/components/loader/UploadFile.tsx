@@ -24,8 +24,8 @@ const UploadFile = () => {
   const [loading, setLoading] = useState(false);
 
   const customRequest = async ({ file, onSuccess, onError }: any) => {
+    setLoading(true);
     try {
-      setLoading(true);
       const response = await loadQuest(file);
       const quests = (quest: QuestData) => {
         if (quest.type === QuestType.multi) {
