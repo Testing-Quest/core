@@ -3,7 +3,7 @@ import { DirectVsBlank } from "../plots/directVsBlank";
 import { DirectVsCoherency } from "../plots/directVsCoherency";
 import { DirectVsMCI } from "../plots/directVsMci";
 import { DirectVsWeighted } from "../plots/directVsWeighted";
-import { HealthProblemsGradu } from "../plots/healthProblemsGradu";
+import { HealthProblemsMulti } from "../plots/healthProblemsMulti";
 import { ItemDiscrimination } from "../plots/itemDiscrimination";
 import { ItemFrequency } from "../plots/itemFrequency";
 import { ItemProfile } from "../plots/itemProfile";
@@ -314,8 +314,8 @@ export class questMulti {
 
 	}
 
-	public getHealthProblems(): HealthProblemsGradu {
-		return new HealthProblemsGradu(
+	public getHealthProblems(): HealthProblemsMulti {
+		return new HealthProblemsMulti(
 			this.choice,
 			this.discrimination,
 			this.cronbachAlpha,

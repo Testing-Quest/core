@@ -1,10 +1,5 @@
-import { ItemMulti } from "../items/itemsMulti";
-import { DirectVsBlank } from "../plots/directVsBlank";
-import { DirectVsCoherency } from "../plots/directVsCoherency";
-import { DirectVsMCI } from "../plots/directVsMci";
-import { DirectVsWeighted } from "../plots/directVsWeighted";
+import { ItemGradu } from "../items/itemsGradu";
 import { HealthProblemsGradu } from "../plots/healthProblemsGradu";
-import { ItemDiscrimination } from "../plots/itemDiscrimination";
 import { ItemFrequency } from "../plots/itemFrequency";
 import { ItemProfile } from "../plots/itemProfile";
 import { ItemMap } from "../plots/itemsMap";
@@ -15,23 +10,17 @@ import { UserGradu } from "../users/usersGradu";
 export class questGradu {
 	// Rows: Users
 	// Columns: Items
-	private omissions: Set<string> = new Set(['*', 'X', '']);
+	private omissions: Set<string> = new Set(['*', 'X', 'x', '']);
 	private cronbachAlpha: number = undefined!;
 	private sem: number = undefined!;
 	private mean: number = undefined!;
 	private variance: number = undefined!;
 	private standardDeviation: number = undefined!;
 
+	private score: number = undefined!;
 	private reliability: number = undefined!;
 	private discrimination: number = undefined!;
-	private keyConflict: number = undefined!;
-	private choice: number = undefined!;
-	private mci: number[] = undefined!;
-	private coherency: number = undefined!;
-
-	private weightScore: number[] = undefined!;
-
-	private difficulty: number = undefined!;
+	private variability: number = undefined!;
 	private testHealth: number = undefined!;
 
 	private originalMatrix: number[][];
@@ -41,7 +30,7 @@ export class questGradu {
 	private keys: string[];
 	private scale: number;
 	private numberOfAnswers: number[];
-	private items: ItemMulti;
+	private items: ItemGradu;
 	private users: UserGradu;
 	private activeItems: boolean[];
 	private activeUsers: boolean[];
@@ -68,9 +57,10 @@ export class questGradu {
 
 		this.createMatrix();
 
-		this.items = new ItemMulti(this.matrix, this.correctedMatrix, numberOfAnswers, correctAnswers);
+		this.items = new ItemGradu(this.correctedMatrix, numberOfAnswers);
 		this.users = new UserGradu(this.correctedMatrix);
 		this.calculate();
+
 	}
 
 	private createMatrix(): void {
@@ -106,34 +96,17 @@ export class questGradu {
 
 		this.items.calculate(this.users.directScoreValue, this.variance);
 
-		this.calculateWeightScore();
 
 		this.calculateStandardDeviation();
 		this.calculateCronbachAlpha();
 		this.calculateSEM();
 		this.calculateReliabilityValue();
+		this.calculateScore();
+		this.calculateVariability();
 		this.calculateDiscrimination();
-		this.calculateKeyConflict();
-		this.calculateChoice();
-		this.calculateMCI();
-		this.calculateCoherency();
-		this.calculateDifficulty();
 		this.calculateTestHealth();
-
-
 	}
 
-	private calculateWeightScore(): void {
-		this.weightScore = []
-
-		for (const vector of this.correctedMatrix) {
-			const puntuacionSujeto = vector.reduce((acumulado, valor, indice) => {
-				return acumulado + (valor === 0 ? 0 : this.items.discriminationValue[indice]);
-			}, 0);
-
-			this.weightScore.push(puntuacionSujeto);
-		}
-	}
 
 	private calculateMean(): void {
 		this.mean = this.users.directScoreValue.reduce((acc, value) => acc + value, 0) / this.users.directScoreValue.length;
@@ -152,7 +125,7 @@ export class questGradu {
 
 	private calculateCronbachAlpha(): void {
 		const nItems = this.correctedMatrix[0].length;
-		const itemVar = this.items.varianceValue.reduce((acc, value) => acc + value, 0);
+		const itemVar = this.items.standartDeviationValue.reduce((acc, value) => acc + value, 0);
 
 		if (nItems > 1) {
 			this.cronbachAlpha = (nItems / (nItems - 1)) * (1 - itemVar / this.variance);
@@ -169,67 +142,23 @@ export class questGradu {
 		this.reliability = this.cronbachAlpha;
 	}
 
+
+	private calculateScore(): void {
+		this.score = this.correctedMatrix.reduce((acc, r) => acc + r.reduce((acc, value) => acc + value, 0),0) / (this.correctedMatrix.length * this.correctedMatrix[0].length)
+	}
+
+	private calculateVariability(): void { 
+		const variability: number = this.numberOfAnswers[0]/10
+		this.variability = this.items.standartDeviationValue.reduce((acc, r) => acc + (r > variability ? 1 : 0), 0) / this.correctedMatrix[0].length
+	}
+
 	private calculateDiscrimination(): void {
 		this.discrimination = this.items.discriminationValue.filter(value => value > 0.3).length / this.items.discriminationValue.length;
 	}
 
-	private calculateKeyConflict(): void {
-		if (this.numberOfAnswers[0] === 2) {
-			return;
-		}
-		this.keyConflict = 1 - (this.items.conflictValue.filter(value => value === true).length / this.items.conflictValue.length);
-	}
-
-	private calculateChoice(): void {
-		if (this.numberOfAnswers[0] > 2) {
-			this.choice = this.items.choiceValue.filter(value => value === true).length / this.items.choiceValue.length;
-		}
-	}
-
-	private calculateMCI(): void {
-		const numFilas: number = this.correctedMatrix.length;
-		const numColumnas: number = this.correctedMatrix[0].length;
-
-		const puntuaciones: number[] = new Array(numFilas).fill(0);
-
-		for (let i = 0; i < numFilas; i++) {
-			for (let j = 0; j < numColumnas; j++) {
-				puntuaciones[i] += this.correctedMatrix[i][j] * this.items.difficultyValue[j];
-			}
-		}
-
-		const columnasOrdenadas: number[] = [...Array(numColumnas).keys()].sort((a, b) => this.items.difficultyValue[b] - this.items.difficultyValue[a]);
-
-		this.mci = [];
-
-		for (let i = 0; i < numFilas; i++) {
-			const totalAciertos: number = this.users.directScoreValue[i];
-			const pautaTotalmenteCorrecta: number = columnasOrdenadas.slice(0, totalAciertos).reduce((suma, idx) => suma + this.items.difficultyValue[idx], 0);
-			const pautaTotalmenteIncorrecta: number = columnasOrdenadas.slice(numColumnas - totalAciertos, numColumnas).reduce((suma, idx) => suma + this.items.difficultyValue[idx], 0);
-			const pautaObservada: number = puntuaciones[i];
-
-			const numerador: number = pautaTotalmenteCorrecta - pautaObservada;
-			const denominador: number = pautaTotalmenteCorrecta - pautaTotalmenteIncorrecta;
-
-			const mci: number = denominador !== 0 ? numerador / denominador : 0;
-			this.mci.push(mci);
-		}
-	}
-
-	private calculateCoherency(): void {
-		this.coherency = this.mci.filter(value => value < 0.5).length / this.mci.length;
-	}
-
-	private calculateDifficulty(): void {
-		this.difficulty = this.items.difficultyValue.reduce((acc, value) => acc + value, 0) / this.items.difficultyValue.length;
-	}
 
 	private calculateTestHealth(): void {
-		if (this.numberOfAnswers[0] > 2) {
-			this.testHealth = (this.reliability + this.discrimination + this.keyConflict + this.choice + this.coherency) / 5;
-		} else {
-			this.testHealth = (this.reliability + this.discrimination + this.keyConflict + this.coherency) / 4;
-		}
+		this.testHealth = (this.variability + this.discrimination + this.reliability) / 3 	
 	}
 
 	public get originalKeysValue(): string[] { return this.originalKeys }
@@ -250,17 +179,13 @@ export class questGradu {
 
 	public get discriminationValue(): number { return this.discrimination }
 
-	public get keyConflictValue(): number { return this.keyConflict }
-
-	public get choiceValue(): number { return this.choice }
-
-	public get coherencyValue(): number { return this.coherency }
-
-	public get difficultyValue(): number { return this.difficulty }
-
 	public get testHealthValue(): number { return this.testHealth }
 
 	public get scaleValue(): number { return this.scale }
+
+	public get scoreValue(): number { return this.score }
+
+	public get variablityValue(): number { return this.variability }
 
 	public calculateReliability(): Reliability {
 		const x: number[] = Array.from({ length: 11 }, (_, i) => 0.5 + i * 0.1);
@@ -275,34 +200,6 @@ export class questGradu {
 		);
 	}
 
-	public directVsWeighted(): DirectVsWeighted {
-		return new DirectVsWeighted(
-			this.users.directScoreValue,
-			this.weightScore,
-		);
-	}
-
-	public directVsBlankAnswer(): DirectVsBlank {
-		return new DirectVsBlank(
-			this.users.directScoreValue,
-			this.users.blankAnswersValue,
-		);
-	}
-
-	public directVsCoherency(): DirectVsCoherency {
-		return new DirectVsCoherency(
-			this.users.directScoreValue,
-			this.users.coherenceValue,
-		);
-	}
-
-	public directVsMCI(): DirectVsMCI {
-		return new DirectVsMCI(
-			this.users.directScoreValue,
-			this.mci,
-		);
-	}
-
 	public scoreDistribution(): ScoreDistribution {
 		return new ScoreDistribution(
 			this.users.directScoreValue,
@@ -312,30 +209,20 @@ export class questGradu {
 
 	public getHealthProblems(): HealthProblemsGradu {
 		return new HealthProblemsGradu(
-			this.choice,
+			this.variability,
 			this.discrimination,
-			this.cronbachAlpha,
-			this.coherency,
-			this.keyConflict,
+			this.reliability
 		);
 	}
 
 	public getItemsTable(): Map<string, any> {
 		const itemsTable = new Map<string, any>();
 		itemsTable.set("id", this.items.idValue);
-		itemsTable.set("Conflict", this.items.conflictValue);
 		itemsTable.set("Graph", this.items.idValue);
 		itemsTable.set("Deactivate", this.items.idValue);
-		itemsTable.set("Key", this.items.keyValue);
-		if (this.numberOfAnswers[0] > 2) {
-			itemsTable.set("Choice", this.items.choiceValue);
-		}
-		itemsTable.set("Difficulty", this.items.difficultyValue);
-		itemsTable.set("Variance", this.items.varianceValue);
+		itemsTable.set("Variance", this.items.standartDeviationValue);
 		itemsTable.set("Discrimination", this.items.discriminationValue);
 		itemsTable.set("Corr Disc", this.items.correctDiscriminationValue);
-		const alternativeDiscrimination = this.items.alternativeDiscriminationValue;
-		alternativeDiscrimination.forEach((value, key) => itemsTable.set(key, value));
 		const alternativeDifficulty = this.items.alternativeDifficultyValue;
 		alternativeDifficulty.forEach((value, key) => itemsTable.set(key, value));
 
@@ -347,12 +234,9 @@ export class questGradu {
 		usersTable.set("id", this.users.idValue);
 		usersTable.set("Deactivate", this.users.idValue);
 		usersTable.set("Direct Score", this.users.directScoreValue);
-		usersTable.set("Weighted Score", this.weightScore);
-		usersTable.set("Coherence", this.users.coherenceValue);
 		usersTable.set("Mean", this.users.meanValue);
 		usersTable.set("TotalScore", this.users.totalScoreValue);
 		usersTable.set("Blank Answer", this.users.blankAnswersValue);
-		usersTable.set("MCI", this.mci);
 
 		return usersTable;
 	}
@@ -362,11 +246,7 @@ export class questGradu {
 	}
 
 	public getItemProfile(id: number): ItemProfile {
-		return this.items.calculateProfile(this.matrix.map(row => row[id]));
-	}
-
-	public getItemDiscrimination(id: number): ItemDiscrimination {
-		return this.items.calculateDiscrimination(id);
+		return this.items.calculateProfile(this.matrix.map(row => row[id].toString()));
 	}
 
 	public updateItemsKey(id: number, key: string): void {
@@ -394,7 +274,7 @@ export class questGradu {
 	}
 
 	public recalculate(): void {
-		this.items.update(this.matrix, this.correctedMatrix, this.keys);
+		this.items.update(this.correctedMatrix);
 		this.users.update(this.correctedMatrix);
 		this.calculate();
 	}

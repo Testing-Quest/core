@@ -59,6 +59,7 @@ const UploadFile = () => {
       ]);
       onSuccess();
     } catch (error) {
+      console.log(error)
       onError(error);
     } finally {
       setLoading(false);

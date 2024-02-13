@@ -2,7 +2,6 @@ export class UserGradu {
 	private id: number[] = undefined!;
 	private mean: number[] = undefined!;
 	private directScore: number[] = undefined!;
-	private coherence: number[] = undefined!;
 	private blankAnswers: number[] = undefined!;
 
 	private correctedMatrix: number[][] = undefined!;
@@ -26,7 +25,6 @@ export class UserGradu {
 	public calculate(): void {
 		this.calculateDirectScore();
 		this.calculateMean();
-		this.calculateCoherence();
 		this.calculateBlankAnswers();
 
 		this.correctedMatrix = undefined!;
@@ -46,33 +44,6 @@ export class UserGradu {
 		});
 	}
 
-	private calculateCoherence(): void {
-		const averagePunctuation: number[] = this.correctedMatrix[0].map((_, colIndex) => {
-			return this.correctedMatrix.reduce((acc, row) => acc + row[colIndex], 0) / this.correctedMatrix.length;
-		});
-
-		this.coherence = this.correctedMatrix.map((row) => {
-			return this.calculatePearson(row, averagePunctuation);
-		});
-
-	}
-
-	private calculatePearson(arr1: number[], arr2: number[]): number {
-		const n = arr1.length;
-		const sumItem = arr1.reduce((prev, curr) => prev + curr, 0);
-		const sumTotalScore = arr2.reduce((prev, curr) => prev + curr, 0);
-		const sumItemTotalScore = arr1.reduce((prev, curr, index) => prev + curr * arr2[index], 0);
-		const sumItemSquared = arr1.reduce((prev, curr) => prev + curr ** 2, 0);
-		const sumTotalScoreSquared = arr2.reduce((prev, curr) => prev + curr ** 2, 0);
-
-		const numerator = n * sumItemTotalScore - sumItem * sumTotalScore;
-		const denominator = Math.sqrt(
-			(n * sumItemSquared - sumItem ** 2) * (n * sumTotalScoreSquared - sumTotalScore ** 2)
-		);
-
-		return numerator / denominator;
-	}
-
 
 	private calculateMean(): void {
 		this.mean = this.directScore.map(score => score / this.correctedMatrix[0].length);
@@ -80,10 +51,6 @@ export class UserGradu {
 
 	public get idValue(): number[] {
 		return this.id;
-	}
-
-	public get coherenceValue(): number[] {
-		return this.coherence;
 	}
 
 	public get totalScoreValue(): number[] {
