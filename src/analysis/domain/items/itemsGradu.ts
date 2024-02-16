@@ -122,7 +122,7 @@ export class ItemGradu {
 			this.alternativeDifficulty.set(`Difficulty ${alternative}`, difficulty);
 		};
 
-		for (let i = 0; i < this.alternatives; i++) {
+		for (let i = 0; i <= this.alternatives; i++) {
 			processAlternative(i);
 		}
 	}
@@ -145,7 +145,7 @@ export class ItemGradu {
 		const alternativeDifficulty: Map<string, number> = new Map(
 			Array.from(this.alternativeDifficulty.entries()).map(([key, value]) => [
 				key.split(" ")[1],
-				value[id]
+				value[id] * this.correctedMatrix.length
 			])
 		);
 		return new ItemFrequency(alternativeDifficulty);
