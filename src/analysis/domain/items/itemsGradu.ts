@@ -12,6 +12,8 @@ export class ItemGradu {
 	private usersDirectScore: number[] = undefined!;
 	private questVariance: number = undefined!;
 	private difficulty: number[] = undefined!;
+	private numUsers: number;
+	private numItems: number;
 
 	private alternativeDifficulty: Map<string, number[]> = undefined!;
 
@@ -23,6 +25,8 @@ export class ItemGradu {
 		this.id = Array.from({ length: correctMatrix[0].length }, (_, i) => i);
 		this.correctedMatrix = correctMatrix;
 		this.alternatives = numberOfAnswer[0];
+		this.numUsers = correctMatrix.length;
+		this.numItems = correctMatrix[0].length;
 	}
 
 	public update(
@@ -30,6 +34,8 @@ export class ItemGradu {
 	): void {
 		this.id = Array.from({ length: correctedMatrix[0].length }, (_, i) => i);
 		this.correctedMatrix = correctedMatrix;
+		this.numUsers = correctedMatrix.length;
+		this.numItems = correctedMatrix[0].length;
 	}
 
 	public calculate(
@@ -49,33 +55,27 @@ export class ItemGradu {
 	}
 
 	private calculateDifficulty(): void { // TODO: Check this
-		const numItems = this.correctedMatrix[0].length;
-		this.difficulty = Array.from({ length: numItems }, (_, colIndex) =>
-			this.correctedMatrix.reduce((acc, row) => acc + row[colIndex], 0) / this.correctedMatrix.length
+		this.difficulty = Array.from({ length: this.numItems }, (_, colIndex) =>
+			this.correctedMatrix.reduce((acc, row) => acc + row[colIndex], 0) / this.numUsers
 		);
 	}
 
 
 	private calculateMean(): void {
-		const numRows = this.correctedMatrix.length;
-		const numCols = this.correctedMatrix[0].length;
-
-		this.mean = Array.from({ length: numCols }, (_, colIndex) =>
-			this.correctedMatrix.reduce((acc, row) => acc + row[colIndex], 0) / numRows
+		this.mean = Array.from({ length: this.numItems }, (_, colIndex) =>
+			this.correctedMatrix.reduce((acc, row) => acc + row[colIndex], 0) / this.numUsers
 		);
 	}
 
 	private calculateStandartDeviation(): void {
-		const numRows = this.correctedMatrix.length;
-		const numCols = this.correctedMatrix[0].length;
 
-		this.variance = Array.from({ length: numCols }, (_, colIndex) =>
-			this.correctedMatrix.reduce((acc, row) => acc + (row[colIndex] - this.mean[colIndex]) ** 2, 0) / (numRows - 1)
+		this.variance = Array.from({ length: this.numItems }, (_, colIndex) =>
+			this.correctedMatrix.reduce((acc, row) => acc + (row[colIndex] - this.mean[colIndex]) ** 2, 0) / (this.numUsers - 1)
 		);
 	}
 
 	private calculateDiscriminationValue(): void {
-		this.discrimination = Array.from({ length: this.id.length }, (_, i) => {
+		this.discrimination = Array.from({ length: this.numItems }, (_, i) => {
 			const item = this.correctedMatrix.map(row => row[i]);
 			return this.calculatePearson(item, this.usersDirectScore);
 		});
@@ -113,9 +113,8 @@ export class ItemGradu {
 		this.alternativeDifficulty = new Map<string, number[]>();
 
 		const processAlternative = (alternative: number) => {
-			const numItems = this.correctedMatrix[0].length;
-			const difficulty = Array.from({ length: numItems }, (_, colIndex) =>
-				this.correctedMatrix.reduce((acc, row) => acc + (row[colIndex] === alternative ? 1 : 0), 0) / this.correctedMatrix.length
+			const difficulty = Array.from({ length: this.numItems }, (_, colIndex) =>
+				this.correctedMatrix.reduce((acc, row) => acc + (row[colIndex] === alternative ? 1 : 0), 0) / this.numUsers
 
 			);
 
@@ -145,7 +144,7 @@ export class ItemGradu {
 		const alternativeDifficulty: Map<string, number> = new Map(
 			Array.from(this.alternativeDifficulty.entries()).map(([key, value]) => [
 				key.split(" ")[1],
-				value[id] * this.correctedMatrix.length
+				value[id] * this.numUsers
 			])
 		);
 		return new ItemFrequency(alternativeDifficulty);

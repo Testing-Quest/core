@@ -35,7 +35,8 @@ export class ItemMulti {
 
 	private alternativeDiscrimination: Map<string, number[]> = undefined!;
 	private alternativeDifficulty: Map<string, number[]> = undefined!;
-
+	private numUsers: number;
+	private numItems: number;
 
 	constructor(
 		matrix: string[][],
@@ -48,6 +49,8 @@ export class ItemMulti {
 		this.correctedMatrix = correctMatrix;
 		this.alternatives = numberOfAnswer[0];
 		this.key = key;
+		this.numUsers = correctMatrix.length;
+		this.numItems = correctMatrix[0].length;
 	}
 
 	public update(
@@ -59,6 +62,8 @@ export class ItemMulti {
 		this.matrix = matrix;
 		this.correctedMatrix = correctedMatrix;
 		this.key = key;
+		this.numUsers = correctedMatrix.length;
+		this.numItems = correctedMatrix[0].length;
 	}
 
 	public calculate(
@@ -82,32 +87,25 @@ export class ItemMulti {
 	}
 
 	private calculateItemsDirectScore(): void {
-		const numItems = this.correctedMatrix[0].length;
-		this.itemsDirectScore = Array.from({ length: numItems }, (_, colIndex) =>
+		this.itemsDirectScore = Array.from({ length: this.numItems }, (_, colIndex) =>
 			this.correctedMatrix.reduce((acc, row) => acc + row[colIndex], 0)
 		);
 	}
 
 	private calculateMean(): void {
-		const numRows = this.correctedMatrix.length;
-		const numCols = this.correctedMatrix[0].length;
-
-		this.mean = Array.from({ length: numCols }, (_, colIndex) =>
-			this.correctedMatrix.reduce((acc, row) => acc + row[colIndex], 0) / numRows
+		this.mean = Array.from({ length: this.numItems }, (_, colIndex) =>
+			this.correctedMatrix.reduce((acc, row) => acc + row[colIndex], 0) / this.numUsers
 		);
 	}
 
 	private calculateVariance(): void {
-		const numRows = this.correctedMatrix.length;
-		const numCols = this.correctedMatrix[0].length;
-
-		this.variance = Array.from({ length: numCols }, (_, colIndex) =>
-			this.correctedMatrix.reduce((acc, row) => acc + (row[colIndex] - this.mean[colIndex]) ** 2, 0) / (numRows - 1)
+		this.variance = Array.from({ length: this.numItems }, (_, colIndex) =>
+			this.correctedMatrix.reduce((acc, row) => acc + (row[colIndex] - this.mean[colIndex]) ** 2, 0) / (this.numUsers - 1)
 		);
 	}
 
 	private calculateDiscriminationValue(): void {
-		this.discrimination = Array.from({ length: this.id.length }, (_, i) => {
+		this.discrimination = Array.from({ length: this.numItems }, (_, i) => {
 			const item = this.correctedMatrix.map(row => row[i]);
 			return this.calculatePearson(item, this.usersDirectScore);
 		});
@@ -133,11 +131,10 @@ export class ItemMulti {
 
 	private calculateDifficulty(): void {
 		this.difficulty = this.itemsDirectScore.map((item) => {
-			const numUsers = this.matrix.length;
-			if (numUsers === 0) {
+			if (this.numUsers === 0) {
 				return 0;
 			}
-			return item / numUsers;
+			return item / this.numUsers;
 		});
 	}
 
@@ -156,7 +153,6 @@ export class ItemMulti {
 			return;
 		}
 		
-		const totalUsers = this.matrix.length;
 
 		this.alternativeDiscrimination = new Map<string, number[]>();
 		this.alternativeDifficulty = new Map<string, number[]>();
@@ -169,11 +165,11 @@ export class ItemMulti {
 		};
 
 		const calculateDifficulty = (directScore: number[]) =>
-			directScore.map((item) => item / totalUsers);
+			directScore.map((item) => item / this.numUsers);
 
 		const processAlternative = (alternative: string) => {
 			const correctedMatrix = this.matrix.map(row => row.map(item => +(item === alternative)));
-			const itemsDirectScore = Array.from({ length: correctedMatrix[0].length }, (_, colIndex) =>
+			const itemsDirectScore = Array.from({ length: this.numUsers }, (_, colIndex) =>
 				correctedMatrix.reduce((acc, row) => acc + row[colIndex], 0)
 			);
 
@@ -208,7 +204,7 @@ export class ItemMulti {
 		const frequencies: Map<string, number[]> = new Map();
 
 		for (const [difficulty, freqs] of this.alternativeDifficulty) {
-			frequencies.set(difficulty, Array.from(freqs, freq => freq * this.usersDirectScore.length));
+			frequencies.set(difficulty, Array.from(freqs, freq => freq * this.numUsers));
 		}
 
 		const getFrequencies = (key: string, index: number) => {
@@ -225,7 +221,7 @@ export class ItemMulti {
 			return itemFrequencies.reduce((acc, freq) => acc + Math.pow(freq - freqEsperada, 2) / freqEsperada, 0);
 		};
 
-		for (let i = 0; i < this.key.length; i++) {
+		for (let i = 0; i < this.numItems; i++) {
 			const itemKey: string = this.key[i];
 			const itemFrequencies: number[] = getFrequencies(itemKey, i);
 			const numRespuestas: number = itemFrequencies.reduce((a, b) => a + b, 0);
@@ -262,7 +258,7 @@ export class ItemMulti {
 		const alternativeDifficulty: Map<string, number> = new Map(
 			Array.from(this.alternativeDifficulty.entries()).map(([key, value]) => [
 				key.split(" ")[1],
-				value[id]
+				value[id] * this.numUsers
 			])
 		);
 		return new ItemFrequency(alternativeDifficulty);
@@ -272,7 +268,7 @@ export class ItemMulti {
 		const alternativeDiscrimination: Map<string, number> = new Map(
 			Array.from(this.alternativeDiscrimination.entries()).map(([key, value]) => [
 				key.split(" ")[1],
-				value[id]
+				value[id] * this.numUsers
 			])
 		);
 		return new ItemDiscrimination(alternativeDiscrimination);
