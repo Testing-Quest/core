@@ -112,7 +112,7 @@ export class ItemGradu {
 
 		this.alternativeDifficulty = new Map<string, number[]>();
 
-		const processAlternative = (alternative: number) => {  // TODO: CHeck if this works
+		const processAlternative = (alternative: number) => {
 			const numItems = this.correctedMatrix[0].length;
 			const difficulty = Array.from({ length: numItems }, (_, colIndex) =>
 				this.correctedMatrix.reduce((acc, row) => acc + (row[colIndex] === alternative ? 1 : 0), 0) / this.correctedMatrix.length
@@ -122,7 +122,7 @@ export class ItemGradu {
 			this.alternativeDifficulty.set(`Difficulty ${alternative}`, difficulty);
 		};
 
-		for (let i = 0; i === this.alternatives; i++) {
+		for (let i = 0; i < this.alternatives; i++) {
 			processAlternative(i);
 		}
 	}
