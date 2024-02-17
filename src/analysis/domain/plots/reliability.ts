@@ -1,13 +1,16 @@
 export class Reliability {
-	private alpha: number[]
+	private x: number[]
+	private y: number[]
 
 	constructor(
-		alpha: number[]
+		x: number[],
+		y: number[]
 	){
-		this.alpha = alpha
+		this.x = x
+		this.y = y
 	}
 
 	public plot(): void {
-		console.log(this.alpha)
+		console.log(this.x, this.y)
 	}
 }

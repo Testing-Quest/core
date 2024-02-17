@@ -189,7 +189,7 @@ export class questGradu {
 
 	public calculateReliability(): Reliability {
 		const x: number[] = Array.from({ length: 11 }, (_, i) => 0.5 + i * 0.1);
-		return new Reliability(x.map((k) => (k * this.cronbachAlpha) / (1 + (k - 1) * this.cronbachAlpha)));
+		return new Reliability(x, x.map((k) => (k * this.cronbachAlpha) / (1 + (k - 1) * this.cronbachAlpha)));
 	}
 
 	public getItemsMap(): ItemMap {
