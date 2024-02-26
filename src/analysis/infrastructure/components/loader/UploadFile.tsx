@@ -8,6 +8,7 @@ import loadQuest, {
 } from "../../../domain/services/loadQuest";
 import { questMulti } from "../../../domain/quests/questMulti";
 import { questGradu } from "../../../domain/quests/questGradu";
+import GraficaFiabilidad from "../analysis/plots/reliability";
 
 type Quests = questMulti | questGradu;
 
@@ -22,10 +23,11 @@ interface UploadedFile {
 const UploadFile = () => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showGraph, setShowGraph] = useState(false);
 
   const customRequest = async ({ file, onSuccess, onError }: any) => {
+    setLoading(true);
     try {
-      setLoading(true);
       const response = await loadQuest(file);
       const quests = (quest: QuestData) => {
         if (quest.type === QuestType.multi) {
@@ -59,6 +61,7 @@ const UploadFile = () => {
       ]);
       onSuccess();
     } catch (error) {
+      console.log(error)
       onError(error);
     } finally {
       setLoading(false);
@@ -83,6 +86,9 @@ const UploadFile = () => {
         flexDirection: "column",
       }}
     >
+      <div>
+        {showGraph && <GraficaFiabilidad />}
+      </div>
       <Upload
         customRequest={customRequest}
         showUploadList={false}
@@ -111,23 +117,33 @@ const UploadFile = () => {
           dataSource={uploadedFiles}
           renderItem={(item) => (
             <List.Item key={item.name}>
-              <Collapse>
-                <Collapse.Panel header={item.name} key={item.name}>
-                  <List
-                    dataSource={item.quest}
-                    renderItem={(quest, index) => (
-                      <List.Item key={`${item.name}-${index}`}>
-                        <Button type="link" onClick={() => { 
-                          quest.recalculate() // TODO: Remove this line
-                          console.log(quest)
-                        }}>
-                          {`Scale: ${quest.scaleValue}  (Users: ${item.users[index]}  Items: ${item.items[index]})`}
-                        </Button>
-                      </List.Item>
-                    )}
-                  />
-                </Collapse.Panel>
-              </Collapse>
+              <Collapse
+                items={[
+                  {
+                    label: item.name,
+                    key: item.name,
+                    children: (
+                      <List
+                        dataSource={item.quest}
+                        renderItem={(quest, index) => (
+                          <List.Item key={`${item.name}-${index}`}>
+                            <Button
+                              type="link"
+                              onClick={() => {
+                                quest.recalculate(); // TODO: Remove this line
+                                setShowGraph(true);
+                                console.log(quest);
+                              }}
+                            >
+                              {`Scale: ${quest.scaleValue}  (Users: ${item.users[index]}  Items: ${item.items[index]})`}
+                            </Button>
+                          </List.Item>
+                        )}
+                      />
+                    ),
+                  },
+                ]}
+              />
             </List.Item>
           )}
         />
