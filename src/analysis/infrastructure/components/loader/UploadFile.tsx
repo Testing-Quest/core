@@ -8,6 +8,7 @@ import loadQuest, {
 } from "../../../domain/services/loadQuest";
 import { questMulti } from "../../../domain/quests/questMulti";
 import { questGradu } from "../../../domain/quests/questGradu";
+import GraficaFiabilidad from "../analysis/plots/reliability";
 
 type Quests = questMulti | questGradu;
 
@@ -22,6 +23,7 @@ interface UploadedFile {
 const UploadFile = () => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showGraph, setShowGraph] = useState(false);
 
   const customRequest = async ({ file, onSuccess, onError }: any) => {
     setLoading(true);
@@ -84,6 +86,9 @@ const UploadFile = () => {
         flexDirection: "column",
       }}
     >
+      <div>
+        {showGraph && <GraficaFiabilidad />}
+      </div>
       <Upload
         customRequest={customRequest}
         showUploadList={false}
@@ -126,6 +131,7 @@ const UploadFile = () => {
                               type="link"
                               onClick={() => {
                                 quest.recalculate(); // TODO: Remove this line
+                                setShowGraph(true);
                                 console.log(quest);
                               }}
                             >
