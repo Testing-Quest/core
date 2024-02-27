@@ -35,13 +35,7 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({ childr
   const [uploadedQuests, setUploadedQuests] = useState<UploadedQuest[]>([]);
 
   const addUploadedQuest = (quest: UploadedQuest) => {
-    const existingQuest = uploadedQuests.find((q) => q.id === quest.id);
-
-    if (existingQuest) {
-      console.log('El Quest ya existe');
-    } else {
-      setUploadedQuests((prevQuests) => [...prevQuests, quest]);
-    }
+    setUploadedQuests((prevQuests) => [quest, ...prevQuests]);
   };
 
   const removeUploadedQuest = (questId: string) => {
@@ -52,9 +46,9 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({ childr
     const existingQuest = analysisQuests.find((q) => q.id === quest.id);
 
     if (existingQuest) {
-      console.log('El Quest ya existe');
+      setAnalysisQuests((prevQuests) => [quest, ...prevQuests.filter((q) => q.id !== quest.id)]);
     } else {
-      setAnalysisQuests((prevQuests) => [...prevQuests, quest]);
+      setAnalysisQuests((prevQuests) => [quest, ...prevQuests]);
     }
   };
 

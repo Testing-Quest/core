@@ -11,6 +11,7 @@ const Analysis: React.FC = () => {
       {analysisQuests.map((quest) => (
         <div key={quest.id}>
           <p>ID del Quest: {quest.id}</p>
+          <button onClick={() => console.log(analysisQuests)}>Mostrar Quest</button>
           {/* Renderizar otras propiedades del Quest según sea necesario */}
         </div>
       ))}
