@@ -5,9 +5,9 @@ import { UploadChangeParam } from "antd/lib/upload";
 import loadQuest, {
   QuestData,
   QuestType,
-} from "../../../domain/services/loadQuest";
-import { questMulti } from "../../../domain/quests/questMulti";
-import { questGradu } from "../../../domain/quests/questGradu";
+} from "../../services/loadQuest";
+import { questMulti } from "../../domain/quests/questMulti";
+import { questGradu } from "../../domain/quests/questGradu";
 import GraficaFiabilidad from "../analysis/plots/reliability";
 
 type Quests = questMulti | questGradu;
