@@ -1,67 +1,39 @@
 import { useState } from "react";
+import { CloseOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Upload, message, List, Collapse, Spin } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import { UploadChangeParam } from "antd/lib/upload";
-import loadQuest, {
-  QuestData,
-  QuestType,
-} from "../../services/loadQuest";
-import { questMulti } from "../../domain/quests/questMulti";
-import { questGradu } from "../../domain/quests/questGradu";
-import GraficaFiabilidad from "../analysis/plots/reliability";
-
-type Quests = questMulti | questGradu;
-
-interface UploadedFile {
-  name: string;
-  quest: Quests[];
-  scale: number[];
-  users: number[];
-  items: number[];
-}
+import loadQuest from "../../application/services/loadQuest";
+import { UploadedQuest, useGlobalState } from "../GlobalState";
+import { useNavigate } from "react-router-dom";
+import { CreateQuest } from "../../application/services/createQuest";
 
 const UploadFile = () => {
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const {
+    uploadedQuests,
+    addAnalysisQuest,
+    addUploadedQuest,
+    removeUploadedQuest,
+    removeAnalysisQuest
+  } = useGlobalState();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [showGraph, setShowGraph] = useState(false);
+
+  const handleRemoveQuest = (item: UploadedQuest) => {
+    removeUploadedQuest(item.id);
+    removeAnalysisQuest(item.id);
+  };
 
   const customRequest = async ({ file, onSuccess, onError }: any) => {
     setLoading(true);
     try {
-      const response = await loadQuest(file);
-      const quests = (quest: QuestData) => {
-        if (quest.type === QuestType.multi) {
-          return new questMulti(
-            quest.matrix,
-            quest.keys,
-            quest.scale,
-            quest.alternatives,
-          );
-        } else if (quest.type === QuestType.gradu) {
-          return new questGradu(
-            quest.matrix,
-            quest.keys,
-            quest.scale,
-            quest.alternatives,
-          );
-        } else {
-          throw new Error("Invalid quest type");
-        }
+      const uploadedQuest = {
+        id: "uploadedQuest" + Math.floor(Math.random() * 1000000),
+        name: file.name,
+        quests: await loadQuest(file),
       };
-
-      setUploadedFiles((prevFiles) => [
-        {
-          name: file.name,
-          quest: response.map(quests),
-          scale: response.map((quest) => quest.scale),
-          users: response.map((quest) => quest.rows),
-          items: response.map((quest) => quest.columns),
-        },
-        ...prevFiles,
-      ]);
+      addUploadedQuest(uploadedQuest);
       onSuccess();
     } catch (error) {
-      console.log(error)
       onError(error);
     } finally {
       setLoading(false);
@@ -69,26 +41,53 @@ const UploadFile = () => {
   };
 
   const handleChange = (info: UploadChangeParam) => {
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-      // TODO: Add custom error handling
+    const { file } = info;
+    if (file.status === "done") {
+      message.success(`${file.name} file uploaded successfully`);
+    } else if (file.status === "error") {
+      message.error(`${file.name} file upload failed.`);
     }
   };
 
+  const renderUploadedQuest = (item: UploadedQuest) => (
+    <List.Item key={item.name}>
+      <Collapse
+        style={{ width: '100%' }}
+        items={[
+          {
+            label: item.name,
+            key: item.name,
+            extra: <CloseOutlined onClick={() => handleRemoveQuest(item)} />,
+            children: (
+              <List
+                dataSource={item.quests}
+                renderItem={(quest, index) => (
+                  <List.Item key={`${item.name}-${index}`}>
+                    <Button
+                      type="link"
+                      onClick={() => {
+                        addAnalysisQuest({
+                          id: item.id + "-" + quest.scale,
+                          name: item.name + " - " + quest.scale,
+                          quest: CreateQuest(quest),
+                        });
+                        navigate(`/analysis`);
+                      }}
+                    >
+                      {`Scale: ${quest.scale}  [Users: ${quest.rows}  Items: ${quest.columns}]`}
+                    </Button>
+                  </List.Item>
+                )}
+              />
+            ),
+          },
+        ]}
+      />
+    </List.Item>
+  );
+
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-      }}
-    >
-      <div>
-        {showGraph && <GraficaFiabilidad />}
-      </div>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
       <Upload
         customRequest={customRequest}
         showUploadList={false}
@@ -98,11 +97,11 @@ const UploadFile = () => {
         <div
           style={{
             cursor: "pointer",
-            border: "2px dashed #1890ff", // Blue border
+            border: "2px dashed #1890ff",
             borderRadius: "5px",
             padding: "20px",
             textAlign: "center",
-            width: "400px", // Adjust the width as needed
+            width: "400px",
             marginBottom: "20px",
           }}
         >
@@ -113,40 +112,7 @@ const UploadFile = () => {
 
       {loading ? <Spin size="large" /> : null}
       <div style={{ width: "400px" }}>
-        <List
-          dataSource={uploadedFiles}
-          renderItem={(item) => (
-            <List.Item key={item.name}>
-              <Collapse
-                items={[
-                  {
-                    label: item.name,
-                    key: item.name,
-                    children: (
-                      <List
-                        dataSource={item.quest}
-                        renderItem={(quest, index) => (
-                          <List.Item key={`${item.name}-${index}`}>
-                            <Button
-                              type="link"
-                              onClick={() => {
-                                quest.recalculate(); // TODO: Remove this line
-                                setShowGraph(true);
-                                console.log(quest);
-                              }}
-                            >
-                              {`Scale: ${quest.scaleValue}  (Users: ${item.users[index]}  Items: ${item.items[index]})`}
-                            </Button>
-                          </List.Item>
-                        )}
-                      />
-                    ),
-                  },
-                ]}
-              />
-            </List.Item>
-          )}
-        />
+        <List dataSource={uploadedQuests} renderItem={renderUploadedQuest} />
       </div>
     </div>
   );

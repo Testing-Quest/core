@@ -1,29 +1,12 @@
 import * as XLSX from 'xlsx';
-
-export const QuestType = {
-	gradu: 1,
-	multi: 2,
-}
+import { QuestData, QuestType } from '../dtos/questDtos';
 
 interface Quest {
-	usersID: number[];
 	keys: string[];
 	scales: number[];
 	alternatives: number[];
 	matrix: string[][];
 }
-
-export interface QuestData {
-	usersID: number[];
-	keys: string[];
-	scale: number;
-	alternatives: number[];
-	matrix: string[][];
-	type: typeof QuestType[keyof typeof QuestType];
-	rows: number;
-	columns: number;
-}
-
 export class FirstColumnsThreeRowsNotEmptyError extends Error {
 	constructor() {
 		console.log('FirstColumnsThreeRowsNotEmptyError');
@@ -134,7 +117,7 @@ async function loadQuest(file: File): Promise<QuestData[]> {
 	if (keys.some(cell => !/^[A-z+ -]+$/.test(cell))) {
 		throw new FirstRowNotContainsAlphabeticCharactersError();
 	}
-	return generateQuestsData({ usersID, keys, scales, alternatives, matrix });
+	return generateQuestsData({ keys, scales, alternatives, matrix });
 }
 
 function generateQuestsData(data: Quest): QuestData[] {
@@ -146,7 +129,7 @@ function generateQuestsData(data: Quest): QuestData[] {
 		const keys = indexes.map(i => data.keys[i]);
 		const type = keys[0][0] === '+' || keys[0][0] === '-' ? QuestType.gradu : QuestType.multi;
 		const alternatives = indexes.map(i => data.alternatives[i]);
-		questsData.push({ usersID: data.usersID, keys, scale, alternatives, matrix, type, rows: matrix.length, columns: matrix[0].length });
+		questsData.push({ keys, scale, alternatives, matrix, type, rows: matrix.length, columns: matrix[0].length });
 	});
 	return questsData;
 }
