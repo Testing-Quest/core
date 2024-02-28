@@ -40,7 +40,11 @@ export const ItemTable: React.FC<PanelProps> = ({ quest }) => {
   const columns = [
     { title: 'ID', dataIndex: 'key', key: 'key' },
     { title: 'Name', dataIndex: 'name', key: 'name' },
-    { title: 'Description', dataIndex: 'description', key: 'description' },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+    },
   ];
 
   const expandedRowRender = (record: TableRow) => <ExpandedRowContent description={record.description} />;
@@ -51,9 +55,12 @@ export const ItemTable: React.FC<PanelProps> = ({ quest }) => {
       columns={columns}
       expandable={{
         expandedRowRender,
-        onExpand: (_, record) => handleRowClick(record),
         expandedRowKeys: expandedRowId ? [expandedRowId] : [],
+        onExpand: (_, record) => handleRowClick(record),
       }}
+      onRow={(record) => ({
+        onClick: () => handleRowClick(record),
+      })}
     />
   );
 };
