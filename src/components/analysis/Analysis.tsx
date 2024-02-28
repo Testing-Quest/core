@@ -56,19 +56,19 @@ const Analysis: React.FC = () => {
   const type = analysisQuests[0].type;
 
   var visualizations: VisualizationItem[] = AnalysisVisualizations
-  .reduce((acc, v) => {
-    const component = type === QuestType.gradu ? v.gradu : type === QuestType.multi ? v.multi : v.binary;
-    
-    if (component !== null) {
-      acc.push({
-        label: v.label,
-        type: v.type,
-        component: component
-      });
-    }
+    .reduce((acc, v) => {
+      const component = type === QuestType.gradu ? v.gradu : type === QuestType.multi ? v.multi : v.binary;
 
-    return acc;
-  }, [] as VisualizationItem[]);
+      if (component !== null) {
+        acc.push({
+          label: v.label,
+          type: v.type,
+          component: component
+        });
+      }
+
+      return acc;
+    }, [] as VisualizationItem[]);
 
   const [selectedOption, setSelectedOption] = useState(visualizations[0]);
 
@@ -78,9 +78,11 @@ const Analysis: React.FC = () => {
 
 
   return (
-    <div>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <Sidebar name={analysisQuests[0].name} onSidebarClick={handleSidebarClick} sidebarOptions={visualizations} />
-      {<selectedOption.component />}
+      <div style={{ flex: 1, textAlign: 'center' }}>
+        {<selectedOption.component quest={analysisQuests[0].quest}/>}
+      </div>
     </div>
   );
 };

@@ -9,6 +9,6 @@ interface PanelProps {
 export const HealthMulti: React.FC<PanelProps> = ({ quest }) => {
   // Renderiza el contenido del panel en función de la opción seleccionada
 
-  return <div>Health</div>;
+  return <div>{quest.semValue}</div>;
 };
 
