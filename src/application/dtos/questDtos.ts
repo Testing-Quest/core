@@ -1,6 +1,7 @@
 export const QuestType = {
-	gradu: 1,
-	multi: 2,
+	gradu: "Graduado",
+	multi: "Multirespuesta",
+	binary: "Binario",
 }
 
 export interface QuestData {

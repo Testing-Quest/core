@@ -144,11 +144,11 @@ export class questGradu {
 
 
 	private calculateScore(): void {
-		this.score = this.correctedMatrix.reduce((acc, r) => acc + r.reduce((acc, value) => acc + value, 0),0) / (this.correctedMatrix.length * this.correctedMatrix[0].length)
+		this.score = this.correctedMatrix.reduce((acc, r) => acc + r.reduce((acc, value) => acc + value, 0), 0) / (this.correctedMatrix.length * this.correctedMatrix[0].length)
 	}
 
-	private calculateVariability(): void { 
-		const variability: number = this.numberOfAnswers[0]/10
+	private calculateVariability(): void {
+		const variability: number = this.numberOfAnswers[0] / 10
 		this.variability = this.items.standartDeviationValue.reduce((acc, r) => acc + (r > variability ? 1 : 0), 0) / this.correctedMatrix[0].length
 	}
 
@@ -158,7 +158,7 @@ export class questGradu {
 
 
 	private calculateTestHealth(): void {
-		this.testHealth = (this.variability + this.discrimination + this.reliability) / 3 	
+		this.testHealth = (this.variability + this.discrimination + this.reliability) / 3
 	}
 
 	public get originalKeysValue(): string[] { return this.originalKeys }
@@ -277,5 +277,25 @@ export class questGradu {
 		this.items.update(this.correctedMatrix);
 		this.users.update(this.correctedMatrix);
 		this.calculate();
+	}
+
+	public inactiveItems(): number[] {
+		return this.activeItems
+			.map((value, index) => (value === false ? index : null))
+			.filter((position): position is number => position !== null);
+	}
+
+	public inactiveUsers(): number[] {
+		return this.activeUsers
+			.map((value, index) => (value === false ? index : null))
+			.filter((position): position is number => position !== null);
+	}
+
+	public isModified(): boolean {
+		// all users are active, all items are active, all keys are correct
+		const activeUsers = this.activeUsers.every(value => value === true);
+		const activeItems = this.activeItems.every(value => value === true);
+		const correctKeys = this.keys.every((value, index) => value === this.originalKeys[index]);
+		return !activeUsers || !activeItems || !correctKeys;
 	}
 }

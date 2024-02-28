@@ -27,7 +27,7 @@ const UploadFile = () => {
     setLoading(true);
     try {
       const uploadedQuest = {
-        id: "uploadedQuest" + Math.floor(Math.random() * 1000000),
+        id: "uploadedQuest" + Math.floor(Math.random() * 10000000000),
         name: file.name,
         quests: await loadQuest(file),
       };
@@ -69,12 +69,13 @@ const UploadFile = () => {
                         addAnalysisQuest({
                           id: item.id + "-" + quest.scale,
                           name: item.name + " - " + quest.scale,
-                          quest: CreateQuest(quest),
+                          quest: CreateQuest(quest),  // TODO: REFATOR: returning a domain entity. Need to find a way to remove this dependency.
+                          type: quest.type
                         });
                         navigate(`/analysis`);
                       }}
                     >
-                      {`Scale: ${quest.scale}  [Users: ${quest.rows}  Items: ${quest.columns}]`}
+                      {`Scale: ${quest.scale} Type: ${quest.type}  [ Users: ${quest.rows}  Items: ${quest.columns} ]`}
                     </Button>
                   </List.Item>
                 )}

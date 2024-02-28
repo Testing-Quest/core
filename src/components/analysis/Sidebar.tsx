@@ -1,11 +1,24 @@
-import React from "react";
+import React from 'react';
+import { VisualizationItem } from './Analysis';
 
-export class Panel extends React.Component {
-  render() {
-    return (
-      <>
-        <h1>Panel</h1>
-      </>
-    );
-  }
+interface SidebarProps {
+  name: string;
+  onSidebarClick: (option: VisualizationItem) => void;
+  sidebarOptions: VisualizationItem[];
 }
+
+const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions }) => {
+
+  return (
+    <div>
+      <h1>{name}</h1>
+      {sidebarOptions.map((option) => (
+        <button onClick={() => onSidebarClick(option)}>
+          {option.label}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+export default Sidebar;

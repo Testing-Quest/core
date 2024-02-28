@@ -122,7 +122,7 @@ export class questMulti {
 		this.calculateMCI();
 		this.calculateCoherency();
 		this.calculateDifficulty();
-		this.calculateTestHealth(); 
+		this.calculateTestHealth();
 
 
 	}
@@ -181,7 +181,7 @@ export class questMulti {
 		if (this.numberOfAnswers[0] === 2) {
 			return;
 		}
-		this.keyConflict = 1- (this.items.conflictValue.filter(value => value === true).length / this.items.conflictValue.length);
+		this.keyConflict = 1 - (this.items.conflictValue.filter(value => value === true).length / this.items.conflictValue.length);
 	}
 
 	private calculateChoice(): void {
@@ -402,4 +402,24 @@ export class questMulti {
 		this.users.update(this.matrix, this.correctedMatrix);
 		this.calculate();
 	}
+
+	public inactiveItems(): number[] {
+		return this.activeItems
+			.map((value, index) => (value === false ? index : null))
+			.filter((position): position is number => position !== null);
+	}
+
+	public inactiveUsers(): number[] {
+		return this.activeUsers
+			.map((value, index) => (value === false ? index : null))
+			.filter((position): position is number => position !== null);
+	}
+	public isModified(): boolean {
+		// all users are active, all items are active, all keys are correct
+		const activeUsers = this.activeUsers.every(value => value === true);
+		const activeItems = this.activeItems.every(value => value === true);
+		const correctKeys = this.keys.every((value, index) => value === this.originalKeys[index]);
+		return !activeUsers || !activeItems || !correctKeys;
+	}
+
 }

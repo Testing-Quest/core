@@ -127,8 +127,8 @@ function generateQuestsData(data: Quest): QuestData[] {
 		const indexes = data.scales.map((s, i) => s === scale ? i : -1).filter(i => i !== -1);
 		const matrix = data.matrix.map(row => indexes.map(i => row[i].toString().trim()));
 		const keys = indexes.map(i => data.keys[i]);
-		const type = keys[0][0] === '+' || keys[0][0] === '-' ? QuestType.gradu : QuestType.multi;
 		const alternatives = indexes.map(i => data.alternatives[i]);
+		const type = keys[0][0] === '+' || keys[0][0] === '-' ? QuestType.gradu : alternatives[0] > 2 ? QuestType.multi : QuestType.binary
 		questsData.push({ keys, scale, alternatives, matrix, type, rows: matrix.length, columns: matrix[0].length });
 	});
 	return questsData;

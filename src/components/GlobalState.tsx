@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { questGradu } from '../domain/quests/questGradu';
 import { questMulti } from '../domain/quests/questMulti';
-import { QuestData } from '../application/dtos/questDtos';
+import { QuestData, QuestType } from '../application/dtos/questDtos';
 
 interface AnalysisQuest {
   id: string;
   name: string;
-  quest: questGradu | questMulti;
+  quest: questGradu | questMulti;  // TODO: REFATOR: Bad code, infrastructe should not know about domain. Need to find a way to remove this dependency.
+  type: typeof QuestType[keyof typeof QuestType];
 }
 
 export interface UploadedQuest {
@@ -58,7 +59,7 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({ childr
   }
 
   return (
-    <GlobalStateContext.Provider value={{ 
+    <GlobalStateContext.Provider value={{
       analysisQuests,
       uploadedQuests,
       addAnalysisQuest,
