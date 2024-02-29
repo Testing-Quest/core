@@ -54,26 +54,23 @@ const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions 
         return <AppstoreOutlined />;
     }
   };
-  
-  // TODO: Fix this dropwdown button style
+
   return (
     <div style={{ width: 'calc(1/6 * 100vw - (1/24 * 100vw))' }}>
-
-      <Dropdown menu={{ items }}>
-        <Button style={{ width: 'calc(1/6 * 100vw - (1/24 * 100vw))', overflow: 'hidden'}}>
-          <Space>
-            <p style={{ maxWidth: 'calc(1/6 * 100vw - (1/24 * 100vw))', overflow: 'hidden', margin: 0}}>
-              {name}
-            </p>
-            <DownOutlined />
-          </Space>
-        </Button>
-      </Dropdown>
-
-      <br />
       <Menu mode="vertical" theme="light" selectedKeys={[selectedKey || '']}>
         <img src="/tqLogo.jpeg" alt="Testing Quest" style={{ width: 'calc(1/6 * 100vw - (1/15 * 100vw))', height: 'auto' }} />
-
+        <div style={{ marginBottom: '12px' }}></div> {/* Añade más espacio aquí */}
+        <Dropdown menu={{ items }}>
+          <Button style={{ width: 'calc(100% - 8px)', overflow: 'hidden', marginLeft: '4px' }}>
+            <Space>
+              <p style={{ maxWidth: 'calc(1/6 * 100vw - (1/12* 100vw))', overflow: 'hidden', margin: 0 }}>
+                {name}
+              </p>
+              <DownOutlined />
+            </Space>
+          </Button>
+        </Dropdown>
+        <div style={{ marginBottom: '18px' }}></div>
         {sidebarOptions.map((option) => (
           <Menu.Item key={option.label} icon={getIcon(option.type)} onClick={() => handleClick(option)}>
             {option.label}
