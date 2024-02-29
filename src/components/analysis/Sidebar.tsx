@@ -6,7 +6,7 @@ import {
   AppstoreOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Dropdown, Space, Menu, Button } from 'antd';
+import { Button, Dropdown, Menu } from 'antd';
 
 import { DownOutlined } from '@ant-design/icons';
 import { useGlobalState } from '../GlobalState';
@@ -55,30 +55,54 @@ const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions 
     }
   };
 
+
   return (
-    <div style={{ width: 'calc(1/6 * 100vw - (1/24 * 100vw))' }}>
+    <div style={{ width: '14%', maxWidth: '260px' }}>
       <Menu mode="vertical" theme="light" selectedKeys={[selectedKey || '']}>
-        <img src="/tqLogo.jpeg" alt="Testing Quest" style={{ width: 'calc(1/6 * 100vw - (1/15 * 100vw))', height: 'auto' }} />
-        <div style={{ marginBottom: '12px' }}></div> {/* Añade más espacio aquí */}
-        <Dropdown menu={{ items }}>
-          <Button style={{ width: 'calc(100% - 8px)', overflow: 'hidden', marginLeft: '4px' }}>
-            <Space>
-              <p style={{ maxWidth: 'calc(1/6 * 100vw - (1/12* 100vw))', overflow: 'hidden', margin: 0 }}>
+        <img src="/tqLogo.jpeg" alt="Testing Quest" style={{ width: '80%', height: 'auto' }} />
+
+        <Dropdown
+          menu={{ items }}
+          placement="bottom"
+        >
+          <Button
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: 'calc(100% - 8px)',
+              paddingBlock: '18px',
+              marginBottom: '18px',
+              marginLeft: '4px',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: 'calc(100% - 24px)',
+              }}
+            >
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {name}
-              </p>
+              </span>
+            </div>
+            <div>
               <DownOutlined />
-            </Space>
+            </div>
           </Button>
         </Dropdown>
-        <div style={{ marginBottom: '18px' }}></div>
+
         {sidebarOptions.map((option) => (
           <Menu.Item key={option.label} icon={getIcon(option.type)} onClick={() => handleClick(option)}>
             {option.label}
           </Menu.Item>
         ))}
       </Menu>
-    </div>
+    </div >
   );
+
 };
 
 export default Sidebar;
