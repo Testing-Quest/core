@@ -19,14 +19,8 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions }) => {
   const { analysisQuests, addAnalysisQuest } = useGlobalState();
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [selectedKey, setSelectedKey] = useState(sidebarOptions[0].label);
   const [analysisUpdated, setAnalysisUpdated] = useState(false);
-
-  useEffect(() => {
-    if (sidebarOptions.length > 0 && selectedKey === null) {
-      setSelectedKey(sidebarOptions[0].label);
-    }
-  }, [sidebarOptions, selectedKey]);
 
   useEffect(() => {
     if (analysisUpdated) {
@@ -42,7 +36,6 @@ const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions 
     key: quest.name,
     label: quest.name,
     onClick: () => {
-      console.log(quest.id);
       addAnalysisQuest(quest);
       setAnalysisUpdated(true);
     }
@@ -53,8 +46,8 @@ const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions 
     onSidebarClick(option);
   };
 
-  const getIcon = (type: string) => {
-    switch (type) {
+  const getIcon = (icon: string) => {
+    switch (icon) {
       case 'basic':
         return <AppstoreOutlined />;
       case 'plot':
@@ -68,7 +61,7 @@ const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions 
 
 
   return (
-    <div style={{ width: '14%', maxWidth: '260px' }}>
+    <div style={{ width: '18%', maxWidth: '260px' }}>
       <Menu mode="vertical" theme="light" selectedKeys={[selectedKey || '']}>
         <img src="/tqLogo.jpeg" alt="Testing Quest" style={{ width: '80%', height: 'auto' }} />
 
@@ -106,7 +99,7 @@ const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions 
         </Dropdown>
 
         {sidebarOptions.map((option) => (
-          <Menu.Item key={option.label} icon={getIcon(option.type)} onClick={() => handleClick(option)}>
+          <Menu.Item key={option.label} icon={getIcon(option.icon)} onClick={() => handleClick(option)}>
             {option.label}
           </Menu.Item>
         ))}
