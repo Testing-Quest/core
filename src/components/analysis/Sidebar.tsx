@@ -20,6 +20,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions }) => {
   const { analysisQuests, addAnalysisQuest } = useGlobalState();
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [analysisUpdated, setAnalysisUpdated] = useState(false);
 
   useEffect(() => {
     if (sidebarOptions.length > 0 && selectedKey === null) {
@@ -27,13 +28,23 @@ const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions 
     }
   }, [sidebarOptions, selectedKey]);
 
+  useEffect(() => {
+    if (analysisUpdated) {
+      console.log(analysisQuests[0].id);
+      const option: VisualizationItem = sidebarOptions[0];
+      handleClick(option);
+      setAnalysisUpdated(false);
+    }
+
+  }, [analysisQuests, analysisUpdated]);
+
   const items: MenuProps['items'] = analysisQuests.map((quest) => ({
     key: quest.name,
     label: quest.name,
     onClick: () => {
+      console.log(quest.id);
       addAnalysisQuest(quest);
-      const option: VisualizationItem = sidebarOptions.find((option) => option.label === "Health") || sidebarOptions[0];
-      handleClick(option)
+      setAnalysisUpdated(true);
     }
   }));
 
