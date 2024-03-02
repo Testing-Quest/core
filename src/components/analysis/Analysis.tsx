@@ -15,6 +15,8 @@ import { ExamineeTable } from './panels/ExamineesTable';
 import { QuestType } from '../../application/dtos/questDtos';
 import { ItemMaps } from './panels/ItemsMap';
 import { PanelProps } from './panels/Panel';
+import { Spin } from 'antd';
+import { DeactivatedElements } from './DeactivatedElements';
 
 interface AnalysisVisualization {
   label: string;
@@ -46,6 +48,7 @@ export interface VisualizationItem {
 
 const Analysis: React.FC = () => {
   const { analysisQuests } = useGlobalState();
+  const [loading, setLoading] = useState(false);
 
   const type = analysisQuests[0].type;
 
@@ -67,20 +70,40 @@ const Analysis: React.FC = () => {
 
   const [selectedPanel, setSelectedPanel] = useState(visualizations[0]);
 
+  if (selectedPanel.quest_id != analysisQuests[0].id) {
+    setSelectedPanel(visualizations[0]);
+  }
+
+  const onReset = async () => {
+    setLoading(true);
+    setTimeout(async () => {
+      await analysisQuests[0].quest.reset();
+      setLoading(false);
+    }, 10);
+  }
+
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Sidebar 
-        name={analysisQuests[0].name} 
-        onSidebarClick={(option) => setSelectedPanel(option)} 
-        sidebarOptions={visualizations} 
+      <Sidebar
+        name={analysisQuests[0].name}
+        onSidebarClick={(option) => setSelectedPanel(option)}
+        sidebarOptions={visualizations}
       />
       <div style={{ flex: 1, textAlign: 'center' }}>
         {
-          (selectedPanel.quest_id != analysisQuests[0].id) ?
-          <div> </div> :
-          <selectedPanel.component 
-          quest={analysisQuests[0].quest}
-          />
+
+          loading ? (<Spin size="large" />) :
+            (selectedPanel.quest_id != analysisQuests[0].id) ?
+              <Spin size="large" /> :
+              <div>
+                <DeactivatedElements
+                  quest={analysisQuests[0].quest}
+                  onReset={onReset}
+                />
+                <selectedPanel.component
+                  quest={analysisQuests[0].quest}
+                />
+              </div>
         }
       </div>
     </div>

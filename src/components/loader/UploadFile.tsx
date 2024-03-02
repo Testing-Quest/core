@@ -10,6 +10,7 @@ import { CreateQuest } from "../../application/services/createQuest";
 const UploadFile = () => {
   const {
     uploadedQuests,
+    analysisQuests,
     addAnalysisQuest,
     addUploadedQuest,
     removeUploadedQuest,
@@ -66,9 +67,16 @@ const UploadFile = () => {
                     <Button
                       type="link"
                       onClick={() => {
+                        const id = item.id + "-" + quest.scale;
+                        const exists = analysisQuests.find((q) => q.id === id);
+                        if (exists) {
+                          addAnalysisQuest(exists);
+                          navigate(`/analysis`);
+                          return;
+                        }
                         addAnalysisQuest({
                           id: item.id + "-" + quest.scale,
-                          name: item.name + " - " + quest.scale,
+                          name: item.name + " - Scale: " + quest.scale,
                           quest: CreateQuest(quest),  // TODO: REFATOR: returning a domain entity. Need to find a way to remove this dependency.
                           type: quest.type
                         });

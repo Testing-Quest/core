@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { VisualizationItem } from './Analysis';
 import {
   LineChartOutlined,
@@ -17,27 +17,29 @@ interface SidebarProps {
   sidebarOptions: VisualizationItem[];
 }
 
+const getIcon = (icon: string) => {
+  switch (icon) {
+    case 'basic':
+      return <AppstoreOutlined />;
+    case 'plot':
+      return <LineChartOutlined />;
+    case 'table':
+      return <TableOutlined />;
+    default:
+      return <AppstoreOutlined />;
+  }
+};
+
 const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions }) => {
   const { analysisQuests, addAnalysisQuest } = useGlobalState();
   const [selectedKey, setSelectedKey] = useState(sidebarOptions[0].label);
-  const [analysisUpdated, setAnalysisUpdated] = useState(false);
-
-  useEffect(() => {
-    if (analysisUpdated) {
-      console.log(analysisQuests[0].id);
-      const option: VisualizationItem = sidebarOptions[0];
-      handleClick(option);
-      setAnalysisUpdated(false);
-    }
-
-  }, [analysisQuests, analysisUpdated]);
 
   const items: MenuProps['items'] = analysisQuests.map((quest) => ({
     key: quest.name,
     label: quest.name,
     onClick: () => {
       addAnalysisQuest(quest);
-      setAnalysisUpdated(true);
+      handleClick(sidebarOptions[0]);
     }
   }));
 
@@ -45,20 +47,6 @@ const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions 
     setSelectedKey(option.label);
     onSidebarClick(option);
   };
-
-  const getIcon = (icon: string) => {
-    switch (icon) {
-      case 'basic':
-        return <AppstoreOutlined />;
-      case 'plot':
-        return <LineChartOutlined />;
-      case 'table':
-        return <TableOutlined />;
-      default:
-        return <AppstoreOutlined />;
-    }
-  };
-
 
   return (
     <div style={{ width: '18%', maxWidth: '260px' }}>

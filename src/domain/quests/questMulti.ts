@@ -421,5 +421,12 @@ export class questMulti {
 		const correctKeys = this.keys.every((value, index) => value === this.originalKeys[index]);
 		return !activeUsers || !activeItems || !correctKeys;
 	}
+	async reset(): Promise<void> {
+		this.keys = this.originalKeys;
+		this.activeItems = Array.from({ length: this.originalMatrix[0].length }, () => true);
+		this.activeUsers = Array.from({ length: this.originalMatrix.length }, () => true);
+		this.createMatrix();
+		this.recalculate()
+	}
 
 }
