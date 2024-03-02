@@ -232,7 +232,8 @@ export class questMulti {
 		if (this.numberOfAnswers[0] > 2) {
 			this.testHealth = (this.reliability + this.discrimination + this.keyConflict + this.choice + this.coherency) / 5;
 		} else {
-			this.testHealth = (this.reliability + this.discrimination + this.keyConflict + this.coherency) / 4;
+			// TODO: CHECK WITH JORDI
+			this.testHealth = (this.reliability + this.discrimination + this.coherency) / 3;
 		}
 	}
 

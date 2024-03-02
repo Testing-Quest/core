@@ -14,16 +14,15 @@ import { ItemTable } from './panels/ItemsTable';
 import { ExamineeTable } from './panels/ExamineesTable';
 import { QuestType } from '../../application/dtos/questDtos';
 import { ItemMaps } from './panels/ItemsMap';
-import { PanelProps } from './panels/Panel';
 import { Spin } from 'antd';
 import { DeactivatedElements } from './DeactivatedElements';
 
 interface AnalysisVisualization {
   label: string;
   icon: string;
-  multi: React.FC<PanelProps> | null;
-  gradu: React.FC<PanelProps> | null;
-  binary: React.FC<PanelProps> | null;
+  multi: React.FC<any> | null;
+  gradu: React.FC<any> | null;
+  binary: React.FC<any> | null;
 }
 
 const AnalysisVisualizations: AnalysisVisualization[] = [
