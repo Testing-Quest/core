@@ -347,8 +347,8 @@ export class questMulti {
 		return itemsTable;
 	}
 
-	public getExamineesTable(): Map<string, any> {
-		const usersTable = new Map<string, any>();
+	public getExamineesTable():  Map<string, (string | number)[]> {
+		const usersTable = new  Map<string, (string | number)[]>();
 		usersTable.set("id", this.users.idValue);
 		usersTable.set("Deactivate", this.users.idValue);
 		usersTable.set("Direct Score", this.users.directScoreValue);
