@@ -91,7 +91,7 @@ const Analysis: React.FC = () => {
           sidebarOptions={visualizations}
         />
       </div>        
-      <div style={{ marginLeft:"16%" ,textAlign: 'center', width:"84%"}}>
+      <div style={{ marginLeft:"16%", width:"84%"}}>
         {loading ? (
           <Spin size="large" />
         ) : selectedPanel.quest_id !== analysisQuests[0].id ? (

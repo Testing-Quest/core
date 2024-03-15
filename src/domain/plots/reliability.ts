@@ -10,6 +10,14 @@ export class Reliability {
 		this.y = y
 	}
 
+	getX(): number[] {
+		return this.x
+	}
+
+	getY(): number[] {
+		return this.y
+	}
+
 	public plot(): void {
 		console.log(this.x, this.y)
 	}
