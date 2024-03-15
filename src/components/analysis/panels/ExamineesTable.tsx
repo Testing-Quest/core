@@ -33,16 +33,8 @@ export const ExamineeTable: React.FC<PanelProps> = ({ quest }) => {
 
     return rowData;
   });
-
-  console.log(table);
-  console.log(tableRows);
-  console.log(columns);
-
-  // Render the table of antd
   return (
-    <div>
       <Table dataSource={tableRows} columns={columns} scroll={{x: 1500}}/>
-    </div>
   );
 };
 

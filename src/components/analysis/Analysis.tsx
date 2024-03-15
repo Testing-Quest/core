@@ -84,22 +84,26 @@ const Analysis: React.FC = () => {
 
   return (
     <div style={{ display: 'flex' }}>
-      <div style={{ position: 'fixed', left: 0 }}>
+      <div style={{ position: 'fixed', left: 0, height: "100%", width: "14.7%", zIndex: 999 }}>
         <Sidebar
           name={analysisQuests[0].name}
           onSidebarClick={(option) => setSelectedPanel(option)}
           sidebarOptions={visualizations}
         />
-      </div>
-      <div style={{ marginLeft: '250px', textAlign: 'center', flex: 1}}> {/* Este margen debe coincidir con el ancho de tu barra lateral */}
+      </div>        
+      <div style={{ marginLeft:"16%" ,textAlign: 'center', width:"84%"}}>
         {loading ? (
           <Spin size="large" />
         ) : selectedPanel.quest_id !== analysisQuests[0].id ? (
           <Spin size="large" />
         ) : (
-          <div>
+          <div style={{maxWidth:"98%"}}>
+            <div>
             <DeactivatedElements quest={analysisQuests[0].quest} onReset={onReset} />
+            </div>
+            <div>
             <selectedPanel.component quest={analysisQuests[0].quest} />
+            </div>
           </div>
         )}
       </div>

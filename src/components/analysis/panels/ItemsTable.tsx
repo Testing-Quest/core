@@ -17,8 +17,6 @@ export const ItemTable: React.FC<PanelProps> = ({ quest }) => {
       title: key, 
       dataIndex: key, 
       key: key, 
-      width: 120,
-      fixed: key === 'id' ? 'left' : undefined
     };
   });
 
@@ -43,9 +41,7 @@ export const ItemTable: React.FC<PanelProps> = ({ quest }) => {
 
   // Render the table of antd
   return (
-    <div style={{maxWidth:"60%"}}>
       <Table dataSource={tableRows} columns={columns} scroll={{x: 1500}}/>
-    </div>
   );
 };
 

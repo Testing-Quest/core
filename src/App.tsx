@@ -22,19 +22,17 @@ const App: React.FC = () => {
   return (
     <GlobalStateProvider>
       <Router>
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-          <div style={{ position: 'fixed', top: 0, width: '100%', zIndex: 999 }}>
-            <Navbar />
+        <div style={{ height: '100vh', width: '100vw' }}>
+          <div style={{position: 'fixed', top: 0, left: 0, height: '50px', width: '100%', backgroundColor: 'white', zIndex: 999 }}>
+          <Navbar />
           </div>
-          <div style={{ display: 'flex', flex: 1, paddingTop: '48px' }}> {/* 60px es la altura del navbar */}
-            <div style={{ flex: 1, padding: '20px' }}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/examples" element={<Examples />} />
-                <Route path="/upload" element={<UploadFile />} />
-                <Route path="/analysis" element={<Analysis />} />
-              </Routes>
-            </div>
+          <div style={{height: '90%', width: '100%', marginTop: '50px' }}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/examples" element={<Examples />} />
+              <Route path="/upload" element={<UploadFile />} />
+              <Route path="/analysis" element={<Analysis />} />
+            </Routes>
           </div>
         </div>
       </Router>

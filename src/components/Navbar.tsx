@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
   ];
 
   return (
-    <div style={{ position: 'fixed', top: 0, width: '100%', backgroundColor: 'white', zIndex: 999 }}>
+    <div>
       <Tabs type="card" activeKey={window.location.pathname} onChange={handleTabChange} items={tabsItems} />
     </div>
   );
