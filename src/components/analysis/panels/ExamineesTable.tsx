@@ -13,7 +13,7 @@ export const ExamineeTable: React.FC<PanelProps> = ({ quest }) => {
 
   // Columns are keys of the table
   const columns = Array.from(table.keys()).map((key) => {
-    return { title: key, dataIndex: key, key: key };
+    return { title: key, dataIndex: key, key: key ,width: 120};
   });
 
   const tableRows = table.values().next().value.map((_: number, rowIndex: number) => {
@@ -41,7 +41,7 @@ export const ExamineeTable: React.FC<PanelProps> = ({ quest }) => {
   // Render the table of antd
   return (
     <div>
-      <Table dataSource={tableRows} columns={columns} />
+      <Table dataSource={tableRows} columns={columns} scroll={{x: 1500}}/>
     </div>
   );
 };

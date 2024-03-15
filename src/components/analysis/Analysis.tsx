@@ -91,7 +91,7 @@ const Analysis: React.FC = () => {
           sidebarOptions={visualizations}
         />
       </div>
-      <div style={{ marginLeft: '250px', textAlign: 'center', flex: 1 }}> {/* Este margen debe coincidir con el ancho de tu barra lateral */}
+      <div style={{ marginLeft: '250px', textAlign: 'center', flex: 1}}> {/* Este margen debe coincidir con el ancho de tu barra lateral */}
         {loading ? (
           <Spin size="large" />
         ) : selectedPanel.quest_id !== analysisQuests[0].id ? (

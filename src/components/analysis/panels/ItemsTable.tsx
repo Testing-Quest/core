@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { questGradu } from '../../../domain/quests/questGradu';
 import { questMulti } from '../../../domain/quests/questMulti';
 import { Table } from 'antd';
@@ -6,61 +6,46 @@ import { Table } from 'antd';
 interface PanelProps {
   quest: questGradu | questMulti;
 }
-interface TableRow {
-  key: number;
-  name: string;
-  description: string;
-}
-interface ExpandedRowContentProps {
-  description: string;
-}
-
-const ExpandedRowContent: React.FC<ExpandedRowContentProps> = ({ description }) => (
-  <div>
-    <p>{`Additional information: ${description}`}</p>
-    {/* Agrega aquí cualquier contenido adicional que desees */}
-  </div>
-);
-
 
 export const ItemTable: React.FC<PanelProps> = ({ quest }) => {
+  // Renderiza el contenido del panel en función de la opción seleccionada
+  const table: Map<string, (string | number)[]> = quest.getItemsTable();
 
-  const [expandedRowId, setExpandedRowId] = useState<number | null>(null);
+  // Columns are keys of the table
+  const columns = Array.from(table.keys()).map((key) => {
+    return { 
+      title: key, 
+      dataIndex: key, 
+      key: key, 
+      width: 120,
+      fixed: key === 'id' ? 'left' : undefined
+    };
+  });
 
-  const data: TableRow[] = [
-    { key: 1, name: 'Row 1', description: 'Description 1' },
-    { key: 2, name: 'Row 2', description: 'Description 2' },
-    // Agrega más filas según sea necesario
-  ];
+  const tableRows = table.values().next().value.map((_: number, rowIndex: number) => {
+    const rowData: { [key: string]: string | number } = {};
 
-  const handleRowClick = (record: TableRow) => {
-    setExpandedRowId(expandedRowId === record.key ? null : record.key);
-  };
+    Array.from(table.keys()).forEach((columnKey) => {
+      const columnValues = table.get(columnKey);
+      const cellValue = columnValues ? columnValues[rowIndex] : '';
 
-  const columns = [
-    { title: 'ID', dataIndex: 'key', key: 'key' },
-    { title: 'Name', dataIndex: 'name', key: 'name' },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-    },
-  ];
+      // Formatea los números a 2 decimales si es un número y tiene más de dos decimales
+      if (typeof cellValue === 'number') {
+        rowData[columnKey] = Number.isInteger(cellValue) ? cellValue : cellValue.toFixed(2);
+      } else {
+        rowData[columnKey] = cellValue;
+      }
+    });
 
-  const expandedRowRender = (record: TableRow) => <ExpandedRowContent description={record.description} />;
+    return rowData;
+  });
 
+
+  // Render the table of antd
   return (
-    <Table
-      dataSource={data}
-      columns={columns}
-      expandable={{
-        expandedRowRender,
-        expandedRowKeys: expandedRowId ? [expandedRowId] : [],
-        onExpand: (_, record) => handleRowClick(record),
-      }}
-      onRow={(record) => ({
-        onClick: () => handleRowClick(record),
-      })}
-    />
+    <div style={{maxWidth:"60%"}}>
+      <Table dataSource={tableRows} columns={columns} scroll={{x: 1500}}/>
+    </div>
   );
 };
+
