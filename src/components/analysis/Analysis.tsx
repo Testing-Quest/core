@@ -81,29 +81,27 @@ const Analysis: React.FC = () => {
     }, 10);
   }
 
-  return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Sidebar
-        name={analysisQuests[0].name}
-        onSidebarClick={(option) => setSelectedPanel(option)}
-        sidebarOptions={visualizations}
-      />
-      <div style={{ flex: 1, textAlign: 'center' }}>
-        {
 
-          loading ? (<Spin size="large" />) :
-            (selectedPanel.quest_id != analysisQuests[0].id) ?
-              <Spin size="large" /> :
-              <div>
-                <DeactivatedElements
-                  quest={analysisQuests[0].quest}
-                  onReset={onReset}
-                />
-                <selectedPanel.component
-                  quest={analysisQuests[0].quest}
-                />
-              </div>
-        }
+  return (
+    <div style={{ display: 'flex' }}>
+      <div style={{ position: 'fixed', left: 0 }}>
+        <Sidebar
+          name={analysisQuests[0].name}
+          onSidebarClick={(option) => setSelectedPanel(option)}
+          sidebarOptions={visualizations}
+        />
+      </div>
+      <div style={{ marginLeft: '250px', textAlign: 'center', flex: 1 }}> {/* Este margen debe coincidir con el ancho de tu barra lateral */}
+        {loading ? (
+          <Spin size="large" />
+        ) : selectedPanel.quest_id !== analysisQuests[0].id ? (
+          <Spin size="large" />
+        ) : (
+          <div>
+            <DeactivatedElements quest={analysisQuests[0].quest} onReset={onReset} />
+            <selectedPanel.component quest={analysisQuests[0].quest} />
+          </div>
+        )}
       </div>
     </div>
   );

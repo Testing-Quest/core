@@ -23,8 +23,10 @@ const App: React.FC = () => {
     <GlobalStateProvider>
       <Router>
         <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-          <Navbar />
-          <div style={{ display: 'flex', flex: 1 }}>
+          <div style={{ position: 'fixed', top: 0, width: '100%', zIndex: 999 }}>
+            <Navbar />
+          </div>
+          <div style={{ display: 'flex', flex: 1, paddingTop: '48px' }}> {/* 60px es la altura del navbar */}
             <div style={{ flex: 1, padding: '20px' }}>
               <Routes>
                 <Route path="/" element={<Home />} />

@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions 
   };
 
   return (
-    <div style={{ width: '18%', maxWidth: '260px' }}>
+    <div style={{ width: '100%', maxWidth: '260px' }}>
       <Menu mode="vertical" theme="light" selectedKeys={[selectedKey || '']}>
         <img src="/tqLogo.jpeg" alt="Testing Quest" style={{ width: '80%', height: 'auto' }} />
 
