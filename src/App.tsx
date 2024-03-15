@@ -22,7 +22,7 @@ const App: React.FC = () => {
   return (
     <GlobalStateProvider>
       <Router>
-        <div style={{ height: '100vh', width: '100vw' }}>
+        <div style={{ height: 'calc(98vh - 50px)', width: '98vw' }}>
           <div style={{position: 'fixed', top: 0, left: 0, height: '50px', width: '100%', backgroundColor: 'white', zIndex: 999 }}>
           <Navbar />
           </div>

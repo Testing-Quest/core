@@ -97,7 +97,7 @@ const Analysis: React.FC = () => {
         ) : selectedPanel.quest_id !== analysisQuests[0].id ? (
           <Spin size="large" />
         ) : (
-          <div style={{maxWidth:"98%"}}>
+          <div >
             <div>
             <DeactivatedElements quest={analysisQuests[0].quest} onReset={onReset} />
             </div>
