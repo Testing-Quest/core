@@ -347,8 +347,8 @@ export class questMulti {
 		return itemsTable;
 	}
 
-	public getExamineesTable():  Map<string, (string | number)[]> {
-		const usersTable = new  Map<string, (string | number)[]>();
+	public getExamineesTable(): Map<string, (string | number)[]> {
+		const usersTable = new Map<string, (string | number)[]>();
 		usersTable.set("id", this.users.idValue);
 		usersTable.set("Deactivate", this.users.idValue);
 		usersTable.set("Direct Score", this.users.directScoreValue);
@@ -380,27 +380,24 @@ export class questMulti {
 
 	public deactivateItems(id: number): void {
 		this.activeItems[id] = false;
-		this.createMatrix();
 	}
 
 	public activateItems(id: number): void {
 		this.activeItems[id] = true;
-		this.createMatrix();
 	}
 
 	public deactivateExaminees(id: number): void {
 		this.activeUsers[id] = false;
-		this.createMatrix();
 	}
 
 	public activateExaminees(id: number): void {
 		this.activeUsers[id] = true;
-		this.createMatrix();
 	}
 
-	public recalculate(): void {
+	public async recalculate(): Promise<void> {
 		this.items.update(this.matrix, this.correctedMatrix, this.keys);
 		this.users.update(this.matrix, this.correctedMatrix);
+		this.createMatrix();
 		this.calculate();
 	}
 
@@ -427,7 +424,12 @@ export class questMulti {
 		this.activeItems = Array.from({ length: this.originalMatrix[0].length }, () => true);
 		this.activeUsers = Array.from({ length: this.originalMatrix.length }, () => true);
 		this.createMatrix();
-		this.recalculate()
+		await this.recalculate()
 	}
-
+	public getType(): string {
+		return "multi";
+	}
+	public getNumberOfAnswers(): number {
+		return this.numberOfAnswers[0];
+	}
 }

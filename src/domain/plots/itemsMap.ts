@@ -14,9 +14,15 @@ export class ItemMap{
 		this.discrimination = discrimination;
 	}
 
-	public plot(): void {
-		console.log(this.id)
-		console.log(this.difficulty)
-		console.log(this.discrimination)
+	public getX(){
+		return this.discrimination;
+	}
+
+	public getY(){
+		return this.difficulty;
+	}
+
+	public getHoverInfo(){
+		return this.id;
 	}
 }

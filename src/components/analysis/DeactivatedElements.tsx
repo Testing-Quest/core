@@ -6,9 +6,10 @@ import { Card, Button } from "antd";
 interface SidebarProps {
   quest: questGradu | questMulti;
   onReset: () => void;
+  onRecalculate: () => void;
 }
 
-export const DeactivatedElements: React.FC<SidebarProps> = ({ quest, onReset }) => {
+export const DeactivatedElements: React.FC<SidebarProps> = ({ quest, onReset, onRecalculate}) => {
   return (
     <div>
       <div style={{ display: "flex" }}>

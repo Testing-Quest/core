@@ -255,27 +255,24 @@ export class questGradu {
 
 	public deactivateItems(id: number): void {
 		this.activeItems[id] = false;
-		this.createMatrix();
 	}
 
 	public activateItems(id: number): void {
 		this.activeItems[id] = true;
-		this.createMatrix();
 	}
 
 	public deactivateExaminees(id: number): void {
 		this.activeUsers[id] = false;
-		this.createMatrix();
 	}
 
 	public activateExaminees(id: number): void {
 		this.activeUsers[id] = true;
-		this.createMatrix();
 	}
 
-	public recalculate(): void {
+	public async recalculate(): Promise<void> {
 		this.items.update(this.correctedMatrix);
 		this.users.update(this.correctedMatrix);
+		this.createMatrix();
 		this.calculate();
 	}
 
@@ -298,11 +295,19 @@ export class questGradu {
 		return !activeUsers || !activeItems || !correctKeys;
 	}
 
-	async reset(): Promise<void> {
+	public async reset(): Promise<void> {
 		this.keys = this.originalKeys;
 		this.activeItems = Array.from({ length: this.originalMatrix[0].length }, () => true);
 		this.activeUsers = Array.from({ length: this.originalMatrix.length }, () => true);
 		this.createMatrix();
-		this.recalculate();
+		await this.recalculate();
+	}
+
+	public getType(): string {
+		return "gradu";
+	}
+
+	public getNumberOfAnswers(): number {
+		return this.numberOfAnswers[0];
 	}
 }

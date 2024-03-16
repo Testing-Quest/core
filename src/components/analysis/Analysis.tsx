@@ -80,7 +80,13 @@ const Analysis: React.FC = () => {
       setLoading(false);
     }, 10);
   }
-
+  const onRecalculate = async () => {
+    setLoading(true);
+    setTimeout(async () => {
+      await analysisQuests[0].quest.recalculate();
+      setLoading(false);
+    }, 10);
+  }
 
   return (
     <div style={{ display: 'flex' }}>
@@ -90,8 +96,8 @@ const Analysis: React.FC = () => {
           onSidebarClick={(option) => setSelectedPanel(option)}
           sidebarOptions={visualizations}
         />
-      </div>        
-      <div style={{ marginLeft:"16%", width:"84%"}}>
+      </div>
+      <div style={{ marginLeft: "16%", width: "84%" }}>
         {loading ? (
           <Spin size="large" />
         ) : selectedPanel.quest_id !== analysisQuests[0].id ? (
@@ -99,10 +105,10 @@ const Analysis: React.FC = () => {
         ) : (
           <div >
             <div>
-            <DeactivatedElements quest={analysisQuests[0].quest} onReset={onReset} />
+              <DeactivatedElements quest={analysisQuests[0].quest} onReset={onReset} onRecalculate={onRecalculate} />
             </div>
             <div>
-            <selectedPanel.component quest={analysisQuests[0].quest} />
+              <selectedPanel.component quest={analysisQuests[0].quest} onRecalculate={onRecalculate} />
             </div>
           </div>
         )}

@@ -44,7 +44,7 @@ export const Reliability: React.FC<PanelProps> = ({ quest }) => {
             labelStyle={{ color: 'black' }} 
             itemStyle={{ color: 'black' }}
           />
-          <Line type="monotone" dataKey="y" stroke="#8884d8" strokeWidth={3} activeDot={{ r: 8 }} />
+          <Line type="monotone" dataKey="y" isAnimationActive={false} stroke="#8884d8" strokeWidth={3} activeDot={{ r: 8 }} />
           <rect x={60} y={90} width={"99%"} height={46} fill="green" fillOpacity={0.3} />
         </LineChart>
       </ResponsiveContainer>
