@@ -40,10 +40,10 @@ export const ItemMaps: React.FC<PanelProps> = ({ quest }) => {
     x3 = 0.6;
     x4 = 0.8;
   } else {
-    y_domain = [1, quest.getNumberOfAnswers()];
-    // desde 1 hasta el número de respuestas de 0.1 en 0.1
-    y_ticks = Array.from({ length: quest.getNumberOfAnswers() * 10 }, (_, index) => ((index + 1) / 10).toFixed(1));
     const answers = quest.getNumberOfAnswers();
+    y_domain = [1, answers];
+    y_ticks = Array.from({ length: (answers-1) * 10 }, (_, index) => (1 + index * 0.1).toFixed(1));
+    y_ticks.push(answers);
     x1 = 1 + (0.2 * (answers - 1))
     x2 = 1 + (0.4 * (answers - 1))
     x3 = 1 + (0.6 * (answers - 1))
