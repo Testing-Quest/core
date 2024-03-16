@@ -32,7 +32,7 @@ export const Reliability: React.FC<PanelProps> = ({ quest }) => {
 
 
   return (
-    <div style={{ height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '50px' }}>
+    <div style={{ height: '600px', display: 'flex', alignItems: 'center', marginLeft: '50px' }}>
       <ResponsiveContainer width="90%" height={500}>
         <LineChart data={data} onClick={handleClick} margin={{bottom: 15}}>
           <CartesianGrid strokeDasharray="0 0" opacity={0.5} />
