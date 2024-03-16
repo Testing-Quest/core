@@ -12,22 +12,6 @@ interface PanelProps {
   quest: questGradu | questMulti;
 }
 
-const CustomTooltip: React.FC<any> = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    const x = payload[0].payload.x.toFixed(2); // Valor de x con dos decimales
-    const y = payload[0].payload.y.toFixed(2); // Valor de y con dos decimales
-
-    return (
-      <div className="custom-tooltip">
-        <p>Lenght: {x}</p>
-        <p>Fiability: {y}</p>
-      </div>
-    );
-  }
-
-  return null;
-};
-
 export const Reliability: React.FC<PanelProps> = ({ quest }) => {
   const reliability = quest.calculateReliability();
 
@@ -48,15 +32,20 @@ export const Reliability: React.FC<PanelProps> = ({ quest }) => {
 
 
   return (
-    <div style={{ height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight:'50px' }}>
-      <ResponsiveContainer width="90%" height={400}>
-        <LineChart data={data} onClick={handleClick}>
+    <div style={{ height: '600px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '50px' }}>
+      <ResponsiveContainer width="90%" height={500}>
+        <LineChart data={data} onClick={handleClick} margin={{bottom: 15}}>
           <CartesianGrid strokeDasharray="0 0" opacity={0.5} />
-          <XAxis dataKey="x" type="number" tickCount={11} domain={[0.5, 1.5]} label={{ value: 'Longitud del test %', position: 'insideBottom', fill: '' }} />
-          <YAxis domain={[0, 1]} tickCount={11} label={{ value: 'Fiabilidad', angle: -90, position: 'insideLeft', offset: 0, fill: '' }} />
-          <Tooltip content={<CustomTooltip />} />
+          <XAxis dataKey="x" type="number" tickCount={11} domain={[0.5, 1.5]} label={{ fontSize: 18, value: 'Test length %', position: 'insideBottom', fill: '', offset: -8 }} />
+          <YAxis domain={[0, 1]} tickCount={11} label={{ fontSize: 18, value: 'Reliability', angle: -90, position: 'insideLeft', offset: 8, fill: '' }} />
+          <Tooltip
+            labelFormatter={(label: any) => `Length: ${label.toFixed(1)}`}
+            formatter={(value: any) => [`${value.toFixed(2)}`, 'Reliability']}
+            labelStyle={{ color: 'black' }} 
+            itemStyle={{ color: 'black' }}
+          />
           <Line type="monotone" dataKey="y" stroke="#8884d8" strokeWidth={3} activeDot={{ r: 8 }} />
-          <rect x={65} y={77.5} width={"99%"} height={35} fill="green" fillOpacity={0.3} />
+          <rect x={60} y={90} width={"99%"} height={46} fill="green" fillOpacity={0.3} />
         </LineChart>
       </ResponsiveContainer>
     </div>
