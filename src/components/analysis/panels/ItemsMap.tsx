@@ -1,8 +1,9 @@
 import React from 'react';
 import { questGradu } from '../../../domain/quests/questGradu';
 import { questMulti } from '../../../domain/quests/questMulti';
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Text } from 'recharts';
 import { ReferenceLine } from 'recharts';
+import { Label } from 'recharts';
 
 interface DataPoint {
   x: number;
@@ -56,8 +57,13 @@ export const ItemMaps: React.FC<PanelProps> = ({ quest }) => {
       <ResponsiveContainer width="90%" height={500}>
         <ScatterChart margin={{ bottom: 15 }}>
           <CartesianGrid strokeDasharray="0 0" opacity={0.5} />
-          <XAxis type="number" dataKey="x" name="X" ticks={y_ticks} domain={y_domain} />
-          <YAxis type="number" ticks={ticks} dataKey="y" name="Y" domain={[-1, 1]} />
+          <XAxis type="number" dataKey="x" name="X" ticks={y_ticks} domain={y_domain} >
+            <Label value="Difficulty" position="insideBottom" offset={-8} fontSize={18} fill=""/>
+            <Text />
+          </XAxis>
+          <YAxis type="number" ticks={ticks} dataKey="y" name="Y" domain={[-1, 1]} >
+            <Label value="Discrimination" angle={-90} position="insideLeft" offset={8} fontSize={18} fill=""/>
+          </YAxis>
           {/* COLORES */}
           <rect x={60} y={1} width={"99%"} height={46 * 2.5} fill="green" fillOpacity={0.4} />
           <rect x={60} y={115} width={"99%"} height={46} fill="yellow" fillOpacity={0.4} />
@@ -71,6 +77,78 @@ export const ItemMaps: React.FC<PanelProps> = ({ quest }) => {
           <ReferenceLine x={x2} stroke="black" />
           <ReferenceLine x={x3} stroke="black" />
           <ReferenceLine x={x4} stroke="black" />
+          { /* Letras Horizontales */}
+          <text
+            x='98%'
+            y='74%'
+            style={{ fontSize: 16, fill: '#000000' }}
+          >
+            4
+          </text>
+          <text
+            x='98%'
+            y='45%'
+            style={{ fontSize: 16, fill: '#000000' }}
+          >
+            5
+          </text>
+          <text
+            x='98%'
+            y='35.4%'
+            style={{ fontSize: 16, fill: '#000000' }}
+          >
+            3
+          </text>
+          <text
+            x='98%'
+            y='28.5%'
+            style={{ fontSize: 16, fill: '#000000' }}
+          >
+            2
+          </text>
+          <text
+            x='98%'
+            y='15%'
+            style={{ fontSize: 16, fill: '#000000' }}
+          >
+            1
+          </text>
+          {/* Letras Verticales */}
+          <text
+            x='90%'
+            y='90%'
+            style={{ fontSize: 16, fill: '#000000' }}
+          >
+            A
+          </text>
+          <text
+            x='71%'
+            y='90%'
+            style={{ fontSize: 16, fill: '#000000' }}
+          >
+            B
+          </text>
+          <text
+            x='51.7%'
+            y='90%'
+            style={{ fontSize: 16, fill: '#000000' }}
+          >
+            C
+          </text>
+          <text
+            x='32.6%'
+            y='90%'
+            style={{ fontSize: 16, fill: '#000000' }}
+          >
+            D
+          </text>
+          <text
+            x='13.5%'
+            y='90%'
+            style={{ fontSize: 16, fill: '#000000' }}
+          >
+            E
+          </text>
           <Scatter name="Items" data={data} fill="#4f4f4f" />
           <Tooltip content={<CustomTooltip />} />
         </ScatterChart>
