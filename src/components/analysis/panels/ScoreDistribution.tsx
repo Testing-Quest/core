@@ -51,7 +51,7 @@ export const ScoreDistribution: React.FC<PanelProps> = ({ quest }) => {
           </XAxis>
           <YAxis type="number" dataKey="y" name="Y" >
           </YAxis>
-          <Bar dataKey="y" fill="#4f4f4f" />
+          <Bar dataKey="y" fill="#8884d8" />
           <Tooltip content={<CustomTooltip />} cursor={{fill: '#00000000'}}/>
         </BarChart>
       </ResponsiveContainer>
@@ -65,7 +65,7 @@ const CustomTooltip: React.FC<any> = ({ active, payload }) => {
     return (
       <div style={{ backgroundColor: 'white', padding: '5px', border: '1px solid #ccc' }}>
         <p>{`Score: ${point.x.toFixed(2)}`}</p>
-        <p>{`Count: ${point.y.toFixed(2)}`}</p>
+        <p>{`percent: ${point.y.toFixed(2)}%`}</p>
       </div>
     );
   }
