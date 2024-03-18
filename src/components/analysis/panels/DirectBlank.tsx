@@ -2,7 +2,6 @@ import React from 'react';
 import { questGradu } from '../../../domain/quests/questGradu';
 import { questMulti } from '../../../domain/quests/questMulti';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Text } from 'recharts';
-import { ReferenceLine } from 'recharts';
 import { Label } from 'recharts';
 
 interface DataPoint {

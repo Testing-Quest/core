@@ -2,16 +2,28 @@ export class DirectVsCoherency {
 
 	private directScore: number[];
 	private coherencyScore: number[];
+	private id: number[]
+
 
 	constructor(
+		id: number[],
 		directScore: number[],
 		coherencyScore: number[]
 	) {
+		this.id = id;
 		this.directScore = directScore;
 		this.coherencyScore = coherencyScore;
 	}
-	public plot(): void {
-		console.log(this.directScore);
-		console.log(this.coherencyScore);
+
+	public getX() {
+		return this.directScore;
+	}
+
+	public getY() {
+		return this.coherencyScore;
+	}
+
+	public getHoverInfo() {
+		return this.id;
 	}
 }

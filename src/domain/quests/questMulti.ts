@@ -282,6 +282,7 @@ export class questMulti {
 
 	public directVsWeighted(): DirectVsWeighted {
 		return new DirectVsWeighted(
+			this.users.idValue,
 			this.users.directScoreValue,
 			this.weightScore,
 		);
@@ -297,6 +298,7 @@ export class questMulti {
 
 	public directVsCoherency(): DirectVsCoherency {
 		return new DirectVsCoherency(
+			this.users.idValue,
 			this.users.directScoreValue,
 			this.users.coherenceValue,
 		);
@@ -304,6 +306,7 @@ export class questMulti {
 
 	public directVsMCI(): DirectVsMCI {
 		return new DirectVsMCI(
+			this.users.idValue,
 			this.users.directScoreValue,
 			this.mci,
 		);

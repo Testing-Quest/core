@@ -7,7 +7,7 @@ export class ScoreDistribution {
 		this.directScore = directScore;
 	}
 
-	public plot(): void {
-		console.log(this.directScore);
+	public getX() {
+		return this.directScore;
 	}
 }
