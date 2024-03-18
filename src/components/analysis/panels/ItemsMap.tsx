@@ -43,7 +43,7 @@ export const ItemMaps: React.FC<PanelProps> = ({ quest }) => {
     const answers = quest.getNumberOfAnswers();
     y_domain = [1, answers];
     y_ticks = Array.from({ length: (answers-1) * 10 }, (_, index) => (1 + index * 0.1).toFixed(1));
-    y_ticks.push(answers);
+    y_ticks.push(answers.toFixed(0));
     x1 = 1 + (0.2 * (answers - 1))
     x2 = 1 + (0.4 * (answers - 1))
     x3 = 1 + (0.6 * (answers - 1))
@@ -157,7 +157,7 @@ export const ItemMaps: React.FC<PanelProps> = ({ quest }) => {
   );
 };
 
-const CustomTooltip: React.FC<any> = ({ active, payload, label }) => {
+const CustomTooltip: React.FC<any> = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const point = payload[0].payload as DataPoint;
     return (

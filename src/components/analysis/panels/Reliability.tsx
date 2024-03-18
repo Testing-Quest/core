@@ -36,7 +36,7 @@ export const Reliability: React.FC<PanelProps> = ({ quest }) => {
       <ResponsiveContainer width="90%" height={500}>
         <LineChart data={data} onClick={handleClick} margin={{bottom: 15}}>
           <CartesianGrid strokeDasharray="0 0" opacity={0.5} />
-          <XAxis dataKey="x" type="number" tickCount={11} domain={[0.5, 1.5]} label={{ fontSize: 18, value: 'Test length %', position: 'insideBottom', fill: '', offset: -8 }} />
+          <XAxis dataKey="x" type="number" tickCount={11} domain={[0.5, 1.5]} label={{ fontSize: 18, value: 'Test length ', position: 'insideBottom', fill: '', offset: -8 }} />
           <YAxis domain={[0, 1]} tickCount={11} label={{ fontSize: 18, value: 'Reliability', angle: -90, position: 'insideLeft', offset: 8, fill: '' }} />
           <Tooltip
             labelFormatter={(label: any) => `Length: ${label.toFixed(1)}`}

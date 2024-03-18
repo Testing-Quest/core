@@ -1,6 +1,7 @@
 import { ItemGradu } from "../items/itemsGradu";
 import { HealthProblemsGradu } from "../plots/healthProblemsGradu";
 import { ItemFrequency } from "../plots/itemFrequency";
+import { DirectVsBlank } from "../plots/directVsBlank";
 import { ItemProfile } from "../plots/itemProfile";
 import { ItemMap } from "../plots/itemsMap";
 import { Reliability } from "../plots/reliability";
@@ -205,6 +206,15 @@ export class questGradu {
 			this.users.directScoreValue,
 		);
 
+	}
+
+	public directVsBlankAnswer(): DirectVsBlank {
+		return new DirectVsBlank(
+			this.users.idValue,
+			this.users.directScoreValue,
+			this.users.blankAnswersValue,
+
+		);
 	}
 
 	public getHealthProblems(): HealthProblemsGradu {

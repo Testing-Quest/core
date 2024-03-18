@@ -289,6 +289,7 @@ export class questMulti {
 
 	public directVsBlankAnswer(): DirectVsBlank {
 		return new DirectVsBlank(
+			this.users.idValue,
 			this.users.directScoreValue,
 			this.users.blankAnswersValue,
 		);
