@@ -51,7 +51,7 @@ export const DirectVsBlank: React.FC<PanelProps> = ({ quest }) => {
               <Label value="Direct Score" position="insideBottom" offset={-8} fontSize={18} fill=""/>
               <Text />
             </XAxis>
-            <YAxis type="number" dataKey="y" name="Y"  ticks={[20, 40, 60, 80]} domain={[0, 100]}>
+            <YAxis type="number" dataKey="y" name="Y">
               <Label value="Blank Answer" angle={-90} position="insideLeft" offset={8} fontSize={18} fill=""/>
             </YAxis>
             <Scatter name="Items" data={data} isAnimationActive={false} fill="#8884d8" />

@@ -30,7 +30,7 @@ const AnalysisVisualizations: AnalysisVisualization[] = [
   { label: "Reliability", icon: "plot", multi: Reliability, gradu: Reliability, binary: Reliability },
   { label: "Items Map", icon: "plot", multi: ItemMaps, gradu: ItemMaps, binary: ItemMaps },
   { label: "Direct Weighted", icon: "plot", multi: DirectVsWeighted, gradu: null, binary: DirectVsWeighted },
-  { label: "Direct Blank", icon: "plot", multi: DirectVsBlank, gradu: null, binary: DirectVsBlank },
+  { label: "Direct Blank", icon: "plot", multi: DirectVsBlank, gradu: DirectVsBlank, binary: DirectVsBlank },
   { label: "Direct Coherency", icon: "plot", multi: DirectVsCoherency, gradu: null, binary: DirectVsCoherency },
   { label: "Direct MCI", icon: "plot", multi: DirectVsMCI, gradu: null, binary: DirectVsMCI },
   { label: "Score Distribution", icon: "plot", multi: ScoreDistribution, gradu: ScoreDistribution, binary: ScoreDistribution },
