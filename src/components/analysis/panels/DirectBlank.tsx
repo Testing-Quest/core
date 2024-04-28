@@ -16,8 +16,8 @@ interface PanelProps {
 }
 
 export const DirectVsBlank: React.FC<PanelProps> = ({ quest }) => {
-  const [loading, setLoading] = useState(true); // Estado para el componente de carga
-  const [data, setData] = useState<DataPoint[]>([]); // Estado para los datos
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<DataPoint[]>([]);
 
   useEffect(() => {
     const items_map = quest.directVsBlankAnswer();
@@ -32,16 +32,15 @@ export const DirectVsBlank: React.FC<PanelProps> = ({ quest }) => {
       hover: hover[index],
     }));
 
-    // Simular una carga más larga con un retraso de 1 segundo
     setTimeout(() => {
       setData(newData);
-      setLoading(false); // Desactivar el componente de carga
+      setLoading(false);
     }, 1);
   }, [quest]);
 
   return (
     <div style={{ height: '600px', display: 'flex', alignItems: 'center', marginLeft: '50px' }}>
-      {loading ? ( // Mostrar el componente de carga si loading es true
+      {loading ? (
         <Spin size="large" />
       ) : (
         <ResponsiveContainer width="90%" height={500}>
