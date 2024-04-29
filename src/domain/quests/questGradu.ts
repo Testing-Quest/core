@@ -280,6 +280,7 @@ export class questGradu {
 	}
 
 	public async recalculate(): Promise<void> {
+		this.createMatrix();
 		this.items.update(this.correctedMatrix);
 		this.users.update(this.correctedMatrix);
 		this.createMatrix();
