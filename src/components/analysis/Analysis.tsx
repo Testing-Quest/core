@@ -105,7 +105,7 @@ const Analysis: React.FC = () => {
         ) : (
           <div >
             <div>
-              <DeactivatedElements quest={analysisQuests[0].quest} onReset={onReset} onRecalculate={onRecalculate} />
+              <DeactivatedElements quest={analysisQuests[0].quest} onReset={onReset} />
             </div>
             <div>
               <selectedPanel.component quest={analysisQuests[0].quest} onRecalculate={onRecalculate} />
