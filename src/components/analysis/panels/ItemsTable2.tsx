@@ -24,6 +24,7 @@ const ExpandedRowContent: React.FC<ExpandedRowContentProps> = ({ description }) 
 
 
 export const ItemTable: React.FC<PanelProps> = ({ quest }) => {
+  console.log(quest);
 
   const [expandedRowId, setExpandedRowId] = useState<number | null>(null);
 
