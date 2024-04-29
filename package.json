@@ -2,7 +2,7 @@
   "name": "core",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://Testing-Quest.github.io/core/",
+  "homepage": "https://Testing-Quest.github.io/",
   "type": "module",
   "scripts": {
     "dev": "vite",
