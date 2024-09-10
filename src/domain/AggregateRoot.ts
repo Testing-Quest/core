@@ -1,4 +1,4 @@
-export abstract class AggregateRoot {
+export abstract class AggregateRoot<T> {
   private _uuid: string;
 
   constructor(uuid: string) {
@@ -7,4 +7,6 @@ export abstract class AggregateRoot {
   getUuid(): string {
     return this._uuid;
   }
+
+  public abstract toJSON(): T;
 }

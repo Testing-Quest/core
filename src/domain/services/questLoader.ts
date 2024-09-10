@@ -8,7 +8,7 @@ import {
   SecondRowNotContainsNumbersError,
   ThirdRowNotContainsNumbersError
 } from "../errors/loadErrors";
-import { QuestType } from "../quest";
+import { NewQuestType } from "../primitives/quest";
 import { v4 as uuidv4 } from 'uuid';
 
 interface Quest {
@@ -95,7 +95,7 @@ function prepareData(data: string[][]): {
   return { usersID, keys, scales, alternatives, matrix };
 }
 
-function generateQuestsData({ keys, scales, alternatives, matrix }: Quest): QuestType[] {
+function generateQuestsData({ keys, scales, alternatives, matrix }: Quest): NewQuestType[] {
   const uniqueScales = Array.from(new Set(scales));
   return uniqueScales.map(scale => {
     const matchingIndexes = scales.reduce<number[]>((indexes, currentScale, i) => {
@@ -120,13 +120,11 @@ function generateQuestsData({ keys, scales, alternatives, matrix }: Quest): Ques
       alternatives: filteredAlternatives,
       matrix: filteredMatrix,
       type,
-      rows: filteredMatrix.length,
-      columns: filteredMatrix[0].length,
     };
   });
 }
 
-async function loadQuest(data: string[][]): Promise<QuestType[]> {
+async function loadQuest(data: string[][]): Promise<NewQuestType[]> {
   validateFirstThreeColumns(data);
   validateNumericRow(data[1].slice(1), new SecondRowNotContainsNumbersError());
   validateNumericRow(data[2].slice(1), new ThirdRowNotContainsNumbersError());
