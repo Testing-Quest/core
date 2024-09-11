@@ -1,6 +1,6 @@
-import calculatePearson from "./calculatePearson";
+import calculatePearson from "../calculatePearson";
 
-export default function calculateCoherence(matrix: number[][]): number[] {
+export default function calculateUsersCoherence(matrix: number[][]): number[] {
   const rows = matrix.length;
   const cols = matrix[0].length;
   const coherence = new Array(rows);

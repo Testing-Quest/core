@@ -1,6 +1,6 @@
 type Primitives = string | number;
 
-export default function calculateBlankAnswers<T extends Primitives>(matrix: T[][], omissions: T[]): number[] {
+export default function calculateUsersBlankAnswers<T extends Primitives>(matrix: T[][], omissions: T[]): number[] {
   const result = new Array(matrix.length);
   const omissionSet = new Set(omissions);
   const rowLength = matrix[0].length;

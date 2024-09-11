@@ -112,8 +112,6 @@ export class questMulti {
 		this.calculateCoherency();
 		this.calculateDifficulty();
 		this.calculateTestHealth();
-
-
 	}
 
 	private calculateWeightScore(): void {

@@ -1,4 +1,4 @@
-export default function calculateDirectScore(matrix: number[][]): number[] {
+export default function calculateUsersDirectScore(matrix: number[][]): number[] {
   const numRows = matrix.length;
   const scores = new Array(numRows);
 

@@ -1,15 +1,15 @@
 import { AggregateRoot } from "../../AggregateRoot";
 import { NewQuestType } from "../../primitives/quest";
-import calculateBlankAnswers from "../../services/calculateBlankAnswers";
-import calculateCoherence from "../../services/calculateCoherence";
-import calculateCorrectMatrix from "../../services/calculateCorrectMatrix";
-import calculateDirectScore from "../../services/calculateDirectScore";
-import calculateItemsDirectScore from "../../services/calculateItemsDirectScore";
-import calculateItemsMean from "../../services/calculateItemsMean";
-import calculateItemsVariance from "../../services/calculateItemsVariance";
-import calculateMean from "../../services/calculateMean";
-import { calculateUserMean } from "../../services/calculateUserMean";
-import calculateVariance from "../../services/calculateVariance";
+import calculateUsersBlankAnswers from "../../services/calculations/users/calculateUsersBlankAnswers";
+import calculateUsersCoherence from "../../services/calculations/users/calculateUsersCoherence";
+import calculateCorrectMatrix from "../../services/calculations/calculateCorrectMatrix";
+import calculateUsersDirectScore from "../../services/calculations/users/calculateUsersDirectScore";
+import calculateItemsDirectScore from "../../services/calculations/items/calculateItemsDirectScore";
+import calculateItemsMean from "../../services/calculations/items/calculateItemsMean";
+import calculateItemsVariance from "../../services/calculations/items/calculateItemsVariance";
+import calculateMean from "../../services/calculations/calculateMean";
+import { calculateUserMean } from "../../services/calculations/users/calculateUserMean";
+import calculateVariance from "../../services/calculations/calculateVariance";
 import { BinaryQuestType } from "../primitives/binaryQuest";
 
 
@@ -28,15 +28,15 @@ export class BinaryQuest extends AggregateRoot<BinaryQuestType> {
   private static calculate(matrix: string[][], keys: string[], alternatives: number): BynaryQuestType {
     const correctMatrix = calculateCorrectMatrix<string>(matrix, keys)
     // Paralelization 1
-    const directScore = calculateDirectScore(correctMatrix);
+    const directScore = calculateUsersDirectScore(correctMatrix);
     const mean = calculateMean(directScore);
     const userMean = calculateUserMean(directScore, correctMatrix[0].length);
     const itemsMean = calculateItemsMean(correctMatrix);
     const variance = calculateVariance(directScore, mean);
 
     // Paralelization 2
-    const coherence = calculateCoherence(correctMatrix);
-    const blankAnswers = calculateBlankAnswers<string>(matrix, ['X', 'x', '*', '']);
+    const coherence = calculateUsersCoherence(correctMatrix);
+    const blankAnswers = calculateUsersBlankAnswers<string>(matrix, ['X', 'x', '*', '']);
     const itemsDirectScore = calculateItemsDirectScore(correctMatrix);
     const itemsVariance = calculateItemsVariance(correctMatrix, itemsMean);
     const itemsDiscrimination = calculateItemsDiscrimination(correctMatrix, itemsMean, itemsVariance);
