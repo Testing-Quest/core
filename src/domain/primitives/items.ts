@@ -1,8 +1,5 @@
 export type ItemsType = {
-  ids: number[];
-  enabled: boolean[];
-  keys: string[];
-  originalKeys: string[];
+
 
   variance: number[];
   discrimination: number[];

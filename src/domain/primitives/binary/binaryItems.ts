@@ -2,7 +2,7 @@ import { ItemsType } from "../items";
 
 export type binaryItemsType = ItemsType & {
   conflict: boolean[];
-  choice: string[];
+  choice: boolean[];
   difficulty: number[];
   altDiscrimination: { [key: string]: number[] };
 }

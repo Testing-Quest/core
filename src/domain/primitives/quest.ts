@@ -2,17 +2,22 @@ export type NewQuestType = {
   uuid: string;
   keys: string[];
   scale: number;
-  alternatives: number[];
+  alternatives: number;
   matrix: string[][];
   type: 'gradu' | 'multi' | 'binary';
 };
 
-export type QuestType = {
-  uuid: string;
-  type: 'gradu' | 'multi' | 'binary';
-  scale: number;
+export type QuestType = NewQuestType &{
+  itemsIds: number[];
+  itemsEnabled: boolean[];
+  usersIds: number[];
+  usersEnabled: boolean[];
+  originalKeys: string[];
+  calculations: QuestCalculationsType;
+};
+
+export type QuestCalculationsType = {
   directScore: number[];
-  numberOfAnswers: number;
   correctedMatrix: number[][];
   cronbachAlpha: number;
 	sem: number;
@@ -21,6 +26,4 @@ export type QuestType = {
 	standardDeviation: number;
   reliability: number;
   discrimination: number;
-  testHealth: number;
 };
-
