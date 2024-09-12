@@ -1,6 +1,6 @@
-import calculatePearson from "../calculatePearson";
+import { calculatePearson } from "../calculatePearson";
 
-export default function calculateItemsDiscrimination(
+export function calculateItemsDiscrimination(
 corrMatrix: number[][],
 usersDirectScore: number[],
 ): number[] {

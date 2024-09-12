@@ -1,15 +1,15 @@
-import calculatePearson from "../calculatePearson";
+import { calculatePearson } from "../calculatePearson";
 
-export default function calculateUsersCoherence(matrix: number[][]): number[] {
-  const rows = matrix.length;
-  const cols = matrix[0].length;
+export function calculateUsersCoherence(correctMatrix: number[][]): number[] {
+  const rows = correctMatrix.length;
+  const cols = correctMatrix[0].length;
   const coherence = new Array(rows);
   const avgPunctuation = new Array(cols);
   const colSums = new Array(cols).fill(0);
   
   // Calculate column sums and average punctuation in one pass
   for (let i = 0; i < rows; i++) {
-    const row = matrix[i];
+    const row = correctMatrix[i];
     for (let j = 0; j < cols; j++) {
       colSums[j] += row[j];
     }
@@ -21,7 +21,7 @@ export default function calculateUsersCoherence(matrix: number[][]): number[] {
 
   // Calculate coherence for each row using calculatePearson
   for (let i = 0; i < rows; i++) {
-    coherence[i] = calculatePearson(matrix[i], avgPunctuation);
+    coherence[i] = calculatePearson(correctMatrix[i], avgPunctuation);
   }
 
   return coherence;

@@ -10,7 +10,7 @@ const DiccionarioTablaChiCuadrado: Map<number, number> = new Map([
 ]);
 
 
-export default function calculateItemChoice(
+export function calculateItemsChoice(
   keys: string[],
   alternatives: number,
   alternativeDifficulty: Map<string, number[]>,

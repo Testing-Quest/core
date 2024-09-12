@@ -1,4 +1,4 @@
-export default function calculateVariance(directScore: number[], mean: number): number {
+export function calculateVariance(directScore: number[], mean: number): number {
   const length = directScore.length;
   if (length === 0) {
     return 0;

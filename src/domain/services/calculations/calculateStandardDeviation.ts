@@ -1,4 +1,4 @@
-export default function calculateStandardDeviation(
+export function calculateStandardDeviation(
   variance: number
 ): number {
   return Math.sqrt(variance);

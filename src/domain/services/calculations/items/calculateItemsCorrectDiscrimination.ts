@@ -1,4 +1,4 @@
-export default function calculateItemsCorrectDiscrimination(
+export function calculateItemsCorrectDiscrimination(
   itemDiscrimination: number[],
   itemsVariance: number[],
   variance: number,

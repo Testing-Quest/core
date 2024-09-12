@@ -1,12 +1,12 @@
-import calculatePearson from "../calculatePearson";
+import { calculatePearson } from "../calculatePearson";
 
 const Alternatives: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U"];
 
-export default function calculateAlternativeDiscriminationDifficulty(
+export function calculateItemsAlternativeDiscriminationDifficulty(
   usersDirectScore: number[],
   matrix: string[][],
   numAlternatives: number,
-): void {
+): [Map<string, number[]>, Map<string, number[]>] {
   const numUsers = usersDirectScore.length;
 
 
@@ -38,4 +38,6 @@ export default function calculateAlternativeDiscriminationDifficulty(
     processAlternative(alternative);
   }
   processAlternative("X");
+
+  return [alternativeDiscrimination, alternativeDifficulty];
 }

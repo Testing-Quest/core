@@ -1,4 +1,4 @@
-export default function calculateMean(directScore: number[]): number {
+export function calculateMean(directScore: number[]): number {
   const length = directScore.length;
   if (length === 0) {
     return 0;

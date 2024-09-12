@@ -1,3 +1,3 @@
-export default function calculateReliability(alpha: number): number {
+export function calculateReliability(alpha: number): number {
   return alpha;
 }

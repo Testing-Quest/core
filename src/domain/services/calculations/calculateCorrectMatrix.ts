@@ -1,6 +1,6 @@
 type Primitives = string | number;
 
-export default function calculateCorrectMatrix<T extends Primitives>(matrix: T[][], keys: T[]): number[][] {
+export function calculateCorrectMatrix<T extends Primitives>(matrix: T[][], keys: T[]): number[][] {
   const numRows = matrix.length;
   const numCols = keys.length;
   const correctedMatrix: number[][] = new Array(numRows);

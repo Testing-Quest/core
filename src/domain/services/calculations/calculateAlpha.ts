@@ -1,4 +1,4 @@
-	export default function calculateCronbachAlpha(
+	export function calculateCronbachAlpha(
     correctMatrix: number[][],
     itemsVariance: number[],
     variance: number,

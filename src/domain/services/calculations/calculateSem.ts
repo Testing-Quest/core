@@ -1,5 +1,4 @@
-
-export default function calculateSEM(
+export function calculateSEM(
   cronbachAlpha: number,
   standardDeviation: number
 ): number {

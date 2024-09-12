@@ -1,5 +1,7 @@
-export default function calculateDiscrimination(
+export function calculateDiscrimination(
   itemsDiscrimination: number[]
-): number[] {
+): number {
+      return itemsDiscrimination.filter(value => value > 0.3).length / itemsDiscrimination.length;
+}
 
 

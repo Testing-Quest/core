@@ -1,5 +1,4 @@
-
-export default function calculateConflict(
+export function calculateItemsConflict(
   alternativeDiscriminationMap: Map<string, number[]>,
   itemDiscrimination: number[],
 ): boolean[] {

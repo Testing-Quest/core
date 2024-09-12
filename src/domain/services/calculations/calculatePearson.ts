@@ -1,4 +1,4 @@
-export default function calculatePearson(arr1: number[], arr2: number[]): number {
+export function calculatePearson(arr1: number[], arr2: number[]): number {
   let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
   const n = arr1.length;
   for (let i = 0; i < n; i++) {
