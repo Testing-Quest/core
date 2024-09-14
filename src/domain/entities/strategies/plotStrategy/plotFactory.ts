@@ -6,7 +6,7 @@ import { PlotStrategyMulti } from "./PlotStrategyMulti";
 
 
 
-export function plotFactory<Q extends QuestTypes>(type: 'gradu' | 'multi' | 'binary'): PlotStrategy<Q> {
+export function plotFactory<Q extends QuestTypes>(type: Q["type"]): PlotStrategy<Q> {
   switch (type) {
     case 'gradu':
       return new PlotStrategyGradu() as PlotStrategy<Q>;

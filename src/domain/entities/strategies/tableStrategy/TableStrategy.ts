@@ -1,18 +1,13 @@
-import { BinaryQuestType, GraduQuestType, MultiQuestType, QuestType } from "../../../primitives";
+import { BinaryQuestType, GraduQuestType, MultiQuestType, QuestTypes } from "../../../primitives";
 
 export type Table = { [name: string]: number[] | string[] | boolean[] };
 
-export interface TableStrategy<Q> {
+export interface TableStrategy<Q extends QuestTypes> {
   getItemsTable(attrs: Q): Table;
   getUsersTable(attrs: Q): Table;
 }
 
-export abstract class TableStrategyBase<Q extends QuestType> implements TableStrategy<Q> {
-  abstract getItemsTable(attrs: Q): Table;
-  abstract getUsersTable(attrs: Q): Table;
-}
-
-export class TableStrategyMulti extends TableStrategyBase<MultiQuestType> {
+export class TableStrategyMulti implements TableStrategy<MultiQuestType> {
   public getItemsTable(attrs: MultiQuestType): Table {
     return {
       'Items': attrs.keys,
@@ -27,7 +22,7 @@ export class TableStrategyMulti extends TableStrategyBase<MultiQuestType> {
   }
 }
 
-export class TableStrategyBinary extends TableStrategyBase<BinaryQuestType> {
+export class TableStrategyBinary implements TableStrategy<BinaryQuestType> {
   public getItemsTable(attrs: BinaryQuestType): Table {
     return {
       'Items': attrs.keys,
@@ -42,7 +37,7 @@ export class TableStrategyBinary extends TableStrategyBase<BinaryQuestType> {
   }
 }
 
-export class TableStrategyGradu extends TableStrategyBase<GraduQuestType> {
+export class TableStrategyGradu implements TableStrategy<GraduQuestType> {
   public getItemsTable(attrs: GraduQuestType): Table {
     return {
       'Items': attrs.keys,

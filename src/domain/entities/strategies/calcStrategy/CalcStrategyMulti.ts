@@ -1,9 +1,9 @@
 import { BinaryQuestType } from "../../../primitives";
 import { BinaryQuestCalculationsType } from "../../../primitives/binary/binaryQuest";
-import { CalcStrategyBase } from "./CalcStrategy";
+import { CalcStrategy } from "./CalcStrategy";
 import { BinaryChoiceCalculations as Bcc } from "./calculations";
 
-export class CalcStrategyMulti extends CalcStrategyBase<BinaryQuestType> {
+export class CalcStrategyMulti implements CalcStrategy<BinaryQuestType> {
   public filterMatrix(matrix: string[][], activeItems: boolean[], activeUsers: boolean[]): string[][] {
     return matrix
       .filter((_, rowIndex) => activeUsers[rowIndex])

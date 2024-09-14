@@ -27,9 +27,9 @@ export interface BaseQuest {
   getScoreDistribution(): dataPoint[];
   getItemsTable(): Table;
   getUsersTable(): Table;
-  getItemFrequency(): dataPoint[];
-  getItemDiscrimination(): dataPoint[] | null;
-  getItemProfile(): { [profile: string]: dataPoint[] };
+  getItemFrequency(id: number): dataPoint[];
+  getItemDiscrimination(id: number): dataPoint[] | null;
+  getItemProfile(id: number): { [profile: string]: dataPoint[] };
   update(payload: UpdatePayload): void;
   getModifications(): { keys: string[]; originalKeys: string[]; users: boolean[]; items: boolean[] };
 }
@@ -54,30 +54,45 @@ export class Quest<Q extends QuestTypes> implements BaseQuest {
   public getScoreDistribution(): dataPoint[] { return this._pltStrategy.getScoreDistribution(this._props) }
   public getItemsTable(): Table { return this._tblStrategy.getItemsTable(this._props) }
   public getUsersTable(): Table { return this._tblStrategy.getUsersTable(this._props) }
-  public getItemFrequency(): dataPoint[] { return this._pltStrategy.getItemFrequency(this._props) }
-  public getItemDiscrimination(): dataPoint[] | null { return this._pltStrategy.getItemDiscrimination(this._props) }
-  public getItemProfile(): { [profile: string]: dataPoint[] } { return this._pltStrategy.getItemProfile(this._props) }
-  public update(payload: UpdatePayload): void { this._props = this._clsStrategy.update(payload, this._props) }
+  public getItemFrequency(id: number): dataPoint[] { return this._pltStrategy.getItemFrequency(this._props, id) }
+  public getItemDiscrimination(id: number): dataPoint[] | null { return this._pltStrategy.getItemDiscrimination(this._props, id) }
+  public getItemProfile(id: number): { [profile: string]: dataPoint[] } { return this._pltStrategy.getItemProfile(this._props, id) }
+  public update(payload: UpdatePayload): void {
+    if (payload.activeItems) {
+      this._props.itemsEnabled = payload.activeItems;
+    }
+    if (payload.activeUsers) {
+      this._props.usersEnabled = payload.activeUsers;
+    }
+    if (payload.keys) {
+      this._props.keys = payload.keys;
+    }
+
+    const keys = this._props.keys.filter((_, i) => this._props.itemsEnabled[i]);
+    const matrix = this._clsStrategy.filterMatrix(this._props.matrix, this._props.itemsEnabled, this._props.usersEnabled);
+
+    this._props = { ...this._props, calculations: this._clsStrategy.calculate(matrix, keys, this._props.alternatives) };
+  }
 
   public getModifications(): { keys: string[]; originalKeys: string[]; users: boolean[]; items: boolean[] } {
-    return { keys: this._props.keys, originalKeys: this._props.originalKeys, users: this._props.usersEnabled, items: this._props.itemsEnabled }
-  }
+  return { keys: this._props.keys, originalKeys: this._props.originalKeys, users: this._props.usersEnabled, items: this._props.itemsEnabled }
+}
 
-  public static create<Q extends QuestTypes>(props: NewQuestType): Quest<Q> {
-    const cls = calcFactory<Q>(props.type);
-    const plt = plotFactory<Q>(props.type);
-    const tbl = tableFactory<Q>(props.type);
+  public static create<Q extends QuestTypes>(props: NewQuestType): Quest < Q > {
+  const cls = calcFactory<Q>(props.type);
+  const plt = plotFactory<Q>(props.type);
+  const tbl = tableFactory<Q>(props.type);
 
-    return new Quest<Q>({
-      ...props,
-      itemsIds: Array.from({ length: props.matrix[0].length }, (_, i) => i),
-      usersIds: Array.from({ length: props.matrix.length }, (_, i) => i),
-      itemsEnabled: new Array(props.matrix[0].length).fill(true),
-      usersEnabled: new Array(props.matrix.length).fill(true),
-      originalKeys: props.keys,
-      matrix: props.matrix,
-      calculations: cls.calculate(props.matrix, props.keys, props.alternatives),
-    } as Q, cls, plt, tbl);
-  }
+  return new Quest<Q>({
+    ...props,
+    itemsIds: Array.from({ length: props.matrix[0].length }, (_, i) => i),
+    usersIds: Array.from({ length: props.matrix.length }, (_, i) => i),
+    itemsEnabled: new Array(props.matrix[0].length).fill(true),
+    usersEnabled: new Array(props.matrix.length).fill(true),
+    originalKeys: props.keys,
+    matrix: props.matrix,
+    calculations: cls.calculate(props.matrix, props.keys, props.alternatives),
+  } as Q, cls, plt, tbl);
+}
 }
 

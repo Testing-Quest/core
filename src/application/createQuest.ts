@@ -23,7 +23,7 @@ export async function createQuestHandler(payload: createQuest, repository: Repos
   const quests = await loadQuest(payload.data);
   const childs: questChild[] = [];
   for (const quest of quests) {
-    repository.save(Quest.create<qType>(quest));
+    repository.save(Quest.create(quest));
     childs.push({ uuid: quest.uuid, scale: quest.scale, type: quest.type, useres: quest.matrix.length, items: quest.matrix[0].length });
   }
   return { childs };

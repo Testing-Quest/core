@@ -4,14 +4,14 @@ import { CalcStrategyBinary } from "./CalcStrategyBinary";
 import { CalcStrategyGradu } from "./CalcStrategyGradu";
 import { CalcStrategyMulti } from "./CalcStrategyMulti";
 
-export function calcFactory<Q extends QuestTypes>(type: 'gradu' | 'multi' | 'binary'): CalcStrategy<Q> {
+export function calcFactory<Q extends QuestTypes>(type: Q["type"]): CalcStrategy<Q> {
   switch (type) {
     case 'gradu':
-      return new CalcStrategyGradu() as CalcStrategy<Q>;
+      return new CalcStrategyGradu();
     case 'multi':
-      return new CalcStrategyMulti() as CalcStrategy<Q>;
+      return new CalcStrategyMulti();
     case 'binary':
-      return new CalcStrategyBinary() as CalcStrategy<Q>;
+      return new CalcStrategyBinary();
     default:
       throw new Error('Invalid calc type');
   }

@@ -1,6 +1,8 @@
+import { QuestTypes } from "../../../primitives";
 import { TableStrategy, TableStrategyBinary, TableStrategyGradu, TableStrategyMulti } from "./TableStrategy";
 
-export function tableFactory<Q>(type: 'gradu' | 'multi' | 'binary'): TableStrategy<Q> {
+
+export function tableFactory<Q extends QuestTypes>(type: Q["type"]): TableStrategy<Q> {
   switch (type) {
     case 'gradu':
       return new TableStrategyGradu() as TableStrategy<Q>;

@@ -12,9 +12,9 @@ export interface PlotStrategy<Q extends QuestTypes> {
   getDirectCohrency(attrs: Q): dataPoint[];
   getDirectMci(attrs: Q): dataPoint[];
   getScoreDistribution(attrs: Q): dataPoint[];
-  getItemFrequency(attrs: Q): dataPoint[];
-  getItemDiscrimination(attrs: Q): dataPoint[] | null;
-  getItemProfile(attrs: Q): { [profile: string]: dataPoint[] };
+  getItemFrequency(attrs: Q, id: number): dataPoint[];
+  getItemDiscrimination(attrs: Q, id: number): dataPoint[] | null;
+  getItemProfile(attrs: Q, id: number): { [profile: string]: dataPoint[] };
 }
 
 export abstract class PlotStrategyBase<Q extends QuestTypes> implements PlotStrategy<Q> {
@@ -65,7 +65,7 @@ export abstract class PlotStrategyBase<Q extends QuestTypes> implements PlotStra
   public getDirectWeight(attrs: Q): dataPoint[] { throw new Error(ERROR_MESSAGE.concat(attrs.type)) };
   public getDirectCohrency(attrs: Q): dataPoint[] { throw new Error(ERROR_MESSAGE.concat(attrs.type)) };
   public getDirectMci(attrs: Q): dataPoint[] { throw new Error(ERROR_MESSAGE.concat(attrs.type)) };
-  public getItemFrequency(attrs: Q): dataPoint[] { throw new Error(ERROR_MESSAGE.concat(attrs.type)) };
-  public getItemDiscrimination(attrs: Q): dataPoint[] | null { throw new Error(ERROR_MESSAGE.concat(attrs.type)) };
-  public getItemProfile(attrs: Q): { [profile: string]: dataPoint[] } { throw new Error(ERROR_MESSAGE.concat(attrs.type)) };
+  public getItemFrequency(attrs: Q, id: number): dataPoint[] { throw new Error(ERROR_MESSAGE.concat(attrs.type)) };
+  public getItemDiscrimination(attrs: Q, id: number): dataPoint[] | null { throw new Error(ERROR_MESSAGE.concat(attrs.type)) };
+  public getItemProfile(attrs: Q, id: number): { [profile: string]: dataPoint[] } { throw new Error(ERROR_MESSAGE.concat(attrs.type)) };
 }
