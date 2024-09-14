@@ -1,13 +1,27 @@
+import { ItemsType } from "./items";
+import { UsersType } from "./users";
+
+
+type MatrixTypes = string[][] | number[][];
+type QuestTypes = 'binary' | 'multi' | 'gradu';
+
+
 export type NewQuestType = {
   uuid: string;
   keys: string[];
   scale: number;
   alternatives: number;
-  matrix: string[][];
-  type: 'gradu' | 'multi' | 'binary';
+  matrix: MatrixTypes;
+  type: QuestTypes;
 };
 
-export type QuestType = NewQuestType &{
+export interface QuestType {
+  uuid: string;
+  keys: string[];
+  scale: number;
+  alternatives: number;
+  matrix: MatrixTypes;
+  type: QuestTypes;
   itemsIds: number[];
   itemsEnabled: boolean[];
   usersIds: number[];
@@ -16,14 +30,20 @@ export type QuestType = NewQuestType &{
   calculations: QuestCalculationsType;
 };
 
-export type QuestCalculationsType = {
-  directScore: number[];
-  correctedMatrix: number[][];
+export type HealthType = {
   cronbachAlpha: number;
-	sem: number;
-	mean: number;
-	variance: number;
-	standardDeviation: number;
+  sem: number;
+  mean: number;
+  variance: number;
+  standardDeviation: number;
   reliability: number;
   discrimination: number;
+  testHealth: number;
+};
+
+export type QuestCalculationsType = {
+  health: HealthType;
+  correctedMatrix: number[][];
+  items: ItemsType;
+  users: UsersType;
 };

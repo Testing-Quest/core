@@ -1,3 +1,3 @@
 import { UsersType } from "../users";
 
-export type graduUsersType = UsersType & {}
+export type graduUsersType = UsersType
