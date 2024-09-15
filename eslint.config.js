@@ -14,9 +14,7 @@ export default tseslint.config(
   {
     extends: [
       js.configs.recommended,
-      ...tseslint.configs.all,
-      //...tseslint.configs.stylisticTypeChecked,
-      //...tseslint.configs.recommended,
+      ...tseslint.configs.all, // sigue extendiendo las configuraciones
     ],
     files: ['src/**/*.{ts,tsx}', 'test/**/*.{ts,tsx}'],
     languageOptions: {
@@ -39,8 +37,9 @@ export default tseslint.config(
       ],
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-magic-numbers': 'off',
-      '@typescript-eslint/consistent-type-definitions': 'off',
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'], // Define la preferencia por "type"
       '@typescript-eslint/prefer-readonly-parameter-types': 'off',
+      '@typescript-eslint/method-signature-style': ['error', 'method'], // Mantiene los métodos
     },
   },
 )
