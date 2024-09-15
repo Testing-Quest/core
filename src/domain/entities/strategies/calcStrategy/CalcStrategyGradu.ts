@@ -1,22 +1,22 @@
-import { BinaryCalcsType } from '../../../primitives/calcs/calcs'
+import { GraduCalcsType } from '../../../primitives/calcs/calcs'
 import { CalcStrategy } from './CalcStrategy'
 import { BinaryChoiceCalculations as Bcc } from './calculations'
 
-export class CalcStrategyGradu implements CalcStrategy<"binary"> {
+export class CalcStrategyGradu implements CalcStrategy<"gradu"> {
   public filterMatrix(
-    matrix: string[][],
+    matrix: number[][],
     activeItems: boolean[],
     activeUsers: boolean[],
-  ): string[][] {
+  ): number[][] {
     return matrix
       .filter((_, rowIndex) => activeUsers[rowIndex])
       .map(row => row.filter((_, columnIndex) => activeItems[columnIndex]))
   }
   public calculate(
-    matrix: string[][],
+    matrix: number[][],
     keys: string[],
     alternatives: number,
-  ): BinaryCalcsType {
+  ): GraduCalcsType {
     const correctMatrix = Bcc.correctMatrix(matrix, keys)
     const usersDirectScore = Bcc.usersDirectScore(correctMatrix)
     const mean = Bcc.mean(usersDirectScore)

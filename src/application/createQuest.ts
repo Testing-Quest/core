@@ -29,9 +29,9 @@ export async function createQuestHandler(
     childs.push({
       uuid: quest.uuid,
       scale: quest.scale,
-      type: quest.type.type,
-      useres: quest.type.matrix.length,
-      items: quest.type.matrix[0].length,
+      type: quest.type,
+      useres: quest.matrix.length,
+      items: quest.matrix[0].length,
     })
   }
   return { childs }
