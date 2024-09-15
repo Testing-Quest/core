@@ -22,9 +22,9 @@ type GraduQuestType = QuestType & {
 type QuestTypes = BinaryQuestType | MultiQuestType | GraduQuestType
 
 type QuestTypesMap = {
-  binary: BinaryQuestType
-  multi: MultiQuestType
-  gradu: GraduQuestType
+  "binary": BinaryQuestType
+  "multi": MultiQuestType
+  "gradu": GraduQuestType
 }
 
 export type {

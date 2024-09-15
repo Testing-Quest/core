@@ -1,9 +1,9 @@
 import { BinaryQuestType } from '../../../primitives'
-import { BinaryQuestCalculationsType } from '../../../primitives/binary/binaryQuest'
+import { BinaryCalcsType } from '../../../primitives/calcs/calcs'
 import { CalcStrategy } from './CalcStrategy'
 import { BinaryChoiceCalculations as Bcc } from './calculations'
 
-export class CalcStrategyMulti implements CalcStrategy<BinaryQuestType> {
+export class CalcStrategyMulti implements CalcStrategy<"binary"> {
   public filterMatrix(
     matrix: string[][],
     activeItems: boolean[],
@@ -17,7 +17,7 @@ export class CalcStrategyMulti implements CalcStrategy<BinaryQuestType> {
     matrix: string[][],
     keys: string[],
     alternatives: number,
-  ): BinaryQuestCalculationsType {
+  ): BinaryCalcsType {
     const correctMatrix = Bcc.correctMatrix(matrix, keys)
     const usersDirectScore = Bcc.usersDirectScore(correctMatrix)
     const mean = Bcc.mean(usersDirectScore)
