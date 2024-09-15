@@ -1,5 +1,3 @@
-export function calculateStandardDeviation(
-  variance: number
-): number {
-  return Math.sqrt(variance);
+export function calculateStandardDeviation(variance: number): number {
+  return Math.sqrt(variance)
 }

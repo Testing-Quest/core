@@ -1,53 +1,70 @@
-import { BinaryQuestType, GraduQuestType, MultiQuestType, QuestTypes } from "../../../primitives";
+import {
+  BinaryQuestType,
+  GraduQuestType,
+  MultiQuestType,
+  QuestTypesMap,
+} from '../../../primitives'
 
-export type Table = { [name: string]: number[] | string[] | boolean[] };
+export type Table = { [name: string]: number[] | string[] | boolean[] }
 
-export interface TableStrategy<Q extends QuestTypes> {
-  getItemsTable(attrs: Q): Table;
-  getUsersTable(attrs: Q): Table;
+export interface TableStrategy<T extends keyof QuestTypesMap> {
+  getItemsTable(
+    items: QuestTypesMap[T]['calcs']['items'],
+    keys: QuestTypesMap[T]['keys'],
+  ): Table
+  getUsersTable(calcs: QuestTypesMap[T]['calcs']['users']): Table
 }
 
-export class TableStrategyMulti implements TableStrategy<MultiQuestType> {
-  public getItemsTable(attrs: MultiQuestType): Table {
+export class TableStrategyMulti implements TableStrategy<'multi'> {
+  public getItemsTable(
+    items: MultiQuestType['calcs']['items'],
+    keys: MultiQuestType['keys'],
+  ): Table {
     return {
-      'Items': attrs.keys,
-      'Enabled': attrs.itemsEnabled,
-    };
+      Items: keys,
+      Enabled: items.itemsEnabled,
+    }
   }
 
-  public getUsersTable(attrs: MultiQuestType): Table {
+  public getUsersTable(users: MultiQuestType['calcs']['users']): Table {
     return {
-      'Enabled': attrs.usersEnabled,
-    };
-  }
-}
-
-export class TableStrategyBinary implements TableStrategy<BinaryQuestType> {
-  public getItemsTable(attrs: BinaryQuestType): Table {
-    return {
-      'Items': attrs.keys,
-      'Enabled': attrs.itemsEnabled,
-    };
-  }
-
-  public getUsersTable(attrs: BinaryQuestType): Table {
-    return {
-      'Enabled': attrs.usersEnabled,
-    };
+      Enabled: users.usersEnabled,
+    }
   }
 }
 
-export class TableStrategyGradu implements TableStrategy<GraduQuestType> {
-  public getItemsTable(attrs: GraduQuestType): Table {
+export class TableStrategyBinary implements TableStrategy<'binary'> {
+  public getItemsTable(
+    items: BinaryQuestType['calcs']['items'],
+    keys: BinaryQuestType['keys'],
+  ): Table {
     return {
-      'Items': attrs.keys,
-      'Enabled': attrs.itemsEnabled,
-    };
+      Items: keys,
+      Enabled: items.itemsEnabled,
+    }
   }
 
-  public getUsersTable(attrs: GraduQuestType): Table {
+  public getUsersTable(users: BinaryQuestType['calcs']['users']): Table {
     return {
-      'Enabled': attrs.usersEnabled,
-    };
+      Enabled: users.usersEnabled,
+    }
+  }
+}
+
+export class TableStrategyGradu implements TableStrategy<'gradu'> {
+  public getItemsTable(
+    items: GraduQuestType['calcs']['items'],
+    keys: GraduQuestType['keys'],
+  ): Table {
+    return {
+      Items: keys,
+      Enabled: items.itemsEnabled,
+    }
+  }
+
+  public getUsersTable(users: GraduQuestType['calcs']['users']): Table {
+    return {
+      Enabled: users.usersEnabled,
+    }
   }
 }

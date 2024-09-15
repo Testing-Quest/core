@@ -1,4 +1,3 @@
-import { GraduQuestType } from "../../../primitives";
-import { PlotStrategyBase } from "./PlotStrategy";
+import { PlotStrategyBase } from './PlotStrategy'
 
-export class PlotStrategyGradu extends PlotStrategyBase<GraduQuestType> {}
+export class PlotStrategyGradu extends PlotStrategyBase<'gradu'> {}

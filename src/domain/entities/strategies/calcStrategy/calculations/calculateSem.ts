@@ -1,6 +1,6 @@
 export function calculateSEM(
   cronbachAlpha: number,
-  standardDeviation: number
+  standardDeviation: number,
 ): number {
-  return standardDeviation * Math.sqrt(1 - cronbachAlpha);
+  return standardDeviation * Math.sqrt(1 - cronbachAlpha)
 }

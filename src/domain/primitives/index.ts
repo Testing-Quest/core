@@ -1,21 +1,37 @@
-import { BinaryQuestType } from "./binary/binaryQuest";
-import { GraduQuestType } from "./gradu/graduQuest";
-import { MultiQuestType } from "./multi/multiQuest";
-import { QuestType } from "./quest";
+import { BinaryCalcsType, GraduCalcsType, MultiCalcsType } from './calcs/calcs'
+import { QuestType, NewQuestType } from './quest'
 
-type QuestTypes = BinaryQuestType | MultiQuestType | GraduQuestType;
+type BinaryQuestType = QuestType & {
+  type: 'binary'
+  matrix: string[][]
+  calcs: BinaryCalcsType
+}
 
-type QuestTypeMap = {
-  'binary': BinaryQuestType;
-  'multi': MultiQuestType;
-  'gradu': GraduQuestType;
-};
+type MultiQuestType = QuestType & {
+  type: 'multi'
+  matrix: string[][]
+  calcs: MultiCalcsType
+}
+
+type GraduQuestType = QuestType & {
+  type: 'gradu'
+  matrix: number[][]
+  calcs: GraduCalcsType
+}
+
+type QuestTypes = BinaryQuestType | MultiQuestType | GraduQuestType
+
+type QuestTypesMap = {
+  binary: BinaryQuestType
+  multi: MultiQuestType
+  gradu: GraduQuestType
+}
 
 export type {
-  QuestType,
-  GraduQuestType,
-  MultiQuestType,
-  BinaryQuestType,
   QuestTypes,
-  QuestTypeMap,
-};
+  QuestTypesMap,
+  NewQuestType,
+  BinaryQuestType,
+  MultiQuestType,
+  GraduQuestType,
+}

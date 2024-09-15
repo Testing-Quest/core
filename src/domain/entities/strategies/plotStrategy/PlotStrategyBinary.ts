@@ -1,4 +1,3 @@
-import { BinaryQuestType } from "../../../primitives";
-import { PlotStrategyBase } from "./PlotStrategy";
+import { PlotStrategyBase } from './PlotStrategy'
 
-export class PlotStrategyBinary extends PlotStrategyBase<BinaryQuestType> {}
+export class PlotStrategyBinary extends PlotStrategyBase<'binary'> {}

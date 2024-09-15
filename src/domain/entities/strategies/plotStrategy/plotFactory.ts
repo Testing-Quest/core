@@ -1,20 +1,20 @@
-import { QuestTypes } from "../../../primitives";
-import { PlotStrategy } from "./PlotStrategy";
-import { PlotStrategyBinary } from "./PlotStrategyBinary";
-import { PlotStrategyGradu } from "./PlotStrategyGradu";
-import { PlotStrategyMulti } from "./PlotStrategyMulti";
+import { QuestTypesMap } from '../../../primitives'
+import { PlotStrategy } from './PlotStrategy'
+import { PlotStrategyBinary } from './PlotStrategyBinary'
+import { PlotStrategyGradu } from './PlotStrategyGradu'
+import { PlotStrategyMulti } from './PlotStrategyMulti'
 
-
-
-export function plotFactory<Q extends QuestTypes>(type: Q["type"]): PlotStrategy<Q> {
+export function plotFactory<T extends keyof QuestTypesMap>(
+  type: T,
+): PlotStrategy<T> {
   switch (type) {
     case 'gradu':
-      return new PlotStrategyGradu() as PlotStrategy<Q>;
+      return new PlotStrategyGradu()
     case 'multi':
-      return new PlotStrategyMulti() as PlotStrategy<Q>;
+      return new PlotStrategyMulti()
     case 'binary':
-      return new PlotStrategyBinary() as PlotStrategy<Q>;
+      return new PlotStrategyBinary()
     default:
-      throw new Error('Invalid calc type');
+      throw new Error('Invalid calc type')
   }
 }

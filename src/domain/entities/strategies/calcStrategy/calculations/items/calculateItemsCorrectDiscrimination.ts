@@ -4,8 +4,12 @@ export function calculateItemsCorrectDiscrimination(
   variance: number,
 ): number[] {
   return itemDiscrimination.map((discrimination, i) => {
-    const numerator = discrimination * itemsVariance[i];
-    const denominator = Math.sqrt(variance ** 2 + itemsVariance[i] ** 2 - 2 * discrimination * variance * itemsVariance[i]);
-    return numerator / denominator;
-  });
+    const numerator = discrimination * itemsVariance[i]
+    const denominator = Math.sqrt(
+      variance ** 2 +
+        itemsVariance[i] ** 2 -
+        2 * discrimination * variance * itemsVariance[i],
+    )
+    return numerator / denominator
+  })
 }
