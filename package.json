@@ -10,7 +10,7 @@
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview --port 8080",
     "deploy": "gh-pages -d dist",
-    "format": "prettier --write 'src/**/*' 'test/**/*'"
+    "format": "prettier --write 'src/**/*' 'test/**/*' && eslint . --fix"
   },
   "dependencies": {
     "antd": "^5.20.5",
