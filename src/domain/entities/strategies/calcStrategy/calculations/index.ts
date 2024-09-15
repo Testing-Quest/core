@@ -20,7 +20,7 @@ import { calculateItemsDirectScore } from './items/calculateItemsDirectScore'
 import { calculateItemsDiscrimination } from './items/calculateItemsDiscrimination'
 import { calculateItemsMean } from './items/calculateItemsMean'
 import { calculateItemsVariance } from './items/calculateItemsVariance'
-import {
+import type {
   BinaryChoiceCalculationsType,
   MultipleChoiceCalculationsType,
 } from './types'

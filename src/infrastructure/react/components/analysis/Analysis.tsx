@@ -17,7 +17,7 @@ import { ItemMaps } from './panels/ItemsMap'
 import { Spin } from 'antd'
 import { DeactivatedElements } from './DeactivatedElements'
 
-interface AnalysisVisualization {
+type AnalysisVisualization = {
   label: string
   icon: string
   multi: React.FC<any> | null
@@ -98,7 +98,7 @@ const AnalysisVisualizations: AnalysisVisualization[] = [
   },
 ]
 
-export interface VisualizationItem {
+export type VisualizationItem = {
   label: string
   icon: string
   component: React.ComponentType<any>
@@ -109,9 +109,9 @@ const Analysis: React.FC = () => {
   const { analysisQuests } = useGlobalState()
   const [loading, setLoading] = useState(false)
 
-  const type = analysisQuests[0].type
+  const {type} = analysisQuests[0]
 
-  const visualizations: VisualizationItem[] = AnalysisVisualizations.reduce(
+  const visualizations: VisualizationItem[] = AnalysisVisualizations.reduce<VisualizationItem[]>(
     (acc, v) => {
       const component =
         type === QuestType.gradu
@@ -131,7 +131,7 @@ const Analysis: React.FC = () => {
 
       return acc
     },
-    [] as VisualizationItem[],
+    [],
   )
 
   const [selectedPanel, setSelectedPanel] = useState(visualizations[0])
@@ -168,7 +168,7 @@ const Analysis: React.FC = () => {
       >
         <Sidebar
           name={analysisQuests[0].name}
-          onSidebarClick={option => setSelectedPanel(option)}
+          onSidebarClick={option => { setSelectedPanel(option); }}
           sidebarOptions={visualizations}
         />
       </div>

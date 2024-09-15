@@ -1,6 +1,6 @@
 import React from 'react'
-import { questGradu } from '../../../domain/quests/questGradu'
-import { questMulti } from '../../../domain/quests/questMulti'
+import type { questGradu } from '../../../domain/quests/questGradu'
+import type { questMulti } from '../../../domain/quests/questMulti'
 import {
   LineChart,
   Line,
@@ -11,12 +11,12 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 
-interface DataPoint {
+type DataPoint = {
   x: number
   y: number
 }
 
-interface PanelProps {
+type PanelProps = {
   quest: questGradu | questMulti
 }
 
@@ -32,7 +32,7 @@ export const Reliability: React.FC<PanelProps> = ({ quest }) => {
   }))
 
   const handleClick = (point: any) => {
-    if (point && point.activePayload && point.activePayload.length > 0) {
+    if (point?.activePayload && point.activePayload.length > 0) {
       const clickedPoint = point.activePayload[0].payload
       console.log(
         `Clicked point - x: ${clickedPoint.x.toFixed(2)}, y: ${clickedPoint.y.toFixed(2)}`,

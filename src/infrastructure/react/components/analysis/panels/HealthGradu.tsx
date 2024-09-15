@@ -1,7 +1,7 @@
 import React from 'react'
-import { questGradu } from '../../../domain/quests/questGradu'
+import type { questGradu } from '../../../domain/quests/questGradu'
 
-interface PanelProps {
+type PanelProps = {
   quest: questGradu
 }
 

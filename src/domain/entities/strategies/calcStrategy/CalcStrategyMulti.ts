@@ -1,8 +1,8 @@
-import { MultiCalcsType } from '../../../primitives/calcs/calcs'
-import { CalcStrategy } from './CalcStrategy'
+import type { MultiCalcsType } from '../../../primitives/calcs/calcs'
+import type { CalcStrategy } from './CalcStrategy'
 import { BinaryChoiceCalculations as Bcc } from './calculations'
 
-export class CalcStrategyMulti implements CalcStrategy<"multi"> {
+export class CalcStrategyMulti implements CalcStrategy<'multi'> {
   public filterMatrix(
     matrix: string[][],
     activeItems: boolean[],

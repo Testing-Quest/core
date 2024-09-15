@@ -1,4 +1,4 @@
-const DiccionarioTablaChiCuadrado: Map<number, number> = new Map([
+const DiccionarioTablaChiCuadrado = new Map<number, number>([
   [3, 5.99],
   [4, 7.81],
   [5, 9.48],
@@ -18,7 +18,7 @@ export function calculateItemsChoice(
 ): boolean[] {
   const choice: boolean[] = []
 
-  const frequencies: Map<string, number[]> = new Map()
+  const frequencies = new Map<string, number[]>()
 
   for (const [difficulty, freqs] of alternativeDifficulty) {
     frequencies.set(

@@ -1,7 +1,7 @@
 import React from 'react'
-import { questMulti } from '../../../domain/quests/questMulti'
+import type { questMulti } from '../../../domain/quests/questMulti'
 
-interface PanelProps {
+type PanelProps = {
   quest: questMulti
 }
 

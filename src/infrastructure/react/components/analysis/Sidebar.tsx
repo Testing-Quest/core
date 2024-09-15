@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { VisualizationItem } from './Analysis'
+import type { VisualizationItem } from './Analysis'
 import {
   LineChartOutlined,
   TableOutlined,
@@ -11,9 +11,9 @@ import { Button, Dropdown, Menu } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 import { useGlobalState } from '../GlobalState'
 
-interface SidebarProps {
+type SidebarProps = {
   name: string
-  onSidebarClick: (option: VisualizationItem) => void
+  onSidebarClick(option: VisualizationItem): void
   sidebarOptions: VisualizationItem[]
 }
 
@@ -94,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <Menu.Item
           key={option.label}
           icon={getIcon(option.icon)}
-          onClick={() => handleClick(option)}
+          onClick={() => { handleClick(option); }}
         >
           {option.label}
         </Menu.Item>

@@ -1,33 +1,34 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react'
-import { questGradu } from '../domain/quests/questGradu'
-import { questMulti } from '../domain/quests/questMulti'
-import { QuestData, QuestType } from '../application/dtos/questDtos'
+import type { ReactNode } from 'react';
+import React, { createContext, useContext, useState } from 'react'
+import type { questGradu } from '../domain/quests/questGradu'
+import type { questMulti } from '../domain/quests/questMulti'
+import type { QuestData, QuestType } from '../application/dtos/questDtos'
 
-interface AnalysisQuest {
+type AnalysisQuest = {
   id: string
   name: string
   quest: questGradu | questMulti // TODO: REFATOR: Bad code, infrastructe should not know about domain. Need to find a way to remove this dependency.
   type: (typeof QuestType)[keyof typeof QuestType]
 }
 
-export interface UploadedQuest {
+export type UploadedQuest = {
   id: string
   name: string
   quests: QuestData[]
 }
 
-interface GlobalState {
+type GlobalState = {
   analysisQuests: AnalysisQuest[]
   uploadedQuests: UploadedQuest[]
-  addAnalysisQuest: (quest: AnalysisQuest) => void
-  addUploadedQuest: (quest: UploadedQuest) => void
-  removeAnalysisQuest: (questId: string) => void
-  removeUploadedQuest: (questId: string) => void
+  addAnalysisQuest(quest: AnalysisQuest): void
+  addUploadedQuest(quest: UploadedQuest): void
+  removeAnalysisQuest(questId: string): void
+  removeUploadedQuest(questId: string): void
 }
 
 const GlobalStateContext = createContext<GlobalState | undefined>(undefined)
 
-interface GlobalStateProviderProps {
+type GlobalStateProviderProps = {
   children: ReactNode
 }
 

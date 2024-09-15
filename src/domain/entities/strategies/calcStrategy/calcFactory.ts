@@ -1,5 +1,5 @@
-import { QuestTypesMap } from '../../../primitives'
-import { CalcStrategy } from './CalcStrategy'
+import type { QuestTypesMap } from '../../../primitives'
+import type { CalcStrategy } from './CalcStrategy'
 import { CalcStrategyBinary } from './CalcStrategyBinary'
 import { CalcStrategyGradu } from './CalcStrategyGradu'
 import { CalcStrategyMulti } from './CalcStrategyMulti'

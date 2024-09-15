@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
-import { questGradu } from '../../../domain/quests/questGradu'
-import { questMulti } from '../../../domain/quests/questMulti'
+import type { questGradu } from '../../../domain/quests/questGradu'
+import type { questMulti } from '../../../domain/quests/questMulti'
 import { Table } from 'antd'
 
-interface PanelProps {
+type PanelProps = {
   quest: questGradu | questMulti
 }
-interface TableRow {
+type TableRow = {
   key: number
   name: string
   description: string
 }
-interface ExpandedRowContentProps {
+type ExpandedRowContentProps = {
   description: string
 }
 
@@ -60,10 +60,10 @@ export const ItemTable: React.FC<PanelProps> = ({ quest }) => {
       expandable={{
         expandedRowRender,
         expandedRowKeys: expandedRowId ? [expandedRowId] : [],
-        onExpand: (_, record) => handleRowClick(record),
+        onExpand: (_, record) => { handleRowClick(record); },
       }}
       onRow={record => ({
-        onClick: () => handleRowClick(record),
+        onClick: () => { handleRowClick(record); },
       })}
     />
   )

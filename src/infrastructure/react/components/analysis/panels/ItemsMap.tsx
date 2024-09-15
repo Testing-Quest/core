@@ -1,6 +1,6 @@
 import React from 'react'
-import { questGradu } from '../../../domain/quests/questGradu'
-import { questMulti } from '../../../domain/quests/questMulti'
+import type { questGradu } from '../../../domain/quests/questGradu'
+import type { questMulti } from '../../../domain/quests/questMulti'
 import {
   ScatterChart,
   Scatter,
@@ -14,13 +14,13 @@ import {
 import { ReferenceLine } from 'recharts'
 import { Label } from 'recharts'
 
-interface DataPoint {
+type DataPoint = {
   x: number
   y: number
   hover: number
 }
 
-interface PanelProps {
+type PanelProps = {
   quest: questGradu | questMulti
 }
 
@@ -37,10 +37,10 @@ export const ItemMaps: React.FC<PanelProps> = ({ quest }) => {
     hover: hover[index],
   }))
 
-  var y_domain
-  var y_ticks
+  let y_domain
+  let y_ticks
 
-  var x1, x2, x3, x4
+  let x1, x2, x3, x4
   if (quest.getType() === 'multi') {
     y_domain = [0, 1]
     y_ticks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
@@ -199,7 +199,7 @@ export const ItemMaps: React.FC<PanelProps> = ({ quest }) => {
 }
 
 const CustomTooltip: React.FC<any> = ({ active, payload }) => {
-  if (active && payload && payload.length) {
+  if (active && payload?.length) {
     const point = payload[0].payload as DataPoint
     return (
       <div

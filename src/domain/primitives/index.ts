@@ -1,5 +1,5 @@
-import { BinaryCalcsType, GraduCalcsType, MultiCalcsType } from './calcs/calcs'
-import { QuestType, NewQuestType } from './quest'
+import type { BinaryCalcsType, GraduCalcsType, MultiCalcsType } from './calcs/calcs'
+import type { QuestType, NewQuestType } from './quest'
 
 type BinaryQuestType = QuestType & {
   type: 'binary'
@@ -22,9 +22,9 @@ type GraduQuestType = QuestType & {
 type QuestTypes = BinaryQuestType | MultiQuestType | GraduQuestType
 
 type QuestTypesMap = {
-  "binary": BinaryQuestType
-  "multi": MultiQuestType
-  "gradu": GraduQuestType
+  binary: BinaryQuestType
+  multi: MultiQuestType
+  gradu: GraduQuestType
 }
 
 export type {

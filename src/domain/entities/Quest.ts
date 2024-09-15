@@ -1,11 +1,11 @@
-import { QuestTypesMap } from '../primitives'
-import { NewQuestType } from '../primitives/quest'
+import type { QuestTypesMap } from '../primitives'
+import type { NewQuestType } from '../primitives/quest'
 import { calcFactory } from './strategies/calcStrategy/calcFactory'
-import { CalcStrategy } from './strategies/calcStrategy/CalcStrategy'
+import type { CalcStrategy } from './strategies/calcStrategy/CalcStrategy'
 import { plotFactory } from './strategies/plotStrategy/plotFactory'
-import { PlotStrategy } from './strategies/plotStrategy/PlotStrategy'
+import type { PlotStrategy } from './strategies/plotStrategy/PlotStrategy'
 import { tableFactory } from './strategies/tableStrategy/tableFactory'
-import { Table, TableStrategy } from './strategies/tableStrategy/TableStrategy'
+import type { Table, TableStrategy } from './strategies/tableStrategy/TableStrategy'
 
 export type dataPoint = { x: number; y: number }
 
@@ -15,9 +15,9 @@ export type UpdatePayload = {
   keys: string[] | null
 }
 
-export interface BaseQuest {
+export type BaseQuest = {
   getUuid(): string
-  getHealth(): { [name: string]: number }
+  getHealth(): Record<string, number>
   getReliability(): dataPoint[]
   getItemsMap(): dataPoint[]
   getDirectWeight(): dataPoint[]
@@ -29,7 +29,7 @@ export interface BaseQuest {
   getUsersTable(): Table
   getItemFrequency(id: number): dataPoint[]
   getItemDiscrimination(id: number): dataPoint[] | null
-  getItemProfile(id: number): { [profile: string]: dataPoint[] }
+  getItemProfile(id: number): Record<string, dataPoint[]>
   update(payload: UpdatePayload): void
   getModifications(): {
     keys: string[]
@@ -42,15 +42,15 @@ export interface BaseQuest {
 export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
   constructor(
     private _props: QuestTypesMap[T],
-    private _clsStrategy: CalcStrategy<T>,
-    private _pltStrategy: PlotStrategy<T>,
-    private _tblStrategy: TableStrategy<T>,
+    private readonly _clsStrategy: CalcStrategy<T>,
+    private readonly _pltStrategy: PlotStrategy<T>,
+    private readonly _tblStrategy: TableStrategy<T>,
   ) {}
 
   public getUuid(): string {
     return this._props.uuid
   }
-  public getHealth(): { [name: string]: number } {
+  public getHealth(): Record<string, number> {
     return this._props.calcs.health
   }
   public getReliability(): dataPoint[] {
@@ -89,7 +89,7 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
   public getItemDiscrimination(id: number): dataPoint[] | null {
     return this._pltStrategy.getItemDiscrimination(this._props.calcs, id)
   }
-  public getItemProfile(id: number): { [profile: string]: dataPoint[] } {
+  public getItemProfile(id: number): Record<string, dataPoint[]> {
     return this._pltStrategy.getItemProfile(this._props.calcs, id)
   }
   public update(payload: UpdatePayload): void {

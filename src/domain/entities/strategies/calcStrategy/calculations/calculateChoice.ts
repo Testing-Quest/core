@@ -1,3 +1,3 @@
 export function calculateChoice(itemsChoice: boolean[]): number {
-  return itemsChoice.filter(value => value === true).length / itemsChoice.length
+  return itemsChoice.filter(value => value).length / itemsChoice.length
 }

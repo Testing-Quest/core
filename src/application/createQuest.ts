@@ -1,5 +1,5 @@
 import { Quest } from '../domain/entities/Quest'
-import { Repository } from '../domain/repository'
+import type { Repository } from '../domain/repository'
 import loadQuest from '../domain/services/questLoader'
 
 type questChild = {

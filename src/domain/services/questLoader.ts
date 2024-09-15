@@ -8,10 +8,10 @@ import {
   SecondRowNotContainsNumbersError,
   ThirdRowNotContainsNumbersError,
 } from '../errors/loadErrors'
-import { NewQuestType } from '../primitives/quest'
+import type { NewQuestType } from '../primitives/quest'
 import { v4 as uuidv4 } from 'uuid'
 
-interface Quest {
+type Quest = {
   keys: string[]
   scales: number[]
   alternatives: number[]

@@ -1,6 +1,6 @@
-import { QuestTypesMap } from '../../../primitives'
+import type { QuestTypesMap } from '../../../primitives'
 
-export interface CalcStrategy<T extends keyof QuestTypesMap> {
+export type CalcStrategy<T extends keyof QuestTypesMap> = {
   calculate(
     matrix: QuestTypesMap[T]['matrix'],
     keys: string[],

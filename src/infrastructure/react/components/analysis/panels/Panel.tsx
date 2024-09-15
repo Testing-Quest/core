@@ -1,6 +1,6 @@
-import { questGradu } from '../../../domain/quests/questGradu'
-import { questMulti } from '../../../domain/quests/questMulti'
+import type { questGradu } from '../../../domain/quests/questGradu'
+import type { questMulti } from '../../../domain/quests/questMulti'
 
-export interface PanelProps {
+export type PanelProps = {
   quest: questGradu | questMulti
 }

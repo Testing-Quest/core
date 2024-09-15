@@ -1,13 +1,13 @@
-import {
+import type {
   BinaryQuestType,
   GraduQuestType,
   MultiQuestType,
   QuestTypesMap,
 } from '../../../primitives'
 
-export type Table = { [name: string]: number[] | string[] | boolean[] }
+export type Table = Record<string, number[] | string[] | boolean[]>
 
-export interface TableStrategy<T extends keyof QuestTypesMap> {
+export type TableStrategy<T extends keyof QuestTypesMap> = {
   getItemsTable(
     items: QuestTypesMap[T]['calcs']['items'],
     keys: QuestTypesMap[T]['keys'],

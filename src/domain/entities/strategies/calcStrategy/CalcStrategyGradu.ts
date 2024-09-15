@@ -1,8 +1,8 @@
-import { GraduCalcsType } from '../../../primitives/calcs/calcs'
-import { CalcStrategy } from './CalcStrategy'
+import type { GraduCalcsType } from '../../../primitives/calcs/calcs'
+import type { CalcStrategy } from './CalcStrategy'
 import { BinaryChoiceCalculations as Bcc } from './calculations'
 
-export class CalcStrategyGradu implements CalcStrategy<"gradu"> {
+export class CalcStrategyGradu implements CalcStrategy<'gradu'> {
   public filterMatrix(
     matrix: number[][],
     activeItems: boolean[],

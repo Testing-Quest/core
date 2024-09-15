@@ -1,9 +1,9 @@
 import React from 'react'
-import { questGradu } from '../../../domain/quests/questGradu'
-import { questMulti } from '../../../domain/quests/questMulti'
+import type { questGradu } from '../../../domain/quests/questGradu'
+import type { questMulti } from '../../../domain/quests/questMulti'
 import { Table } from 'antd'
 
-interface PanelProps {
+type PanelProps = {
   quest: questGradu | questMulti
 }
 
@@ -20,7 +20,7 @@ export const ExamineeTable: React.FC<PanelProps> = ({ quest }) => {
     .values()
     .next()
     .value.map((_: number, rowIndex: number) => {
-      const rowData: { [key: string]: string | number } = {}
+      const rowData: Record<string, string | number> = {}
 
       Array.from(table.keys()).forEach(columnKey => {
         const columnValues = table.get(columnKey)

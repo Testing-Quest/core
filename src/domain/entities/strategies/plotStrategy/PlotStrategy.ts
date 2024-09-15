@@ -1,9 +1,9 @@
-import { QuestTypesMap } from '../../../primitives'
-import { dataPoint } from '../../Quest'
+import type { QuestTypesMap } from '../../../primitives'
+import type { dataPoint } from '../../Quest'
 
 const ERROR_MESSAGE = 'Not implemented for Quest Type: '
 
-export interface PlotStrategy<T extends keyof QuestTypesMap> {
+export type PlotStrategy<T extends keyof QuestTypesMap> = {
   getReliability(attrs: QuestTypesMap[T]['calcs']): dataPoint[]
   getItemsMap(attrs: QuestTypesMap[T]['calcs']): dataPoint[]
   getDirectBlank(attrs: QuestTypesMap[T]['calcs']): dataPoint[]
@@ -19,7 +19,7 @@ export interface PlotStrategy<T extends keyof QuestTypesMap> {
   getItemProfile(
     attrs: QuestTypesMap[T]['calcs'],
     id: number,
-  ): { [profile: string]: dataPoint[] }
+  ): Record<string, dataPoint[]>
 }
 
 export abstract class PlotStrategyBase<T extends keyof QuestTypesMap>
@@ -95,7 +95,7 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap>
   public getItemProfile(
     attrs: QuestTypesMap[T]['calcs'],
     id: number,
-  ): { [profile: string]: dataPoint[] } {
+  ): Record<string, dataPoint[]> {
     throw new Error(ERROR_MESSAGE)
   }
 }

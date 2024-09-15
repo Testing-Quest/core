@@ -1,10 +1,10 @@
-import {
+import type {
   BinaryItemsType,
   GraduItemsType,
   ItemsType,
   MultiItemsType,
 } from './items'
-import {
+import type {
   BinaryUsersType,
   GraduUsersType,
   MultiUsersType,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { questMulti } from '../../../domain/quests/questMulti'
+import type { questMulti } from '../../../domain/quests/questMulti'
 import {
   XAxis,
   YAxis,
@@ -9,16 +9,16 @@ import {
   Text,
   Bar,
 } from 'recharts'
-import { questGradu } from '../../../domain/quests/questGradu'
+import type { questGradu } from '../../../domain/quests/questGradu'
 import { BarChart } from 'recharts'
 
-interface DataPoint {
+type DataPoint = {
   x: number
   y: number
   hover: number
 }
 
-interface PanelProps {
+type PanelProps = {
   quest: questMulti | questGradu
 }
 
@@ -36,13 +36,13 @@ export const ScoreDistribution: React.FC<PanelProps> = ({ quest }) => {
 
   // create bins
 
-  let bins: number[] = []
+  const bins: number[] = []
   for (let i = 0; i < 23; i++) {
     bins.push(min + binSize * i)
   }
   bins.push(max)
 
-  let data: any[] = []
+  const data: any[] = []
   for (let i = 0; i < 23; i++) {
     const count = score.filter(s => s >= bins[i] && s < bins[i + 1]).length
     data.push({ x: bins[i], y: (count / score.length) * 100 })
@@ -73,7 +73,7 @@ export const ScoreDistribution: React.FC<PanelProps> = ({ quest }) => {
 }
 
 const CustomTooltip: React.FC<any> = ({ active, payload }) => {
-  if (active && payload && payload.length) {
+  if (active && payload?.length) {
     const point = payload[0].payload as DataPoint
     return (
       <div

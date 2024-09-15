@@ -1,5 +1,5 @@
-import { QuestTypesMap } from '../../../primitives'
-import { PlotStrategy } from './PlotStrategy'
+import type { QuestTypesMap } from '../../../primitives'
+import type { PlotStrategy } from './PlotStrategy'
 import { PlotStrategyBinary } from './PlotStrategyBinary'
 import { PlotStrategyGradu } from './PlotStrategyGradu'
 import { PlotStrategyMulti } from './PlotStrategyMulti'

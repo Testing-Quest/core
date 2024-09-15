@@ -1,11 +1,11 @@
 import React from 'react'
-import { questMulti } from '../../domain/quests/questMulti'
-import { questGradu } from '../../domain/quests/questGradu'
+import type { questMulti } from '../../domain/quests/questMulti'
+import type { questGradu } from '../../domain/quests/questGradu'
 import { Card, Button } from 'antd'
 
-interface SidebarProps {
+type SidebarProps = {
   quest: questGradu | questMulti
-  onReset: () => void
+  onReset(): void
   //onRecalculate: () => void;
 }
 

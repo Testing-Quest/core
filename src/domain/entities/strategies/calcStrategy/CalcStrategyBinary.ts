@@ -1,5 +1,5 @@
-import { BinaryCalcsType } from '../../../primitives/calcs/calcs'
-import { CalcStrategy } from './CalcStrategy'
+import type { BinaryCalcsType } from '../../../primitives/calcs/calcs'
+import type { CalcStrategy } from './CalcStrategy'
 import { BinaryChoiceCalculations as Bcc } from './calculations'
 
 export class CalcStrategyBinary implements CalcStrategy<'binary'> {

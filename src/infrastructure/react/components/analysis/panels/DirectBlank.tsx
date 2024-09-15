@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { questGradu } from '../../../domain/quests/questGradu'
-import { questMulti } from '../../../domain/quests/questMulti'
+import type { questGradu } from '../../../domain/quests/questGradu'
+import type { questMulti } from '../../../domain/quests/questMulti'
 import {
   ScatterChart,
   Scatter,
@@ -14,13 +14,13 @@ import {
 import { Label } from 'recharts'
 import { Spin } from 'antd'
 
-interface DataPoint {
+type DataPoint = {
   x: number
   y: number
   hover: number
 }
 
-interface PanelProps {
+type PanelProps = {
   quest: questGradu | questMulti
 }
 
@@ -97,7 +97,7 @@ export const DirectVsBlank: React.FC<PanelProps> = ({ quest }) => {
 }
 
 const CustomTooltip: React.FC<any> = ({ active, payload }) => {
-  if (active && payload && payload.length) {
+  if (active && payload?.length) {
     const point = payload[0].payload as DataPoint
     return (
       <div
