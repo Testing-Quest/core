@@ -1,5 +1,5 @@
 export function calculateVariance(directScore: number[], mean: number): number {
-  const {length} = directScore
+  const { length } = directScore
   if (length === 0) {
     return 0
   }

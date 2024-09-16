@@ -1,8 +1,9 @@
 import { Quest } from '../domain/entities/Quest'
 import type { Repository } from '../domain/repository'
 import loadQuest from '../domain/services/questLoader'
+import type { Response } from './response'
 
-type questChild = {
+type QuestChild = {
   uuid: string
   scale: number
   type: 'multi' | 'gradu' | 'binary'
@@ -10,22 +11,22 @@ type questChild = {
   items: number
 }
 
-export type createQuest = {
+export type CreateQuest = {
   data: string[][]
 }
 
-export type createQuestResponse = {
-  childs: questChild[]
+export type CreateQuestResponse = Response & {
+  childs: QuestChild[] | null
 }
 
-export async function createQuestHandler(
-  payload: createQuest,
+async function _createQuest(
+  payload: CreateQuest,
   repository: Repository,
-): Promise<createQuestResponse> {
+): Promise<CreateQuestResponse> {
   const quests = await loadQuest(payload.data)
-  const childs: questChild[] = []
+  const childs: QuestChild[] = []
   for (const quest of quests) {
-    repository.save(Quest.create(quest))
+    await repository.save(Quest.create(quest))
     childs.push({
       uuid: quest.uuid,
       scale: quest.scale,
@@ -34,5 +35,19 @@ export async function createQuestHandler(
       items: quest.matrix[0].length,
     })
   }
-  return { childs }
+  return { childs, error: null }
+}
+
+export async function createQuestHandler(
+  payload: CreateQuest,
+  repository: Repository,
+): Promise<CreateQuestResponse> {
+  try {
+    return await _createQuest(payload, repository)
+  } catch (error: unknown) {
+    return {
+      childs: null,
+      error: error instanceof Error ? error.message : String(error),
+    }
+  }
 }

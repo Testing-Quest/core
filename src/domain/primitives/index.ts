@@ -1,4 +1,8 @@
-import type { BinaryCalcsType, GraduCalcsType, MultiCalcsType } from './calcs/calcs'
+import type {
+  BinaryCalcsType,
+  GraduCalcsType,
+  MultiCalcsType,
+} from './calcs/calcs'
 import type { QuestType, NewQuestType } from './quest'
 
 type BinaryQuestType = QuestType & {

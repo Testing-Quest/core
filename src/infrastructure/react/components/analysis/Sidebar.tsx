@@ -94,7 +94,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         <Menu.Item
           key={option.label}
           icon={getIcon(option.icon)}
-          onClick={() => { handleClick(option); }}
+          onClick={() => {
+            handleClick(option)
+          }}
         >
           {option.label}
         </Menu.Item>

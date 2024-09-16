@@ -109,30 +109,29 @@ const Analysis: React.FC = () => {
   const { analysisQuests } = useGlobalState()
   const [loading, setLoading] = useState(false)
 
-  const {type} = analysisQuests[0]
+  const { type } = analysisQuests[0]
 
-  const visualizations: VisualizationItem[] = AnalysisVisualizations.reduce<VisualizationItem[]>(
-    (acc, v) => {
-      const component =
-        type === QuestType.gradu
-          ? v.gradu
-          : type === QuestType.multi
-            ? v.multi
-            : v.binary
+  const visualizations: VisualizationItem[] = AnalysisVisualizations.reduce<
+    VisualizationItem[]
+  >((acc, v) => {
+    const component =
+      type === QuestType.gradu
+        ? v.gradu
+        : type === QuestType.multi
+          ? v.multi
+          : v.binary
 
-      if (component !== null) {
-        acc.push({
-          label: v.label,
-          icon: v.icon,
-          component: component,
-          quest_id: analysisQuests[0].id,
-        })
-      }
+    if (component !== null) {
+      acc.push({
+        label: v.label,
+        icon: v.icon,
+        component: component,
+        quest_id: analysisQuests[0].id,
+      })
+    }
 
-      return acc
-    },
-    [],
-  )
+    return acc
+  }, [])
 
   const [selectedPanel, setSelectedPanel] = useState(visualizations[0])
 
@@ -168,7 +167,9 @@ const Analysis: React.FC = () => {
       >
         <Sidebar
           name={analysisQuests[0].name}
-          onSidebarClick={option => { setSelectedPanel(option); }}
+          onSidebarClick={option => {
+            setSelectedPanel(option)
+          }}
           sidebarOptions={visualizations}
         />
       </div>

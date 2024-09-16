@@ -5,7 +5,10 @@ import type { CalcStrategy } from './strategies/calcStrategy/CalcStrategy'
 import { plotFactory } from './strategies/plotStrategy/plotFactory'
 import type { PlotStrategy } from './strategies/plotStrategy/PlotStrategy'
 import { tableFactory } from './strategies/tableStrategy/tableFactory'
-import type { Table, TableStrategy } from './strategies/tableStrategy/TableStrategy'
+import type {
+  Table,
+  TableStrategy,
+} from './strategies/tableStrategy/TableStrategy'
 
 export type dataPoint = { x: number; y: number }
 

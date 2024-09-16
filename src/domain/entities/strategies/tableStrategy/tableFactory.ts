@@ -1,6 +1,5 @@
 import type { QuestTypesMap } from '../../../primitives'
-import type {
-  TableStrategy} from './TableStrategy';
+import type { TableStrategy } from './TableStrategy'
 import {
   TableStrategyBinary,
   TableStrategyGradu,

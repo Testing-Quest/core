@@ -1,5 +1,5 @@
 export function calculateMean(directScore: number[]): number {
-  const {length} = directScore
+  const { length } = directScore
   if (length === 0) {
     return 0
   }

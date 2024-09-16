@@ -60,10 +60,14 @@ export const ItemTable: React.FC<PanelProps> = ({ quest }) => {
       expandable={{
         expandedRowRender,
         expandedRowKeys: expandedRowId ? [expandedRowId] : [],
-        onExpand: (_, record) => { handleRowClick(record); },
+        onExpand: (_, record) => {
+          handleRowClick(record)
+        },
       }}
       onRow={record => ({
-        onClick: () => { handleRowClick(record); },
+        onClick: () => {
+          handleRowClick(record)
+        },
       })}
     />
   )

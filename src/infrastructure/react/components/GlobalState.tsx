@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from 'react'
 import React, { createContext, useContext, useState } from 'react'
 import type { questGradu } from '../domain/quests/questGradu'
 import type { questMulti } from '../domain/quests/questMulti'

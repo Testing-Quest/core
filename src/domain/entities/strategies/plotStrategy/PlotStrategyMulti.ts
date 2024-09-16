@@ -10,13 +10,13 @@ export class PlotStrategyMulti extends PlotStrategyBase<'multi'> {
   }
 
   public getDirectCohrency(attrs: MultiQuestType['calcs']): dataPoint[] {
-    const {coherence} = attrs.users
+    const { coherence } = attrs.users
     const direct = attrs.users.directScore
     return coherence.map((c, i) => ({ x: direct[i], y: c }))
   }
 
   public getDirectMci(attrs: MultiQuestType['calcs']): dataPoint[] {
-    const {mci} = attrs.users
+    const { mci } = attrs.users
     const direct = attrs.users.directScore
     return mci.map((m, i) => ({ x: direct[i], y: m }))
   }

@@ -3,7 +3,7 @@ import { CloseOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Upload, message, List, Collapse, Spin } from 'antd'
 import type { UploadChangeParam } from 'antd/lib/upload'
 import loadQuest from '../../application/services/loadQuest'
-import type { UploadedQuest} from '../GlobalState';
+import type { UploadedQuest } from '../GlobalState'
 import { useGlobalState } from '../GlobalState'
 import { useNavigate } from 'react-router-dom'
 import { CreateQuest } from '../../application/services/createQuest'
@@ -59,7 +59,13 @@ const UploadFile = () => {
           {
             label: item.name,
             key: item.name,
-            extra: <CloseOutlined onClick={() => { handleRemoveQuest(item); }} />,
+            extra: (
+              <CloseOutlined
+                onClick={() => {
+                  handleRemoveQuest(item)
+                }}
+              />
+            ),
             children: (
               <List
                 dataSource={item.quests}
