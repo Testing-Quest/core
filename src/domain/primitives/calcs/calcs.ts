@@ -12,7 +12,7 @@ import type {
 } from './users'
 
 export type CalcsType = {
-  correctedMatrix: number[][]
+  correctMatrix: number[][]
   health: HealthType
   items: ItemsType
   users: UsersType

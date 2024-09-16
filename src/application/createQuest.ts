@@ -1,23 +1,11 @@
 import { Quest } from '../domain/entities/Quest'
 import type { Repository } from '../domain/repository'
 import loadQuest from '../domain/services/questLoader'
-import type { Response } from './response'
-
-type QuestChild = {
-  uuid: string
-  scale: number
-  type: 'multi' | 'gradu' | 'binary'
-  useres: number
-  items: number
-}
-
-export type CreateQuest = {
-  data: string[][]
-}
-
-export type CreateQuestResponse = Response & {
-  childs: QuestChild[] | null
-}
+import type { CreateQuest } from './requests/createQuestRequest'
+import type {
+  CreateQuestResponse,
+  QuestChild,
+} from './responses/createQuestResponse'
 
 async function _createQuest(
   payload: CreateQuest,

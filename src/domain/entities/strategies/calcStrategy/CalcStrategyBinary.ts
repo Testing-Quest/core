@@ -39,7 +39,7 @@ export class CalcStrategyBinary implements CalcStrategy<'binary'> {
     const mci = Bcc.mci(correctMatrix, itemsDifficulty, usersDirectScore)
 
     return {
-      correctedMatrix: correctMatrix,
+      correctMatrix: correctMatrix,
       coherency: Bcc.coherency(mci),
       difficulty: Bcc.difficulty(itemsDifficulty),
       health: {
