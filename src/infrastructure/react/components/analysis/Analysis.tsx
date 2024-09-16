@@ -111,15 +111,8 @@ const Analysis: React.FC = () => {
 
   const { type } = analysisQuests[0]
 
-  const visualizations: VisualizationItem[] = AnalysisVisualizations.reduce<
-    VisualizationItem[]
-  >((acc, v) => {
-    const component =
-      type === QuestType.gradu
-        ? v.gradu
-        : type === QuestType.multi
-          ? v.multi
-          : v.binary
+  const visualizations: VisualizationItem[] = AnalysisVisualizations.reduce<VisualizationItem[]>((acc, v) => {
+    const component = type === QuestType.gradu ? v.gradu : type === QuestType.multi ? v.multi : v.binary
 
     if (component !== null) {
       acc.push({
@@ -181,16 +174,10 @@ const Analysis: React.FC = () => {
         ) : (
           <div>
             <div>
-              <DeactivatedElements
-                quest={analysisQuests[0].quest}
-                onReset={onReset}
-              />
+              <DeactivatedElements quest={analysisQuests[0].quest} onReset={onReset} />
             </div>
             <div>
-              <selectedPanel.component
-                quest={analysisQuests[0].quest}
-                onRecalculate={onRecalculate}
-              />
+              <selectedPanel.component quest={analysisQuests[0].quest} onRecalculate={onRecalculate} />
             </div>
           </div>
         )}

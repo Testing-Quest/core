@@ -32,9 +32,7 @@ type GlobalStateProviderProps = {
   children: ReactNode
 }
 
-export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
-  children,
-}) => {
+export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({ children }) => {
   const [analysisQuests, setAnalysisQuests] = useState<AnalysisQuest[]>([])
   const [uploadedQuests, setUploadedQuests] = useState<UploadedQuest[]>([])
 
@@ -50,10 +48,7 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
     const existingQuest = analysisQuests.find(q => q.id === quest.id)
 
     if (existingQuest) {
-      setAnalysisQuests(prevQuests => [
-        quest,
-        ...prevQuests.filter(q => q.id !== quest.id),
-      ])
+      setAnalysisQuests(prevQuests => [quest, ...prevQuests.filter(q => q.id !== quest.id)])
     } else {
       setAnalysisQuests(prevQuests => [quest, ...prevQuests])
     }
@@ -61,9 +56,7 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
 
   const removeAnalysisQuest = (questId: string) => {
     setAnalysisQuests(prevQuests => prevQuests.filter(q => q.id !== questId))
-    setAnalysisQuests(prevQuests =>
-      prevQuests.filter(q => q.id.split('-')[0] !== questId),
-    )
+    setAnalysisQuests(prevQuests => prevQuests.filter(q => q.id.split('-')[0] !== questId))
   }
 
   return (
@@ -85,9 +78,7 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
 export const useGlobalState = () => {
   const context = useContext(GlobalStateContext)
   if (!context) {
-    throw new Error(
-      'useGlobalState debe ser utilizado dentro de GlobalStateProvider',
-    )
+    throw new Error('useGlobalState debe ser utilizado dentro de GlobalStateProvider')
   }
   return context
 }

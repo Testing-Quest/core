@@ -6,9 +6,7 @@ export function calculateItemsCorrectDiscrimination(
   return itemDiscrimination.map((discrimination, i) => {
     const numerator = discrimination * itemsVariance[i]
     const denominator = Math.sqrt(
-      variance ** 2 +
-        itemsVariance[i] ** 2 -
-        2 * discrimination * variance * itemsVariance[i],
+      variance ** 2 + itemsVariance[i] ** 2 - 2 * discrimination * variance * itemsVariance[i],
     )
     return numerator / denominator
   })

@@ -1,8 +1,4 @@
-export function calculateCronbachAlpha(
-  correctMatrix: number[][],
-  itemsVariance: number[],
-  variance: number,
-): number {
+export function calculateCronbachAlpha(correctMatrix: number[][], itemsVariance: number[], variance: number): number {
   const nItems = correctMatrix[0].length
   const itemVar = itemsVariance.reduce((acc, value) => acc + value, 0)
 

@@ -1,89 +1,29 @@
 import type { GraduCalcsType } from '../../../primitives/calcs/calcs'
-import type { CalcStrategy } from './CalcStrategy'
-import { BinaryChoiceCalculations as Bcc } from './calculations'
+import type { MatrixType } from '../../../primitives/quest'
+import { CalcStrategyBase } from './CalcStrategy'
+import { GraduatedCalculations as Gc } from './calculations'
 
-export class CalcStrategyGradu implements CalcStrategy<'gradu'> {
-  public filterMatrix(
-    matrix: number[][],
-    activeItems: boolean[],
-    activeUsers: boolean[],
-  ): number[][] {
-    return matrix
-      .filter((_, rowIndex) => activeUsers[rowIndex])
-      .map(row => row.filter((_, columnIndex) => activeItems[columnIndex]))
-  }
-  public calculate(
-    matrix: number[][],
-    keys: string[],
-    alternatives: number,
-  ): GraduCalcsType {
-    const correctMatrix = Bcc.correctMatrix(matrix, keys)
-    const usersDirectScore = Bcc.usersDirectScore(correctMatrix)
-    const mean = Bcc.mean(usersDirectScore)
-    const variance = Bcc.variance(usersDirectScore, mean)
-    const itemsDirectScore = Bcc.itemsDirectScore(correctMatrix)
-    const itemsMean = Bcc.itemsMean(correctMatrix)
-    const itemsVariance = Bcc.itemsVariance(correctMatrix, itemsMean)
-    const itemsDiscrimination = Bcc.itemsDiscrimination(
-      correctMatrix,
-      usersDirectScore,
-    )
-    const itemsDifficulty = Bcc.itemsDifficulty(itemsDirectScore, matrix.length)
-    const itemsAltDiscDiff = Bcc.itemsAltDiscDiff(
-      usersDirectScore,
-      matrix,
-      alternatives,
-    )
-    const standardDeviation = Bcc.standardDeviation(variance)
-    const alpha = Bcc.alpha(correctMatrix, itemsVariance, variance)
-    const mci = Bcc.mci(correctMatrix, itemsDifficulty, usersDirectScore)
+export class CalcStrategyGradu extends CalcStrategyBase<'gradu'> {
+  public calculate(matrix: MatrixType, keys: string[], alternatives: number): GraduCalcsType {
+    const correctMatrix = Gc.correctMatrix(matrix, keys, alternatives)
+    const baseCalcs = this.getBaseCalcs(correctMatrix, keys, matrix)
+    // itemsStandartDeviation: number[], alternatives: number
+    const variability = Gc.variability(baseCalcs.items.variance, alternatives)
 
     return {
       correctMatrix: correctMatrix,
-      coherency: Bcc.coherency(mci),
-      difficulty: Bcc.difficulty(itemsDifficulty),
-      health: {
-        cronbachAlpha: alpha,
-        sem: Bcc.sem(alpha, standardDeviation),
-        mean: mean,
-        variance: variance,
-        standardDeviation: standardDeviation,
-        reliability: Bcc.reliability(alpha),
-        discrimination: Bcc.discrimination(itemsDiscrimination),
-        testHealth:
-          (Bcc.reliability(alpha) +
-            Bcc.discrimination(itemsDiscrimination) +
-            Bcc.coherency(mci)) /
-          3,
-      },
       items: {
-        variance: itemsVariance,
-        discrimination: itemsDiscrimination,
-        corrDiscrimination: Bcc.itemsCorrDiscrimination(
-          itemsDiscrimination,
-          itemsVariance,
-          variance,
-        ),
-        altDifficulty: Object.fromEntries(itemsAltDiscDiff[1]),
-        altDiscrimination: Object.fromEntries(itemsAltDiscDiff[0]),
-        difficulty: itemsDifficulty,
-        choice: Bcc.itemsChoice(
-          keys,
-          alternatives,
-          itemsAltDiscDiff[1],
-          matrix.length,
-          keys.length,
-        ),
-        conflict: Bcc.itemsConflict(itemsAltDiscDiff[0], itemsDiscrimination),
+        ...baseCalcs.items,
+        altDifficulty: Object.fromEntries(Gc.itemsAltDifficulty(correctMatrix, alternatives)),
       },
       users: {
-        directScore: usersDirectScore,
-        weightedScore: Bcc.weightScore(correctMatrix, itemsDiscrimination),
-        coherence: Bcc.usersCoherence(correctMatrix),
-        mci: mci,
-        mean: Bcc.usersMean(usersDirectScore, matrix.length),
-        totalScore: usersDirectScore,
-        blankAnswer: Bcc.usersBlankAnswers(matrix, keys),
+        ...baseCalcs.users,
+      },
+      health: {
+        ...baseCalcs.health,
+        score: Gc.score(correctMatrix),
+        variability: variability,
+        testHealth: (variability + baseCalcs.health.discrimination + baseCalcs.health.reliability) / 3,
       },
     }
   }

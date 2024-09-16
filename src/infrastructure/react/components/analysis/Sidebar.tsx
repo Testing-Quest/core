@@ -1,10 +1,6 @@
 import React, { useState } from 'react'
 import type { VisualizationItem } from './Analysis'
-import {
-  LineChartOutlined,
-  TableOutlined,
-  AppstoreOutlined,
-} from '@ant-design/icons'
+import { LineChartOutlined, TableOutlined, AppstoreOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Button, Dropdown, Menu } from 'antd'
 
@@ -30,11 +26,7 @@ const getIcon = (icon: string) => {
   }
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  name,
-  onSidebarClick,
-  sidebarOptions,
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({ name, onSidebarClick, sidebarOptions }) => {
   const { analysisQuests, addAnalysisQuest } = useGlobalState()
   const [selectedKey, setSelectedKey] = useState(sidebarOptions[0].label)
 
@@ -54,11 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <Menu mode='vertical' theme='light' selectedKeys={[selectedKey || '']}>
-      <img
-        src='/tqLogo.jpeg'
-        alt='Testing Quest'
-        style={{ width: '80%', height: 'auto' }}
-      />
+      <img src='/tqLogo.jpeg' alt='Testing Quest' style={{ width: '80%', height: 'auto' }} />
 
       <Dropdown menu={{ items }} placement='bottom'>
         <Button
@@ -80,9 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               width: 'calc(100% - 24px)',
             }}
           >
-            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {name}
-            </span>
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{name}</span>
           </div>
           <div>
             <DownOutlined />

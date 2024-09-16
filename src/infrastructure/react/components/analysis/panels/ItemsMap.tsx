@@ -1,16 +1,7 @@
 import React from 'react'
 import type { questGradu } from '../../../domain/quests/questGradu'
 import type { questMulti } from '../../../domain/quests/questMulti'
-import {
-  ScatterChart,
-  Scatter,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Text,
-} from 'recharts'
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Text } from 'recharts'
 import { ReferenceLine } from 'recharts'
 import { Label } from 'recharts'
 
@@ -51,9 +42,7 @@ export const ItemMaps: React.FC<PanelProps> = ({ quest }) => {
   } else {
     const answers = quest.getNumberOfAnswers()
     y_domain = [1, answers]
-    y_ticks = Array.from({ length: (answers - 1) * 10 }, (_, index) =>
-      (1 + index * 0.1).toFixed(1),
-    )
+    y_ticks = Array.from({ length: (answers - 1) * 10 }, (_, index) => (1 + index * 0.1).toFixed(1))
     y_ticks.push(answers.toFixed(0))
     x1 = 1 + 0.2 * (answers - 1)
     x2 = 1 + 0.4 * (answers - 1)
@@ -62,8 +51,7 @@ export const ItemMaps: React.FC<PanelProps> = ({ quest }) => {
   }
   // ticks es una lista de 0.1 en 0.1 desde -1 hasta 1
   const ticks = [
-    -1, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3,
-    0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1,
+    -1, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1,
   ]
 
   return (
@@ -78,79 +66,19 @@ export const ItemMaps: React.FC<PanelProps> = ({ quest }) => {
       <ResponsiveContainer width='90%' height={500}>
         <ScatterChart margin={{ bottom: 15 }}>
           <CartesianGrid strokeDasharray='0 0' opacity={0.5} />
-          <XAxis
-            type='number'
-            dataKey='x'
-            name='X'
-            ticks={y_ticks}
-            domain={y_domain}
-          >
-            <Label
-              value='Difficulty'
-              position='insideBottom'
-              offset={-8}
-              fontSize={18}
-              fill=''
-            />
+          <XAxis type='number' dataKey='x' name='X' ticks={y_ticks} domain={y_domain}>
+            <Label value='Difficulty' position='insideBottom' offset={-8} fontSize={18} fill='' />
             <Text />
           </XAxis>
-          <YAxis
-            type='number'
-            ticks={ticks}
-            dataKey='y'
-            name='Y'
-            domain={[-1, 1]}
-          >
-            <Label
-              value='Discrimination'
-              angle={-90}
-              position='insideLeft'
-              offset={8}
-              fontSize={18}
-              fill=''
-            />
+          <YAxis type='number' ticks={ticks} dataKey='y' name='Y' domain={[-1, 1]}>
+            <Label value='Discrimination' angle={-90} position='insideLeft' offset={8} fontSize={18} fill='' />
           </YAxis>
           {/* COLORES */}
-          <rect
-            x={60}
-            y={1}
-            width={'99%'}
-            height={46 * 2.5}
-            fill='green'
-            fillOpacity={0.4}
-          />
-          <rect
-            x={60}
-            y={115}
-            width={'99%'}
-            height={46}
-            fill='yellow'
-            fillOpacity={0.4}
-          />
-          <rect
-            x={60}
-            y={160}
-            width={'99%'}
-            height={23}
-            fill='orange'
-            fillOpacity={0.4}
-          />
-          <rect
-            x={60}
-            y={182}
-            width={'99%'}
-            height={46 * 2}
-            fill='red'
-            fillOpacity={0.4}
-          />
-          <rect
-            x={60}
-            y={272}
-            width={'99%'}
-            height={46 * 4}
-            fill='black'
-            fillOpacity={0.4}
-          />
+          <rect x={60} y={1} width={'99%'} height={46 * 2.5} fill='green' fillOpacity={0.4} />
+          <rect x={60} y={115} width={'99%'} height={46} fill='yellow' fillOpacity={0.4} />
+          <rect x={60} y={160} width={'99%'} height={23} fill='orange' fillOpacity={0.4} />
+          <rect x={60} y={182} width={'99%'} height={46 * 2} fill='red' fillOpacity={0.4} />
+          <rect x={60} y={272} width={'99%'} height={46 * 4} fill='black' fillOpacity={0.4} />
           {/* 4 Lineas Horizontales */}
           <ReferenceLine y={0} stroke='black' />
           {/* 4 Lineas Verticales */}

@@ -1,17 +1,22 @@
 import { calculateCronbachAlpha } from './calculateAlpha'
 import { calculateChoice } from './calculateChoice'
 import { calculateCoherency } from './calculateCoherency'
-import { calculateCorrectMatrix } from './calculateCorrectMatrix'
+import { calculateChoiceCorrectMatrix, calculateGraduCorrectMatrix } from './calculateCorrectMatrix'
 import { calculateDifficulty } from './calculateDifficulty'
 import { calculateDiscrimination } from './calculateDiscrimination'
 import { calculateKeyConflict } from './calculateKeyConflict'
 import { calculateMCI } from './calculateMci'
 import { calculateMean } from './calculateMean'
 import { calculateReliability } from './calculateReliability'
+import { calculateScore } from './calculateScore'
 import { calculateSEM } from './calculateSem'
 import { calculateStandardDeviation } from './calculateStandardDeviation'
+import { calculateVariability } from './calculateVariability'
 import { calculateVariance } from './calculateVariance'
-import { calculateItemsAlternativeDiscriminationDifficulty } from './items/calculateItemsAlternativeDiscDif'
+import {
+  calculateBinaryAlternativeDifficulty,
+  calculateItemsAlternativeDiscriminationDifficulty,
+} from './items/calculateItemsAlternativeDiscDif'
 import { calculateItemsChoice } from './items/calculateItemsChoice'
 import { calculateItemsConflict } from './items/calculateItemsConflict'
 import { calculateItemsCorrectDiscrimination } from './items/calculateItemsCorrectDiscrimination'
@@ -21,7 +26,9 @@ import { calculateItemsDiscrimination } from './items/calculateItemsDiscriminati
 import { calculateItemsMean } from './items/calculateItemsMean'
 import { calculateItemsVariance } from './items/calculateItemsVariance'
 import type {
+  BasedCalculationsType,
   BinaryChoiceCalculationsType,
+  GraduatedCalculationsType,
   MultipleChoiceCalculationsType,
 } from './types'
 import { calculateUserMean } from './users/calculateUserMean'
@@ -30,11 +37,9 @@ import { calculateUsersCoherence } from './users/calculateUsersCoherence'
 import { calculateUsersDirectScore } from './users/calculateUsersDirectScore'
 import { calculateWeightScore } from './users/calculateWeightScore'
 
-export const MultipleChoiceCalculations: MultipleChoiceCalculationsType = {
-  correctMatrix: calculateCorrectMatrix<string>,
+export const BaseCalculations: BasedCalculationsType = {
   usersDirectScore: calculateUsersDirectScore,
   usersMean: calculateUserMean,
-  usersCoherence: calculateUsersCoherence,
   usersBlankAnswers: calculateUsersBlankAnswers,
   mean: calculateMean,
   variance: calculateVariance,
@@ -44,15 +49,20 @@ export const MultipleChoiceCalculations: MultipleChoiceCalculationsType = {
   itemsDiscrimination: calculateItemsDiscrimination,
   itemsDifficulty: calculateItemsDifficulty,
   itemsCorrDiscrimination: calculateItemsCorrectDiscrimination,
-  itemsAltDiscDiff: calculateItemsAlternativeDiscriminationDifficulty,
-  itemsConflict: calculateItemsConflict,
-  itemsChoice: calculateItemsChoice,
-  weightScore: calculateWeightScore,
   standardDeviation: calculateStandardDeviation,
   alpha: calculateCronbachAlpha,
   sem: calculateSEM,
   reliability: calculateReliability,
   discrimination: calculateDiscrimination,
+}
+
+export const MultipleChoiceCalculations: MultipleChoiceCalculationsType = {
+  correctMatrix: calculateChoiceCorrectMatrix,
+  usersCoherence: calculateUsersCoherence,
+  itemsAltDiscDiff: calculateItemsAlternativeDiscriminationDifficulty,
+  itemsConflict: calculateItemsConflict,
+  itemsChoice: calculateItemsChoice,
+  weightScore: calculateWeightScore,
   keyConflict: calculateKeyConflict,
   choice: calculateChoice,
   mci: calculateMCI,
@@ -61,31 +71,22 @@ export const MultipleChoiceCalculations: MultipleChoiceCalculationsType = {
 }
 
 export const BinaryChoiceCalculations: BinaryChoiceCalculationsType = {
-  correctMatrix: calculateCorrectMatrix<string>,
-  usersDirectScore: calculateUsersDirectScore,
-  usersMean: calculateUserMean,
+  correctMatrix: calculateChoiceCorrectMatrix,
   usersCoherence: calculateUsersCoherence,
-  usersBlankAnswers: calculateUsersBlankAnswers,
-  mean: calculateMean,
-  variance: calculateVariance,
-  itemsDirectScore: calculateItemsDirectScore,
-  itemsMean: calculateItemsMean,
-  itemsVariance: calculateItemsVariance,
-  itemsDiscrimination: calculateItemsDiscrimination,
-  itemsDifficulty: calculateItemsDifficulty,
-  itemsCorrDiscrimination: calculateItemsCorrectDiscrimination,
   itemsAltDiscDiff: calculateItemsAlternativeDiscriminationDifficulty,
   itemsConflict: calculateItemsConflict,
   itemsChoice: calculateItemsChoice,
   weightScore: calculateWeightScore,
-  standardDeviation: calculateStandardDeviation,
-  alpha: calculateCronbachAlpha,
-  sem: calculateSEM,
-  reliability: calculateReliability,
-  discrimination: calculateDiscrimination,
   keyConflict: calculateKeyConflict,
   choice: calculateChoice,
   mci: calculateMCI,
   coherency: calculateCoherency,
   difficulty: calculateDifficulty,
+}
+
+export const GraduatedCalculations: GraduatedCalculationsType = {
+  correctMatrix: calculateGraduCorrectMatrix,
+  itemsAltDifficulty: calculateBinaryAlternativeDifficulty,
+  score: calculateScore,
+  variability: calculateVariability,
 }

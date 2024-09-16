@@ -3,20 +3,12 @@ import type { CalcStrategy } from './CalcStrategy'
 import { BinaryChoiceCalculations as Bcc } from './calculations'
 
 export class CalcStrategyMulti implements CalcStrategy<'multi'> {
-  public filterMatrix(
-    matrix: string[][],
-    activeItems: boolean[],
-    activeUsers: boolean[],
-  ): string[][] {
+  public filterMatrix(matrix: string[][], activeItems: boolean[], activeUsers: boolean[]): string[][] {
     return matrix
       .filter((_, rowIndex) => activeUsers[rowIndex])
       .map(row => row.filter((_, columnIndex) => activeItems[columnIndex]))
   }
-  public calculate(
-    matrix: string[][],
-    keys: string[],
-    alternatives: number,
-  ): MultiCalcsType {
+  public calculate(matrix: string[][], keys: string[], alternatives: number): MultiCalcsType {
     const correctMatrix = Bcc.correctMatrix(matrix, keys)
     const usersDirectScore = Bcc.usersDirectScore(correctMatrix)
     const mean = Bcc.mean(usersDirectScore)
@@ -24,16 +16,9 @@ export class CalcStrategyMulti implements CalcStrategy<'multi'> {
     const itemsDirectScore = Bcc.itemsDirectScore(correctMatrix)
     const itemsMean = Bcc.itemsMean(correctMatrix)
     const itemsVariance = Bcc.itemsVariance(correctMatrix, itemsMean)
-    const itemsDiscrimination = Bcc.itemsDiscrimination(
-      correctMatrix,
-      usersDirectScore,
-    )
+    const itemsDiscrimination = Bcc.itemsDiscrimination(correctMatrix, usersDirectScore)
     const itemsDifficulty = Bcc.itemsDifficulty(itemsDirectScore, matrix.length)
-    const itemsAltDiscDiff = Bcc.itemsAltDiscDiff(
-      usersDirectScore,
-      matrix,
-      alternatives,
-    )
+    const itemsAltDiscDiff = Bcc.itemsAltDiscDiff(usersDirectScore, matrix, alternatives)
     const standardDeviation = Bcc.standardDeviation(variance)
     const alpha = Bcc.alpha(correctMatrix, itemsVariance, variance)
     const mci = Bcc.mci(correctMatrix, itemsDifficulty, usersDirectScore)
@@ -50,30 +35,16 @@ export class CalcStrategyMulti implements CalcStrategy<'multi'> {
         standardDeviation: standardDeviation,
         reliability: Bcc.reliability(alpha),
         discrimination: Bcc.discrimination(itemsDiscrimination),
-        testHealth:
-          (Bcc.reliability(alpha) +
-            Bcc.discrimination(itemsDiscrimination) +
-            Bcc.coherency(mci)) /
-          3,
+        testHealth: (Bcc.reliability(alpha) + Bcc.discrimination(itemsDiscrimination) + Bcc.coherency(mci)) / 3,
       },
       items: {
         variance: itemsVariance,
         discrimination: itemsDiscrimination,
-        corrDiscrimination: Bcc.itemsCorrDiscrimination(
-          itemsDiscrimination,
-          itemsVariance,
-          variance,
-        ),
+        corrDiscrimination: Bcc.itemsCorrDiscrimination(itemsDiscrimination, itemsVariance, variance),
         altDifficulty: Object.fromEntries(itemsAltDiscDiff[1]),
         altDiscrimination: Object.fromEntries(itemsAltDiscDiff[0]),
         difficulty: itemsDifficulty,
-        choice: Bcc.itemsChoice(
-          keys,
-          alternatives,
-          itemsAltDiscDiff[1],
-          matrix.length,
-          keys.length,
-        ),
+        choice: Bcc.itemsChoice(keys, alternatives, itemsAltDiscDiff[1], matrix.length, keys.length),
         conflict: Bcc.itemsConflict(itemsAltDiscDiff[0], itemsDiscrimination),
       },
       users: {

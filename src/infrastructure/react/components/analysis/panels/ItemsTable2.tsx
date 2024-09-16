@@ -15,9 +15,7 @@ type ExpandedRowContentProps = {
   description: string
 }
 
-const ExpandedRowContent: React.FC<ExpandedRowContentProps> = ({
-  description,
-}) => (
+const ExpandedRowContent: React.FC<ExpandedRowContentProps> = ({ description }) => (
   <div>
     <p>{`Additional information: ${description}`}</p>
     {/* Agrega aquí cualquier contenido adicional que desees */}
@@ -49,9 +47,7 @@ export const ItemTable: React.FC<PanelProps> = ({ quest }) => {
     },
   ]
 
-  const expandedRowRender = (record: TableRow) => (
-    <ExpandedRowContent description={record.description} />
-  )
+  const expandedRowRender = (record: TableRow) => <ExpandedRowContent description={record.description} />
 
   return (
     <Table

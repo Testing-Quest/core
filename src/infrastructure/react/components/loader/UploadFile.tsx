@@ -111,12 +111,7 @@ const UploadFile = () => {
         flexDirection: 'column',
       }}
     >
-      <Upload
-        customRequest={customRequest}
-        showUploadList={false}
-        onChange={handleChange}
-        accept='.xls, .xlsx, .ods,'
-      >
+      <Upload customRequest={customRequest} showUploadList={false} onChange={handleChange} accept='.xls, .xlsx, .ods,'>
         <div
           style={{
             cursor: 'pointer',

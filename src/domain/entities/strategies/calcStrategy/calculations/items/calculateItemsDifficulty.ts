@@ -1,7 +1,4 @@
-export function calculateItemsDifficulty(
-  itemsDirectScore: number[],
-  totalUsers: number,
-): number[] {
+export function calculateItemsDifficulty(itemsDirectScore: number[], totalUsers: number): number[] {
   const difficulty = new Array(itemsDirectScore.length)
   const totalUsersInv = 1 / totalUsers
 

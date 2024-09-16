@@ -5,10 +5,7 @@ import type { CalcStrategy } from './strategies/calcStrategy/CalcStrategy'
 import { plotFactory } from './strategies/plotStrategy/plotFactory'
 import type { PlotStrategy } from './strategies/plotStrategy/PlotStrategy'
 import { tableFactory } from './strategies/tableStrategy/tableFactory'
-import type {
-  Table,
-  TableStrategy,
-} from './strategies/tableStrategy/TableStrategy'
+import type { Table, TableStrategy } from './strategies/tableStrategy/TableStrategy'
 
 export type dataPoint = { x: number; y: number }
 
@@ -78,10 +75,7 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
     return this._pltStrategy.getScoreDistribution(this._props.calcs)
   }
   public getItemsTable(): Table {
-    return this._tblStrategy.getItemsTable(
-      this._props.calcs.items,
-      this._props.keys,
-    )
+    return this._tblStrategy.getItemsTable(this._props.calcs.items, this._props.keys)
   }
   public getUsersTable(): Table {
     return this._tblStrategy.getUsersTable(this._props.calcs.users)
@@ -105,9 +99,7 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
     if (payload.keys) {
       this._props.keys = payload.keys
     }
-    const keys = this._props.keys.filter(
-      (_, i) => this._props.calcs.items.itemsEnabled[i],
-    )
+    const keys = this._props.keys.filter((_, i) => this._props.calcs.items.itemsEnabled[i])
     const matrix = this._clsStrategy.filterMatrix(
       this._props.matrix,
       this._props.calcs.items.itemsEnabled,
@@ -115,11 +107,7 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
     )
     this._props = {
       ...this._props,
-      calculations: this._clsStrategy.calculate(
-        matrix,
-        keys,
-        this._props.alternatives,
-      ),
+      calculations: this._clsStrategy.calculate(matrix, keys, this._props.alternatives),
     }
   }
 
@@ -137,9 +125,7 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
     }
   }
 
-  public static create<T extends keyof QuestTypesMap>(
-    props: NewQuestType & { type: T },
-  ): Quest<T> {
+  public static create<T extends keyof QuestTypesMap>(props: NewQuestType & { type: T }): Quest<T> {
     const cls = calcFactory<T>(props.type)
     const plt = plotFactory<T>(props.type)
     const tbl = tableFactory<T>(props.type)

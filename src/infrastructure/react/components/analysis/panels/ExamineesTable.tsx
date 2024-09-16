@@ -28,9 +28,7 @@ export const ExamineeTable: React.FC<PanelProps> = ({ quest }) => {
 
         // Formatea los números a 2 decimales si es un número y tiene más de dos decimales
         if (typeof cellValue === 'number') {
-          rowData[columnKey] = Number.isInteger(cellValue)
-            ? cellValue
-            : cellValue.toFixed(2)
+          rowData[columnKey] = Number.isInteger(cellValue) ? cellValue : cellValue.toFixed(2)
         } else {
           rowData[columnKey] = cellValue
         }

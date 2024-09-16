@@ -1,9 +1,6 @@
-type Primitives = string | number
+import type { MatrixType } from '../../../../primitives/quest'
 
-export function calculateCorrectMatrix<T extends Primitives>(
-  matrix: T[][],
-  keys: T[],
-): number[][] {
+export function calculateChoiceCorrectMatrix(matrix: MatrixType, keys: string[]): number[][] {
   const numRows = matrix.length
   const numCols = keys.length
   const correctedMatrix: number[][] = new Array(numRows)
@@ -16,6 +13,17 @@ export function calculateCorrectMatrix<T extends Primitives>(
     }
     correctedMatrix[i] = correctedRow
   }
-
   return correctedMatrix
+}
+
+export function calculateGraduCorrectMatrix(matrix: MatrixType, keys: string[], alternatives: number): number[][] {
+  return matrix.map(row =>
+    row.map((answer: number | string | null, columnIndex: number) => {
+      const newAnswer = Number(answer)
+      if (keys[columnIndex] === '-' && newAnswer != 0 && newAnswer <= alternatives) {
+        return alternatives - newAnswer + 1
+      }
+      return newAnswer
+    }),
+  )
 }

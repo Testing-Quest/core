@@ -1,10 +1,12 @@
+export type MatrixType = (string | number | null)[][]
+
 export type NewQuestType = {
   uuid: string
   keys: string[]
   scale: number
   alternatives: number
   type: 'binary' | 'multi' | 'gradu'
-  matrix: string[][] | number[][]
+  matrix: MatrixType
 }
 
 export type QuestType = {
@@ -13,4 +15,5 @@ export type QuestType = {
   scale: number
   alternatives: number
   originalKeys: string[]
+  matrix: MatrixType
 }

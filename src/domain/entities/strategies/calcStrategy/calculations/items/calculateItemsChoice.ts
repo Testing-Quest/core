@@ -37,14 +37,8 @@ export function calculateItemsChoice(
     return result
   }
 
-  const calculateChiCuadrado = (
-    itemFrequencies: number[],
-    freqEsperada: number,
-  ): number => {
-    return itemFrequencies.reduce(
-      (acc, freq) => acc + Math.pow(freq - freqEsperada, 2) / freqEsperada,
-      0,
-    )
+  const calculateChiCuadrado = (itemFrequencies: number[], freqEsperada: number): number => {
+    return itemFrequencies.reduce((acc, freq) => acc + Math.pow(freq - freqEsperada, 2) / freqEsperada, 0)
   }
 
   for (let i = 0; i < numItems; i++) {
@@ -54,14 +48,9 @@ export function calculateItemsChoice(
 
     const freqEsperada: number = numRespuestas / (alternatives - 1)
 
-    const chiCuadrado: number = calculateChiCuadrado(
-      itemFrequencies,
-      freqEsperada,
-    )
+    const chiCuadrado: number = calculateChiCuadrado(itemFrequencies, freqEsperada)
 
-    choice.push(
-      chiCuadrado < DiccionarioTablaChiCuadrado.get(alternatives - 1)!,
-    )
+    choice.push(chiCuadrado < DiccionarioTablaChiCuadrado.get(alternatives - 1)!)
   }
   return choice
 }

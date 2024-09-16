@@ -1,7 +1,8 @@
 import type { QuestTypesMap } from '../../../primitives'
+import type { MatrixType } from '../../../primitives/quest'
+import { BaseCalculations as Bc } from './calculations'
 
-
-type BaseCalcs = {
+export type BaseCalcs = {
   health: {
     cronbachAlpha: number
     sem: number
@@ -10,7 +11,6 @@ type BaseCalcs = {
     standardDeviation: number
     reliability: number
     discrimination: number
-    testHealth: number
   }
   items: {
     itemsIds: number[]
@@ -19,7 +19,6 @@ type BaseCalcs = {
     discrimination: number[]
     corrDiscrimination: number[]
     difficulty: number[]
-    altDifficulty: Record<string, number[]>
   }
   users: {
     usersIds: number[]
@@ -32,34 +31,57 @@ type BaseCalcs = {
 }
 
 export type CalcStrategy<T extends keyof QuestTypesMap> = {
-  calculate(
-    matrix: QuestTypesMap[T]['matrix'],
-    keys: string[],
-    alternatives: number,
-  ): QuestTypesMap[T]['calcs']
-  filterMatrix(
-    matrx: QuestTypesMap[T]['matrix'],
-    activeItems: boolean[],
-    activeUsers: boolean[],
-  ): QuestTypesMap[T]['matrix']
+  calculate(matrix: MatrixType, keys: string[], alternatives: number): QuestTypesMap[T]['calcs']
+  filterMatrix(matrx: MatrixType, activeItems: boolean[], activeUsers: boolean[]): MatrixType
 }
 
 export abstract class CalcStrategyBase<T extends keyof QuestTypesMap> implements CalcStrategy<T> {
-  abstract calculate(
-    matrix: QuestTypesMap[T]['matrix'],
-    keys: string[],
-    alternatives: number,
-  ): QuestTypesMap[T]['calcs']
-  filterMatrix(
-    matrx: QuestTypesMap[T]['matrix'],
-    activeItems: boolean[],
-    activeUsers: boolean[],
-  ): QuestTypesMap[T]['matrix'] {
+  abstract calculate(matrix: MatrixType, keys: string[], alternatives: number): QuestTypesMap[T]['calcs']
+  filterMatrix(matrx: MatrixType, activeItems: boolean[], activeUsers: boolean[]): MatrixType {
     return matrx
       .filter((_, rowIndex) => activeUsers[rowIndex])
-      .map(row => row.filter((_, columnIndex) => activeItems[columnIndex])) as QuestTypesMap[T]['matrix']
+      .map(row => row.filter((_, columnIndex) => activeItems[columnIndex]))
   }
 
-  getBaseCalcs(correctMatrix: number[][], keys: string[], matrix: QuestTypesMap[T]['matrix']) { }
-}
+  public getBaseCalcs(correctMatrix: number[][], keys: string[], matrix: MatrixType): BaseCalcs {
+    const usersDirectScore = Bc.usersDirectScore(correctMatrix)
+    const mean = Bc.mean(usersDirectScore)
+    const variance = Bc.variance(usersDirectScore, mean)
+    const itemsDirectScore = Bc.itemsDirectScore(correctMatrix)
+    const itemsMean = Bc.itemsMean(correctMatrix)
+    const itemsVariance = Bc.itemsVariance(correctMatrix, itemsMean)
+    const itemsDiscrimination = Bc.itemsDiscrimination(correctMatrix, usersDirectScore)
+    const itemsDifficulty = Bc.itemsDifficulty(itemsDirectScore, matrix.length)
 
+    const standardDeviation = Bc.standardDeviation(variance)
+    const alpha = Bc.alpha(correctMatrix, itemsVariance, variance)
+
+    return {
+      health: {
+        cronbachAlpha: alpha,
+        sem: Bc.sem(alpha, standardDeviation),
+        mean: mean,
+        variance: variance,
+        standardDeviation: standardDeviation,
+        reliability: Bc.reliability(alpha),
+        discrimination: Bc.discrimination(itemsDiscrimination),
+      },
+      items: {
+        itemsIds: Array.from({ length: itemsDirectScore.length }, (_, i) => i),
+        itemsEnabled: new Array(itemsDirectScore.length).fill(true),
+        variance: itemsVariance,
+        discrimination: itemsDiscrimination,
+        corrDiscrimination: Bc.itemsCorrDiscrimination(itemsDiscrimination, itemsVariance, variance),
+        difficulty: itemsDifficulty,
+      },
+      users: {
+        usersIds: Array.from({ length: usersDirectScore.length }, (_, i) => i),
+        usersEnabled: new Array(usersDirectScore.length).fill(true),
+        directScore: usersDirectScore,
+        mean: Bc.usersMean(usersDirectScore, matrix.length),
+        totalScore: usersDirectScore,
+        blankAnswer: Bc.usersBlankAnswers(matrix, keys),
+      },
+    }
+  }
+}

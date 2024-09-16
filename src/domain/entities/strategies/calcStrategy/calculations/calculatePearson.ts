@@ -16,9 +16,7 @@ export function calculatePearson(arr1: number[], arr2: number[]): number {
   }
 
   const numerator = n * sumXY - sumX * sumY
-  const denominator = Math.sqrt(
-    (n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY),
-  )
+  const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY))
 
   return denominator === 0 ? 0 : numerator / denominator
 }

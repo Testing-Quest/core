@@ -1,7 +1,4 @@
-export function calculateWeightScore(
-  correctMatrix: number[][],
-  itemsDiscrimination: number[],
-): number[] {
+export function calculateWeightScore(correctMatrix: number[][], itemsDiscrimination: number[]): number[] {
   const weightScore: number[] = []
 
   for (const vector of correctMatrix) {

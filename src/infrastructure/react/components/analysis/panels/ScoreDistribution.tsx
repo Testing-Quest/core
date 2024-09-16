@@ -1,14 +1,6 @@
 import React from 'react'
 import type { questMulti } from '../../../domain/quests/questMulti'
-import {
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Text,
-  Bar,
-} from 'recharts'
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Text, Bar } from 'recharts'
 import type { questGradu } from '../../../domain/quests/questGradu'
 import { BarChart } from 'recharts'
 

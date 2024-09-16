@@ -12,19 +12,11 @@ export type PlotStrategy<T extends keyof QuestTypesMap> = {
   getDirectMci(attrs: QuestTypesMap[T]['calcs']): dataPoint[]
   getScoreDistribution(attrs: QuestTypesMap[T]['calcs']): dataPoint[]
   getItemFrequency(attrs: QuestTypesMap[T]['calcs'], id: number): dataPoint[]
-  getItemDiscrimination(
-    attrs: QuestTypesMap[T]['calcs'],
-    id: number,
-  ): dataPoint[] | null
-  getItemProfile(
-    attrs: QuestTypesMap[T]['calcs'],
-    id: number,
-  ): Record<string, dataPoint[]>
+  getItemDiscrimination(attrs: QuestTypesMap[T]['calcs'], id: number): dataPoint[] | null
+  getItemProfile(attrs: QuestTypesMap[T]['calcs'], id: number): Record<string, dataPoint[]>
 }
 
-export abstract class PlotStrategyBase<T extends keyof QuestTypesMap>
-  implements PlotStrategy<T>
-{
+export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements PlotStrategy<T> {
   public getReliability(attrs: QuestTypesMap[T]['calcs']): dataPoint[] {
     const alpha = attrs.health.cronbachAlpha
     return Array.from({ length: 11 }, (_, i) => {
@@ -53,10 +45,7 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap>
     const range = max - min
     const binSize = range / 23
 
-    const bins: number[] = Array.from(
-      { length: 24 },
-      (_, i) => min + i * binSize,
-    )
+    const bins: number[] = Array.from({ length: 24 }, (_, i) => min + i * binSize)
 
     const binCounts = Array(23).fill(0)
 
@@ -80,22 +69,13 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap>
   public getDirectMci(attrs: QuestTypesMap[T]['calcs']): dataPoint[] {
     throw new Error(ERROR_MESSAGE)
   }
-  public getItemFrequency(
-    attrs: QuestTypesMap[T]['calcs'],
-    id: number,
-  ): dataPoint[] {
+  public getItemFrequency(attrs: QuestTypesMap[T]['calcs'], id: number): dataPoint[] {
     throw new Error(ERROR_MESSAGE)
   }
-  public getItemDiscrimination(
-    attrs: QuestTypesMap[T]['calcs'],
-    id: number,
-  ): dataPoint[] | null {
+  public getItemDiscrimination(attrs: QuestTypesMap[T]['calcs'], id: number): dataPoint[] | null {
     throw new Error(ERROR_MESSAGE)
   }
-  public getItemProfile(
-    attrs: QuestTypesMap[T]['calcs'],
-    id: number,
-  ): Record<string, dataPoint[]> {
+  public getItemProfile(attrs: QuestTypesMap[T]['calcs'], id: number): Record<string, dataPoint[]> {
     throw new Error(ERROR_MESSAGE)
   }
 }

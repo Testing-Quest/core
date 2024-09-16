@@ -1,15 +1,5 @@
-import type {
-  BinaryItemsType,
-  GraduItemsType,
-  ItemsType,
-  MultiItemsType,
-} from './items'
-import type {
-  BinaryUsersType,
-  GraduUsersType,
-  MultiUsersType,
-  UsersType,
-} from './users'
+import type { BinaryItemsType, GraduItemsType, ItemsType, MultiItemsType } from './items'
+import type { BinaryUsersType, GraduUsersType, MultiUsersType, UsersType } from './users'
 
 export type CalcsType = {
   correctMatrix: number[][]
@@ -46,7 +36,10 @@ type MultiHealthType = HealthType & {
   keyConflict: number
 }
 
-type GraduHealthType = HealthType
+type GraduHealthType = HealthType & {
+  score: number
+  variability: number
+}
 
 export type BinaryCalcsType = CalcsType & {
   health: BinaryHealthType

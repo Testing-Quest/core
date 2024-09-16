@@ -4,9 +4,7 @@ import { PlotStrategyBinary } from './PlotStrategyBinary'
 import { PlotStrategyGradu } from './PlotStrategyGradu'
 import { PlotStrategyMulti } from './PlotStrategyMulti'
 
-export function plotFactory<T extends keyof QuestTypesMap>(
-  type: T,
-): PlotStrategy<T> {
+export function plotFactory<T extends keyof QuestTypesMap>(type: T): PlotStrategy<T> {
   switch (type) {
     case 'gradu':
       return new PlotStrategyGradu()

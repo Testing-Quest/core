@@ -1,7 +1,4 @@
-export function calculateUserMean(
-  directScore: number[],
-  totalItems: number,
-): number[] {
+export function calculateUserMean(directScore: number[], totalItems: number): number[] {
   const mean = new Array(directScore.length)
   const totalItemsInv = 1 / totalItems
 

@@ -4,9 +4,7 @@ import { CalcStrategyBinary } from './CalcStrategyBinary'
 import { CalcStrategyGradu } from './CalcStrategyGradu'
 import { CalcStrategyMulti } from './CalcStrategyMulti'
 
-export function calcFactory<T extends keyof QuestTypesMap>(
-  type: T,
-): CalcStrategy<T> {
+export function calcFactory<T extends keyof QuestTypesMap>(type: T): CalcStrategy<T> {
   switch (type) {
     case 'gradu':
       return new CalcStrategyGradu()

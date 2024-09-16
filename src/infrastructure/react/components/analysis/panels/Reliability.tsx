@@ -1,15 +1,7 @@
 import React from 'react'
 import type { questGradu } from '../../../domain/quests/questGradu'
 import type { questMulti } from '../../../domain/quests/questMulti'
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 type DataPoint = {
   x: number
@@ -34,9 +26,7 @@ export const Reliability: React.FC<PanelProps> = ({ quest }) => {
   const handleClick = (point: any) => {
     if (point?.activePayload && point.activePayload.length > 0) {
       const clickedPoint = point.activePayload[0].payload
-      console.log(
-        `Clicked point - x: ${clickedPoint.x.toFixed(2)}, y: ${clickedPoint.y.toFixed(2)}`,
-      )
+      console.log(`Clicked point - x: ${clickedPoint.x.toFixed(2)}, y: ${clickedPoint.y.toFixed(2)}`)
     }
   }
 
@@ -91,14 +81,7 @@ export const Reliability: React.FC<PanelProps> = ({ quest }) => {
             strokeWidth={3}
             activeDot={{ r: 8 }}
           />
-          <rect
-            x={60}
-            y={90}
-            width={'99%'}
-            height={46}
-            fill='green'
-            fillOpacity={0.3}
-          />
+          <rect x={60} y={90} width={'99%'} height={46} fill='green' fillOpacity={0.3} />
         </LineChart>
       </ResponsiveContainer>
     </div>

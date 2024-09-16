@@ -1,9 +1,6 @@
-type Primitives = string | number
+import type { MatrixType } from '../../../../../primitives/quest'
 
-export function calculateUsersBlankAnswers<T extends Primitives>(
-  matrix: T[][],
-  omissions: T[],
-): number[] {
+export function calculateUsersBlankAnswers(matrix: MatrixType, omissions: string[]): number[] {
   const result = new Array(matrix.length)
   const omissionSet = new Set(omissions)
   const rowLength = matrix[0].length
@@ -13,7 +10,7 @@ export function calculateUsersBlankAnswers<T extends Primitives>(
     const row = matrix[i]
     let blankCount = 0
     for (let j = 0; j < rowLength; j++) {
-      if (omissionSet.has(row[j])) {
+      if (!row[j] || omissionSet.has(String(row[j]))) {
         blankCount++
       }
     }

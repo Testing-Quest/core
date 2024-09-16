@@ -9,10 +9,7 @@ type SidebarProps = {
   //onRecalculate: () => void;
 }
 
-export const DeactivatedElements: React.FC<SidebarProps> = ({
-  quest,
-  onReset,
-}) => {
+export const DeactivatedElements: React.FC<SidebarProps> = ({ quest, onReset }) => {
   return (
     <div>
       <div style={{ display: 'flex' }}>
@@ -25,8 +22,7 @@ export const DeactivatedElements: React.FC<SidebarProps> = ({
         </Card>
 
         <div style={{ marginTop: '16px' }}>
-          {quest.inactiveUsers().length > 0 ||
-          quest.inactiveItems().length > 0 ? (
+          {quest.inactiveUsers().length > 0 || quest.inactiveItems().length > 0 ? (
             <Button type='primary' onClick={onReset}>
               Reset
             </Button>

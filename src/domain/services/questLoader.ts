@@ -31,12 +31,7 @@ function validateNumericRow(row: string[], error: Error): void {
     throw error
   }
 }
-function validateMatrixDimensions(
-  matrix: string[][],
-  keys: string[],
-  scales: number[],
-  alternatives: number[],
-): void {
+function validateMatrixDimensions(matrix: string[][], keys: string[], scales: number[], alternatives: number[]): void {
   const columnCount = matrix[0].length
 
   if (columnCount !== keys.length) {
@@ -73,15 +68,9 @@ function prepareData(data: string[][]): {
   matrix: string[][]
 } {
   const [firstRow, secondRow, thirdRow] = data
-  const firstThreeColumnsEmpty = [firstRow[0], secondRow[0], thirdRow[0]].every(
-    cell => cell === undefined,
-  )
+  const firstThreeColumnsEmpty = [firstRow[0], secondRow[0], thirdRow[0]].every(cell => cell === undefined)
 
-  let usersID: number[],
-    keys: string[],
-    scales: number[],
-    alternatives: number[],
-    matrix: string[][]
+  let usersID: number[], keys: string[], scales: number[], alternatives: number[], matrix: string[][]
 
   if (firstThreeColumnsEmpty) {
     usersID = Array.from({ length: data.length - 3 }, (_, i) => i + 1)
@@ -110,25 +99,15 @@ function prepareData(data: string[][]): {
   return { usersID, keys, scales, alternatives, matrix }
 }
 
-function generateQuestsData({
-  keys,
-  scales,
-  alternatives,
-  matrix,
-}: Quest): NewQuestType[] {
+function generateQuestsData({ keys, scales, alternatives, matrix }: Quest): NewQuestType[] {
   const uniqueScales = Array.from(new Set(scales))
   return uniqueScales.map(scale => {
-    const matchingIndexes = scales.reduce<number[]>(
-      (indexes, currentScale, i) => {
-        if (currentScale === scale) indexes.push(i)
-        return indexes
-      },
-      [],
-    )
+    const matchingIndexes = scales.reduce<number[]>((indexes, currentScale, i) => {
+      if (currentScale === scale) indexes.push(i)
+      return indexes
+    }, [])
 
-    const filteredMatrix = matrix.map(row =>
-      matchingIndexes.map(i => row[i].trim()),
-    )
+    const filteredMatrix = matrix.map(row => matchingIndexes.map(i => row[i].trim()))
     const filteredKeys = matchingIndexes.map(i => keys[i])
     const filteredAlternatives = matchingIndexes.map(i => alternatives[i])
 
@@ -143,7 +122,7 @@ function generateQuestsData({
       uuid: uuidv4(),
       keys: filteredKeys,
       scale,
-      alternatives: filteredAlternatives,
+      alternatives: filteredAlternatives[0],
       matrix: filteredMatrix,
       type,
     }

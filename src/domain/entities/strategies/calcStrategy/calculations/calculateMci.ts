@@ -1,8 +1,4 @@
-export function calculateMCI(
-  correctMatrix: number[][],
-  itemsDifficulty: number[],
-  directScore: number[],
-): number[] {
+export function calculateMCI(correctMatrix: number[][], itemsDifficulty: number[], directScore: number[]): number[] {
   const numFilas: number = correctMatrix.length
   const numColumnas: number = correctMatrix[0].length
 
@@ -31,8 +27,7 @@ export function calculateMCI(
     const pautaObservada: number = puntuaciones[i]
 
     const numerador: number = pautaTotalmenteCorrecta - pautaObservada
-    const denominador: number =
-      pautaTotalmenteCorrecta - pautaTotalmenteIncorrecta
+    const denominador: number = pautaTotalmenteCorrecta - pautaTotalmenteIncorrecta
 
     const mci: number = denominador !== 0 ? numerador / denominador : 0
     mci_array.push(mci)

@@ -1,89 +1,35 @@
 import type { BinaryCalcsType } from '../../../primitives/calcs/calcs'
-import type { CalcStrategy } from './CalcStrategy'
+import type { MatrixType } from '../../../primitives/quest'
+import { CalcStrategyBase } from './CalcStrategy'
 import { BinaryChoiceCalculations as Bcc } from './calculations'
 
-export class CalcStrategyBinary implements CalcStrategy<'binary'> {
-  public filterMatrix(
-    matrix: string[][],
-    activeItems: boolean[],
-    activeUsers: boolean[],
-  ): string[][] {
-    return matrix
-      .filter((_, rowIndex) => activeUsers[rowIndex])
-      .map(row => row.filter((_, columnIndex) => activeItems[columnIndex]))
-  }
-  public calculate(
-    matrix: string[][],
-    keys: string[],
-    alternatives: number,
-  ): BinaryCalcsType {
+export class CalcStrategyBinary extends CalcStrategyBase<'binary'> {
+  public calculate(matrix: MatrixType, keys: string[], alternatives: number): BinaryCalcsType {
     const correctMatrix = Bcc.correctMatrix(matrix, keys)
-    const usersDirectScore = Bcc.usersDirectScore(correctMatrix)
-    const mean = Bcc.mean(usersDirectScore)
-    const variance = Bcc.variance(usersDirectScore, mean)
-    const itemsDirectScore = Bcc.itemsDirectScore(correctMatrix)
-    const itemsMean = Bcc.itemsMean(correctMatrix)
-    const itemsVariance = Bcc.itemsVariance(correctMatrix, itemsMean)
-    const itemsDiscrimination = Bcc.itemsDiscrimination(
-      correctMatrix,
-      usersDirectScore,
-    )
-    const itemsDifficulty = Bcc.itemsDifficulty(itemsDirectScore, matrix.length)
-    const itemsAltDiscDiff = Bcc.itemsAltDiscDiff(
-      usersDirectScore,
-      matrix,
-      alternatives,
-    )
-    const standardDeviation = Bcc.standardDeviation(variance)
-    const alpha = Bcc.alpha(correctMatrix, itemsVariance, variance)
-    const mci = Bcc.mci(correctMatrix, itemsDifficulty, usersDirectScore)
-
+    const baseCalcs = this.getBaseCalcs(correctMatrix, keys, matrix)
+    const itemsAltDiscDiff = Bcc.itemsAltDiscDiff(baseCalcs.users.directScore, correctMatrix, alternatives)
+    const itemsConflict = Bcc.itemsConflict(itemsAltDiscDiff[1], baseCalcs.items.discrimination)
+    const mci = Bcc.mci(correctMatrix, baseCalcs.items.difficulty, baseCalcs.users.directScore)
+    const coherency = Bcc.coherency(mci)
     return {
       correctMatrix: correctMatrix,
-      coherency: Bcc.coherency(mci),
-      difficulty: Bcc.difficulty(itemsDifficulty),
-      health: {
-        cronbachAlpha: alpha,
-        sem: Bcc.sem(alpha, standardDeviation),
-        mean: mean,
-        variance: variance,
-        standardDeviation: standardDeviation,
-        reliability: Bcc.reliability(alpha),
-        discrimination: Bcc.discrimination(itemsDiscrimination),
-        testHealth:
-          (Bcc.reliability(alpha) +
-            Bcc.discrimination(itemsDiscrimination) +
-            Bcc.coherency(mci)) /
-          3,
-      },
       items: {
-        variance: itemsVariance,
-        discrimination: itemsDiscrimination,
-        corrDiscrimination: Bcc.itemsCorrDiscrimination(
-          itemsDiscrimination,
-          itemsVariance,
-          variance,
-        ),
+        ...baseCalcs.items,
         altDifficulty: Object.fromEntries(itemsAltDiscDiff[1]),
         altDiscrimination: Object.fromEntries(itemsAltDiscDiff[0]),
-        difficulty: itemsDifficulty,
-        choice: Bcc.itemsChoice(
-          keys,
-          alternatives,
-          itemsAltDiscDiff[1],
-          matrix.length,
-          keys.length,
-        ),
-        conflict: Bcc.itemsConflict(itemsAltDiscDiff[0], itemsDiscrimination),
+        conflict: itemsConflict,
       },
       users: {
-        directScore: usersDirectScore,
-        weightedScore: Bcc.weightScore(correctMatrix, itemsDiscrimination),
+        ...baseCalcs.users,
+        weightedScore: Bcc.weightScore(correctMatrix, baseCalcs.items.discrimination),
         coherence: Bcc.usersCoherence(correctMatrix),
         mci: mci,
-        mean: Bcc.usersMean(usersDirectScore, matrix.length),
-        totalScore: usersDirectScore,
-        blankAnswer: Bcc.usersBlankAnswers(matrix, keys),
+      },
+      health: {
+        ...baseCalcs.health,
+        coherency: coherency,
+        difficulty: Bcc.difficulty(baseCalcs.items.difficulty),
+        testHealth: (baseCalcs.health.reliability + baseCalcs.health.discrimination + coherency) / 3,
       },
     }
   }
