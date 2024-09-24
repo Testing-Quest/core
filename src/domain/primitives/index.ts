@@ -23,5 +23,29 @@ type QuestTypesMap = {
   multi: MultiQuestType
   gradu: GraduQuestType
 }
-
+export const alternatives: string[] = [
+  'A',
+  'B',
+  'C',
+  'D',
+  'E',
+  'F',
+  'G',
+  'H',
+  'I',
+  'J',
+  'K',
+  'L',
+  'M',
+  'N',
+  'O',
+  'P',
+  'Q',
+  'R',
+  'S',
+  'T',
+  'U',
+  'V',
+  'W',
+]
 export type { QuestTypes, QuestTypesMap, NewQuestType, BinaryQuestType, MultiQuestType, GraduQuestType }

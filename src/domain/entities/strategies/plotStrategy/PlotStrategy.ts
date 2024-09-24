@@ -1,4 +1,4 @@
-import type { QuestTypesMap } from '../../../primitives'
+import { alternatives, type QuestTypesMap } from '../../../primitives'
 import type { DataPoint, StringDataPoint } from '../../Quest'
 
 export type PlotStrategy<T extends keyof QuestTypesMap> = {
@@ -75,18 +75,18 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
     const itemResponses = attrs.matrix.map(row => row[id])
     const min = Math.min(...attrs.calcs.users.directScore)
     const max = Math.max(...attrs.calcs.users.directScore)
-    const range = max - min
+    const range = max - min || 1
+    const validAlternatives = [...alternatives.slice(0, attrs.alternatives), 'X']
 
     const usersGroups = attrs.calcs.users.directScore.map(score =>
       Math.min(groupCount - 1, Math.floor(((score - min) / range) * groupCount)),
     )
 
     return Object.fromEntries(
-      attrs.keys.map(key => {
-        const correctItem = itemResponses.map(response => response === key)
+      validAlternatives.map(key => {
         const dataPoints = Array.from({ length: groupCount }, (_, group) => ({
-          x: group + 1,
-          y: correctItem.filter((_, index) => usersGroups[index] === group).length,
+          x: group,
+          y: itemResponses.filter((response, index) => response === key && usersGroups[index] === group).length,
         }))
         return [key, dataPoints]
       }),
