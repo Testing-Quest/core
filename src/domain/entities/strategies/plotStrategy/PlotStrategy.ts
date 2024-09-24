@@ -11,7 +11,7 @@ export type PlotStrategy<T extends keyof QuestTypesMap> = {
   getScoreDistribution(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
   getItemFrequency(attrs: QuestTypesMap[T]['calcs'], id: number): StringDataPoint[]
   getItemDiscrimination(attrs: QuestTypesMap[T]['calcs'], id: number): StringDataPoint[]
-  getItemProfile(attrs: QuestTypesMap[T]['calcs'], id: number): Record<string, StringDataPoint[]>
+  getItemProfile(attrs: QuestTypesMap[T], id: number): Record<string, DataPoint[]>
 }
 
 export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements PlotStrategy<T> {
@@ -70,30 +70,27 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
     })
   }
 
-  public getItemProfile(attrs: QuestTypesMap[T]['calcs'], id: number): Record<string, StringDataPoint[]> {
-    const groupCount = id
-    const {
-      items: { itemsIds },
-      users: { directScore },
-    } = attrs
+  public getItemProfile(attrs: QuestTypesMap[T], id: number): Record<string, DataPoint[]> {
+    const groupCount = 5
+    const itemResponses = attrs.matrix.map(row => row[id])
+    const min = Math.min(...attrs.calcs.users.directScore)
+    const max = Math.max(...attrs.calcs.users.directScore)
+    const range = max - min
 
-    const groupsProfile: Record<string, StringDataPoint[]> = Object.fromEntries(
-      Array.from({ length: groupCount }, (_, i) => [
-        String(i + 1),
-        itemsIds.map((_, index) => ({ x: String(index), y: 0 })),
-      ]),
+    const usersGroups = attrs.calcs.users.directScore.map(score =>
+      Math.min(groupCount - 1, Math.floor(((score - min) / range) * groupCount)),
     )
 
-    const maxScore = Math.max(...directScore)
-    const groupSize = maxScore / groupCount
-    const groupCutoffs = Array.from({ length: groupCount }, (_, i) => groupSize * (i + 1))
-
-    directScore.forEach((score, index) => {
-      const groupIndex = groupCutoffs.findIndex(cutoff => score <= cutoff) + 1
-      if (groupIndex) groupsProfile[String(groupIndex)][index].y += 1
-    })
-
-    return groupsProfile
+    return Object.fromEntries(
+      attrs.keys.map(key => {
+        const correctItem = itemResponses.map(response => response === key)
+        const dataPoints = Array.from({ length: groupCount }, (_, group) => ({
+          x: group + 1,
+          y: correctItem.filter((_, index) => usersGroups[index] === group).length,
+        }))
+        return [key, dataPoints]
+      }),
+    )
   }
 
   public abstract getDirectWeight(attrs: QuestTypesMap[T]['calcs']): DataPoint[]

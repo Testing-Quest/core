@@ -30,7 +30,7 @@ export type BaseQuest = {
   getUsersTable(): Table
   getItemFrequency(id: number): StringDataPoint[]
   getItemDiscrimination(id: number): StringDataPoint[]
-  getItemProfile(id: number): Record<string, StringDataPoint[]>
+  getItemProfile(id: number): Record<string, DataPoint[]>
   update(payload: UpdatePayload): void
   getModifications(): {
     keys: string[]
@@ -115,8 +115,8 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
   public getItemDiscrimination(id: number): StringDataPoint[] {
     return this._pltStrategy.getItemDiscrimination(this._props.calcs, id)
   }
-  public getItemProfile(id: number): Record<string, StringDataPoint[]> {
-    return this._pltStrategy.getItemProfile(this._props.calcs, id)
+  public getItemProfile(id: number): Record<string, DataPoint[]> {
+    return this._pltStrategy.getItemProfile(this._props, id)
   }
   public update(payload: UpdatePayload): void {
     if (payload.activeItems) {
