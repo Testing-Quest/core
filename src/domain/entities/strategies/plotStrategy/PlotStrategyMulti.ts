@@ -1,23 +1,34 @@
-import type { MultiQuestType } from '../../../primitives'
-import type { dataPoint } from '../../Quest'
+import type { MultiCalcsType } from '../../../primitives/calcs/calcs'
+import type { DataPoint, StringDataPoint } from '../../Quest'
 import { PlotStrategyBase } from './PlotStrategy'
 
 export class PlotStrategyMulti extends PlotStrategyBase<'multi'> {
-  public getDirectWeight(attrs: MultiQuestType['calcs']): dataPoint[] {
+  public getDirectWeight(attrs: MultiCalcsType): DataPoint[] {
     const weight = attrs.users.weightedScore
     const direct = attrs.users.directScore
     return weight.map((w, i) => ({ x: direct[i], y: w }))
   }
 
-  public getDirectCohrency(attrs: MultiQuestType['calcs']): dataPoint[] {
+  public getDirectCohrency(attrs: MultiCalcsType): DataPoint[] {
     const { coherence } = attrs.users
     const direct = attrs.users.directScore
     return coherence.map((c, i) => ({ x: direct[i], y: c }))
   }
 
-  public getDirectMci(attrs: MultiQuestType['calcs']): dataPoint[] {
+  public getDirectMci(attrs: MultiCalcsType): DataPoint[] {
     const { mci } = attrs.users
     const direct = attrs.users.directScore
     return mci.map((m, i) => ({ x: direct[i], y: m }))
+  }
+
+  public getItemDiscrimination(attrs: MultiCalcsType, id: number): StringDataPoint[] {
+    const numUsers = attrs.correctMatrix.length
+
+    return Array.from(Object.entries(attrs.items.altDiscrimination)).map(([key, value]): StringDataPoint => {
+      return {
+        x: key.split(' ')[1],
+        y: value[id] * numUsers,
+      }
+    })
   }
 }

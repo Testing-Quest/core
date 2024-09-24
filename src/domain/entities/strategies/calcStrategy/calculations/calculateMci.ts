@@ -2,7 +2,7 @@ export function calculateMCI(correctMatrix: number[][], itemsDifficulty: number[
   const numFilas: number = correctMatrix.length
   const numColumnas: number = correctMatrix[0].length
 
-  const puntuaciones: number[] = new Array(numFilas).fill(0)
+  const puntuaciones: number[] = new Array(numFilas).fill(0) as number[]
 
   for (let i = 0; i < numFilas; i++) {
     for (let j = 0; j < numColumnas; j++) {
@@ -14,7 +14,7 @@ export function calculateMCI(correctMatrix: number[][], itemsDifficulty: number[
     (a, b) => itemsDifficulty[b] - itemsDifficulty[a],
   )
 
-  const mci_array = []
+  const mciArray = []
 
   for (let i = 0; i < numFilas; i++) {
     const totalAciertos: number = directScore[i]
@@ -30,7 +30,7 @@ export function calculateMCI(correctMatrix: number[][], itemsDifficulty: number[
     const denominador: number = pautaTotalmenteCorrecta - pautaTotalmenteIncorrecta
 
     const mci: number = denominador !== 0 ? numerador / denominador : 0
-    mci_array.push(mci)
+    mciArray.push(mci)
   }
-  return mci_array
+  return mciArray
 }

@@ -37,7 +37,7 @@ import { calculateUsersCoherence } from './users/calculateUsersCoherence'
 import { calculateUsersDirectScore } from './users/calculateUsersDirectScore'
 import { calculateWeightScore } from './users/calculateWeightScore'
 
-export const BaseCalculations: BasedCalculationsType = {
+export const baseCalculations: BasedCalculationsType = {
   usersDirectScore: calculateUsersDirectScore,
   usersMean: calculateUserMean,
   usersBlankAnswers: calculateUsersBlankAnswers,
@@ -56,7 +56,7 @@ export const BaseCalculations: BasedCalculationsType = {
   discrimination: calculateDiscrimination,
 }
 
-export const MultipleChoiceCalculations: MultipleChoiceCalculationsType = {
+export const multipleChoiceCalculations: MultipleChoiceCalculationsType = {
   correctMatrix: calculateChoiceCorrectMatrix,
   usersCoherence: calculateUsersCoherence,
   itemsAltDiscDiff: calculateItemsAlternativeDiscriminationDifficulty,
@@ -70,21 +70,18 @@ export const MultipleChoiceCalculations: MultipleChoiceCalculationsType = {
   difficulty: calculateDifficulty,
 }
 
-export const BinaryChoiceCalculations: BinaryChoiceCalculationsType = {
+export const binaryChoiceCalculations: BinaryChoiceCalculationsType = {
   correctMatrix: calculateChoiceCorrectMatrix,
   usersCoherence: calculateUsersCoherence,
   itemsAltDiscDiff: calculateItemsAlternativeDiscriminationDifficulty,
   itemsConflict: calculateItemsConflict,
-  itemsChoice: calculateItemsChoice,
   weightScore: calculateWeightScore,
-  keyConflict: calculateKeyConflict,
-  choice: calculateChoice,
   mci: calculateMCI,
   coherency: calculateCoherency,
   difficulty: calculateDifficulty,
 }
 
-export const GraduatedCalculations: GraduatedCalculationsType = {
+export const graduatedCalculations: GraduatedCalculationsType = {
   correctMatrix: calculateGraduCorrectMatrix,
   itemsAltDifficulty: calculateBinaryAlternativeDifficulty,
   score: calculateScore,

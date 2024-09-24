@@ -37,9 +37,10 @@ export default tseslint.config(
       ],
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-magic-numbers': 'off',
-      '@typescript-eslint/consistent-type-definitions': ['error', 'type'], // Define la preferencia por "type"
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/prefer-readonly-parameter-types': 'off',
-      '@typescript-eslint/method-signature-style': ['error', 'method'], // Mantiene los métodos
+      '@typescript-eslint/method-signature-style': ['error', 'method'],
+      '@typescript-eslint/class-methods-use-this': 'off',
     },
   },
 )

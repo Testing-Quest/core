@@ -1,4 +1,4 @@
-const DiccionarioTablaChiCuadrado = new Map<number, number>([
+const dictChiSqr = new Map<number, number>([
   [3, 5.99],
   [4, 7.81],
   [5, 9.48],
@@ -50,7 +50,7 @@ export function calculateItemsChoice(
 
     const chiCuadrado: number = calculateChiCuadrado(itemFrequencies, freqEsperada)
 
-    choice.push(chiCuadrado < DiccionarioTablaChiCuadrado.get(alternatives - 1)!)
+    choice.push(chiCuadrado < dictChiSqr.get(alternatives - 1)!)
   }
   return choice
 }

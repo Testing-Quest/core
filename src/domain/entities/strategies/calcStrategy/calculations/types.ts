@@ -53,17 +53,8 @@ export type BinaryChoiceCalculationsType = {
     numAlternatives: number,
   ): [Map<string, number[]>, Map<string, number[]>]
   itemsConflict(alternativeDiscrimination: Map<string, number[]>, itemDiscrimination: number[]): boolean[]
-  itemsChoice(
-    keys: string[],
-    alternatives: number,
-    alternativeDifficulty: Map<string, number[]>,
-    numUsers: number,
-    numItems: number,
-  ): boolean[]
 
   weightScore(correctMatrix: number[][], itemsDiscrimination: number[]): number[]
-  keyConflict(itemsConflict: boolean[]): number
-  choice(itemsChoice: boolean[]): number
   mci(correctMatrix: number[][], itemsDifficulty: number[], directScore: number[]): number[]
   coherency(mci: number[]): number
   difficulty(itemsDifficulty: number[]): number

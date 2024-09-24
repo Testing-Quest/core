@@ -1,6 +1,6 @@
 import type { QuestTypesMap } from '../../../primitives'
 import type { MatrixType } from '../../../primitives/quest'
-import { BaseCalculations as Bc } from './calculations'
+import { baseCalculations as Bc } from './calculations'
 
 export type BaseCalcs = {
   health: {
@@ -36,8 +36,7 @@ export type CalcStrategy<T extends keyof QuestTypesMap> = {
 }
 
 export abstract class CalcStrategyBase<T extends keyof QuestTypesMap> implements CalcStrategy<T> {
-  abstract calculate(matrix: MatrixType, keys: string[], alternatives: number): QuestTypesMap[T]['calcs']
-  filterMatrix(matrx: MatrixType, activeItems: boolean[], activeUsers: boolean[]): MatrixType {
+  public filterMatrix(matrx: MatrixType, activeItems: boolean[], activeUsers: boolean[]): MatrixType {
     return matrx
       .filter((_, rowIndex) => activeUsers[rowIndex])
       .map(row => row.filter((_, columnIndex) => activeItems[columnIndex]))
@@ -68,7 +67,7 @@ export abstract class CalcStrategyBase<T extends keyof QuestTypesMap> implements
       },
       items: {
         itemsIds: Array.from({ length: itemsDirectScore.length }, (_, i) => i),
-        itemsEnabled: new Array(itemsDirectScore.length).fill(true),
+        itemsEnabled: new Array(itemsDirectScore.length).fill(true) as boolean[],
         variance: itemsVariance,
         discrimination: itemsDiscrimination,
         corrDiscrimination: Bc.itemsCorrDiscrimination(itemsDiscrimination, itemsVariance, variance),
@@ -76,7 +75,7 @@ export abstract class CalcStrategyBase<T extends keyof QuestTypesMap> implements
       },
       users: {
         usersIds: Array.from({ length: usersDirectScore.length }, (_, i) => i),
-        usersEnabled: new Array(usersDirectScore.length).fill(true),
+        usersEnabled: new Array(usersDirectScore.length).fill(true) as boolean[],
         directScore: usersDirectScore,
         mean: Bc.usersMean(usersDirectScore, matrix.length),
         totalScore: usersDirectScore,
@@ -84,4 +83,6 @@ export abstract class CalcStrategyBase<T extends keyof QuestTypesMap> implements
       },
     }
   }
+
+  public abstract calculate(matrix: MatrixType, keys: string[], alternatives: number): QuestTypesMap[T]['calcs']
 }

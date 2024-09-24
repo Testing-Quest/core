@@ -1,6 +1,6 @@
 import { calculatePearson } from '../calculatePearson'
 
-const Alternatives: string[] = [
+const alternatives: string[] = [
   'A',
   'B',
   'C',
@@ -36,16 +36,16 @@ export function calculateItemsAlternativeDiscriminationDifficulty(
   const alternativeDiscrimination = new Map<string, number[]>()
   const alternativeDifficulty = new Map<string, number[]>()
 
-  const calculateDisrimination = (matrix: number[][]) => {
-    return Array.from({ length: matrix[0].length }, (_, i) => {
-      const item = matrix.map(row => row[i])
+  const calculateDisrimination = (discMatrix: number[][]): number[] => {
+    return Array.from({ length: discMatrix[0].length }, (_, i) => {
+      const item = discMatrix.map(row => row[i])
       return calculatePearson(item, usersDirectScore)
     })
   }
 
-  const calculateDifficulty = (directScore: number[]) => directScore.map(item => item / numUsers)
+  const calculateDifficulty = (directScore: number[]): number[] => directScore.map(item => item / numUsers)
 
-  const processAlternative = (alternative: string) => {
+  const processAlternative = (alternative: string): void => {
     const correctedMatrix = matrix.map(row => row.map(item => +(item === alternative)))
     const itemsDirectScore = Array.from({ length: numUsers }, (_, colIndex) =>
       correctedMatrix.reduce((acc, row) => acc + row[colIndex], 0),
@@ -56,7 +56,7 @@ export function calculateItemsAlternativeDiscriminationDifficulty(
   }
 
   for (let i = 0; i < numAlternatives; i++) {
-    const alternative = Alternatives[i]
+    const alternative = alternatives[i]
     processAlternative(alternative)
   }
   processAlternative('X')
@@ -69,7 +69,7 @@ export function calculateBinaryAlternativeDifficulty(
 ): Map<string, number[]> {
   const alternativeDifficulty = new Map<string, number[]>()
 
-  const processAlternative = (alternative: number) => {
+  const processAlternative = (alternative: number): void => {
     const difficulty = Array.from(
       { length: correctMatrix[0].length },
       (_, colIndex) =>

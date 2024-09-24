@@ -1,16 +1,16 @@
 import type { BinaryCalcsType } from '../../../primitives/calcs/calcs'
 import type { MatrixType } from '../../../primitives/quest'
 import { CalcStrategyBase } from './CalcStrategy'
-import { BinaryChoiceCalculations as Bcc } from './calculations'
+import { binaryChoiceCalculations as bc } from './calculations'
 
 export class CalcStrategyBinary extends CalcStrategyBase<'binary'> {
   public calculate(matrix: MatrixType, keys: string[], alternatives: number): BinaryCalcsType {
-    const correctMatrix = Bcc.correctMatrix(matrix, keys)
+    const correctMatrix = bc.correctMatrix(matrix, keys)
     const baseCalcs = this.getBaseCalcs(correctMatrix, keys, matrix)
-    const itemsAltDiscDiff = Bcc.itemsAltDiscDiff(baseCalcs.users.directScore, correctMatrix, alternatives)
-    const itemsConflict = Bcc.itemsConflict(itemsAltDiscDiff[1], baseCalcs.items.discrimination)
-    const mci = Bcc.mci(correctMatrix, baseCalcs.items.difficulty, baseCalcs.users.directScore)
-    const coherency = Bcc.coherency(mci)
+    const itemsAltDiscDiff = bc.itemsAltDiscDiff(baseCalcs.users.directScore, correctMatrix, alternatives)
+    const itemsConflict = bc.itemsConflict(itemsAltDiscDiff[1], baseCalcs.items.discrimination)
+    const mci = bc.mci(correctMatrix, baseCalcs.items.difficulty, baseCalcs.users.directScore)
+    const coherency = bc.coherency(mci)
     return {
       correctMatrix: correctMatrix,
       items: {
@@ -21,14 +21,14 @@ export class CalcStrategyBinary extends CalcStrategyBase<'binary'> {
       },
       users: {
         ...baseCalcs.users,
-        weightedScore: Bcc.weightScore(correctMatrix, baseCalcs.items.discrimination),
-        coherence: Bcc.usersCoherence(correctMatrix),
+        weightedScore: bc.weightScore(correctMatrix, baseCalcs.items.discrimination),
+        coherence: bc.usersCoherence(correctMatrix),
         mci: mci,
       },
       health: {
         ...baseCalcs.health,
         coherency: coherency,
-        difficulty: Bcc.difficulty(baseCalcs.items.difficulty),
+        difficulty: bc.difficulty(baseCalcs.items.difficulty),
         testHealth: (baseCalcs.health.reliability + baseCalcs.health.discrimination + coherency) / 3,
       },
     }

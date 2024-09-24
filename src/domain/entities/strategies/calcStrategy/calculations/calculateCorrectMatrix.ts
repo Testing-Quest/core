@@ -3,11 +3,11 @@ import type { MatrixType } from '../../../../primitives/quest'
 export function calculateChoiceCorrectMatrix(matrix: MatrixType, keys: string[]): number[][] {
   const numRows = matrix.length
   const numCols = keys.length
-  const correctedMatrix: number[][] = new Array(numRows)
+  const correctedMatrix: number[][] = new Array(numRows) as number[][]
 
   for (let i = 0; i < numRows; i++) {
     const row = matrix[i]
-    const correctedRow = new Array(numCols)
+    const correctedRow = new Array(numCols) as number[]
     for (let j = 0; j < numCols; j++) {
       correctedRow[j] = row[j] === keys[j] ? 1 : 0
     }
