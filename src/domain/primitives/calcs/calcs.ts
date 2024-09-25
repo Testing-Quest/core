@@ -2,43 +2,38 @@ import type { BinaryItemsType, GraduItemsType, ItemsType, MultiItemsType } from 
 import type { BinaryUsersType, GraduUsersType, MultiUsersType, UsersType } from './users'
 
 export type CalcsType = {
-  correctMatrix: number[][]
-  health: HealthType
-  items: ItemsType
-  users: UsersType
+  readonly correctMatrix: number[][]
+  readonly health: HealthType
+  readonly items: ItemsType
+  readonly users: UsersType
 }
 
 type HealthType = {
-  cronbachAlpha: number
-  sem: number
-  mean: number
-  variance: number
-  standardDeviation: number
-  reliability: number
-  discrimination: number
-  testHealth: number
-
-  coherency?: number
-  choice?: number
-  difficulty?: number
-  keyConflict?: number
+  readonly cronbachAlpha: number
+  readonly sem: number
+  readonly mean: number
+  readonly variance: number
+  readonly standardDeviation: number
+  readonly reliability: number
+  readonly discrimination: number
+  readonly testHealth: number
 }
 
 type BinaryHealthType = HealthType & {
-  coherency: number
-  difficulty: number
+  readonly coherency: number
+  readonly difficulty: number
 }
 
 type MultiHealthType = HealthType & {
-  coherency: number
-  choice: number
-  difficulty: number
-  keyConflict: number
+  readonly coherency: number
+  readonly choice: number
+  readonly difficulty: number
+  readonly keyConflict: number
 }
 
 type GraduHealthType = HealthType & {
-  score: number
-  variability: number
+  readonly score: number
+  readonly variability: number
 }
 
 export type BinaryCalcsType = CalcsType & {

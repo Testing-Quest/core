@@ -1,10 +1,10 @@
 import type { QuestTypesMap } from '../primitives'
-import type { NewQuestType } from '../primitives/quest'
+import type { MatrixType, NewQuestType, QuestType } from '../primitives/quest'
 import { calcFactory } from './strategies/calcStrategy/calcFactory'
 import type { CalcStrategy } from './strategies/calcStrategy/CalcStrategy'
 import { plotFactory } from './strategies/plotStrategy/plotFactory'
 import type { PlotStrategy } from './strategies/plotStrategy/PlotStrategy'
-import { tableFactory } from './strategies/tableStrategy/tableFactory'
+import { tableFactory } from './strategies/tableStrategy/TableFactory'
 import type { Table, TableStrategy } from './strategies/tableStrategy/TableStrategy'
 
 export type DataPoint = { x: number; y: number }
@@ -58,19 +58,28 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
     this._tblStrategy = attrs.tblStrategy
   }
 
-  public static create<T extends keyof QuestTypesMap>(props: NewQuestType & { type: T }): Quest<T> {
-    const cls = calcFactory<T>(props.type)
-    const plt = plotFactory<T>(props.type)
-    const tbl = tableFactory<T>(props.type)
+  public static create<T extends keyof QuestTypesMap>(attrs: NewQuestType & { type: T }): Quest<T> {
+    const cls = calcFactory<T>(attrs.type)
+    const plt = plotFactory<T>(attrs.type)
+    const tbl = tableFactory<T>(attrs.type)
+
+    const baseQuest: QuestType = {
+      uuid: attrs.uuid,
+      keys: attrs.keys,
+      scale: attrs.scale,
+      alternatives: attrs.alternatives,
+      originalKeys: attrs.keys,
+      matrix: attrs.matrix,
+      itemsEnabled: attrs.matrix[0].map(() => true),
+      itemsIds: attrs.matrix[0].map((_, i) => i),
+      usersEnabled: attrs.matrix.map(() => true),
+      usersIds: attrs.matrix.map((_, i) => i),
+    }
 
     const questProps: QuestTypesMap[T] = {
-      uuid: props.uuid,
-      keys: props.keys,
-      scale: props.scale,
-      matrix: props.matrix,
-      type: props.type,
-      originalKeys: props.keys,
-      calcs: cls.calculate(props.matrix, props.keys, props.alternatives),
+      ...baseQuest,
+      type: attrs.type,
+      calcs: cls.calculate(attrs.matrix, attrs.keys, attrs.alternatives),
     } as QuestTypesMap[T]
 
     return new Quest<T>({ props: questProps, clsStrategy: cls, pltStrategy: plt, tblStrategy: tbl })
@@ -103,43 +112,58 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
   public getScoreDistribution(): DataPoint[] {
     return this._pltStrategy.getScoreDistribution(this._props.calcs)
   }
-  public getItemsTable(): Table {
-    return this._tblStrategy.getItemsTable(this._props.calcs.items, this._props.keys)
-  }
-  public getUsersTable(): Table {
-    return this._tblStrategy.getUsersTable(this._props.calcs.users)
-  }
   public getItemFrequency(id: number): StringDataPoint[] {
     return this._pltStrategy.getItemFrequency(this._props.calcs, id)
   }
   public getItemDiscrimination(id: number): StringDataPoint[] {
     return this._pltStrategy.getItemDiscrimination(this._props.calcs, id)
   }
+  public getItemsTable(): Table {
+    return this._tblStrategy.getItemsTable(
+      {
+        itemsEnabled: this._props.itemsEnabled,
+        itemsIds: this._props.itemsIds,
+        keys: this._props.keys,
+      },
+      this._props.calcs.items,
+    )
+  }
+  public getUsersTable(): Table {
+    return this._tblStrategy.getUsersTable(
+      {
+        usersEnabled: this._props.usersEnabled,
+        usersIds: this._props.usersIds,
+      },
+      this._props.calcs.users,
+    )
+  }
   public getItemProfile(id: number): Record<string, DataPoint[]> {
-    return this._pltStrategy.getItemProfile(this._props, id)
+    return this._pltStrategy.getItemProfile(
+      {
+        matrix: this.filterMatrix(),
+        alternatives: this._props.alternatives,
+        calcs: this._props.calcs,
+      },
+      id,
+    )
   }
   public update(payload: UpdatePayload): void {
     if (payload.activeItems) {
-      this._props.calcs.items.itemsEnabled = payload.activeItems
+      this._props.itemsEnabled = payload.activeItems
     }
     if (payload.activeUsers) {
-      this._props.calcs.users.usersEnabled = payload.activeUsers
+      this._props.usersEnabled = payload.activeUsers
     }
     if (payload.keys) {
       this._props.keys = payload.keys
     }
-    const keys = this._props.keys.filter((_, i) => this._props.calcs.items.itemsEnabled[i])
-    const matrix = this._clsStrategy.filterMatrix(
-      this._props.matrix,
-      this._props.calcs.items.itemsEnabled,
-      this._props.calcs.users.usersEnabled,
-    )
+    const keys = this._props.keys.filter((_, i) => this._props.itemsEnabled[i])
+    const matrix = this.filterMatrix()
     this._props = {
       ...this._props,
       calculations: this._clsStrategy.calculate(matrix, keys, this._props.alternatives),
     }
   }
-
   public getModifications(): {
     keys: string[]
     originalKeys: string[]
@@ -149,8 +173,11 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
     return {
       keys: this._props.keys,
       originalKeys: this._props.originalKeys,
-      users: this._props.calcs.users.usersEnabled,
-      items: this._props.calcs.items.itemsEnabled,
+      users: this._props.usersEnabled,
+      items: this._props.itemsEnabled,
     }
+  }
+  private filterMatrix(): MatrixType {
+    return this._clsStrategy.filterMatrix(this._props.matrix, this._props.itemsEnabled, this._props.usersEnabled)
   }
 }

@@ -13,16 +13,12 @@ export type BaseCalcs = {
     discrimination: number
   }
   items: {
-    itemsIds: number[]
-    itemsEnabled: boolean[]
     variance: number[]
     discrimination: number[]
     corrDiscrimination: number[]
     difficulty: number[]
   }
   users: {
-    usersIds: number[]
-    usersEnabled: boolean[]
     directScore: number[]
     mean: number[]
     totalScore: number[]
@@ -66,16 +62,12 @@ export abstract class CalcStrategyBase<T extends keyof QuestTypesMap> implements
         discrimination: Bc.discrimination(itemsDiscrimination),
       },
       items: {
-        itemsIds: Array.from({ length: itemsDirectScore.length }, (_, i) => i),
-        itemsEnabled: new Array(itemsDirectScore.length).fill(true) as boolean[],
         variance: itemsVariance,
         discrimination: itemsDiscrimination,
         corrDiscrimination: Bc.itemsCorrDiscrimination(itemsDiscrimination, itemsVariance, variance),
         difficulty: itemsDifficulty,
       },
       users: {
-        usersIds: Array.from({ length: usersDirectScore.length }, (_, i) => i),
-        usersEnabled: new Array(usersDirectScore.length).fill(true) as boolean[],
         directScore: usersDirectScore,
         mean: Bc.usersMean(usersDirectScore, matrix.length),
         totalScore: usersDirectScore,

@@ -16,4 +16,8 @@ export type QuestType = {
   alternatives: number
   originalKeys: string[]
   matrix: MatrixType
+  itemsEnabled: boolean[]
+  readonly itemsIds: number[]
+  usersEnabled: boolean[]
+  readonly usersIds: number[]
 }

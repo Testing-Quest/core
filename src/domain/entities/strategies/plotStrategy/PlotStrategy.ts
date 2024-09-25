@@ -1,4 +1,5 @@
 import { alternatives, type QuestTypesMap } from '../../../primitives'
+import type { MatrixType } from '../../../primitives/quest'
 import type { DataPoint, StringDataPoint } from '../../Quest'
 
 export type PlotStrategy<T extends keyof QuestTypesMap> = {
@@ -11,7 +12,10 @@ export type PlotStrategy<T extends keyof QuestTypesMap> = {
   getScoreDistribution(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
   getItemFrequency(attrs: QuestTypesMap[T]['calcs'], id: number): StringDataPoint[]
   getItemDiscrimination(attrs: QuestTypesMap[T]['calcs'], id: number): StringDataPoint[]
-  getItemProfile(attrs: QuestTypesMap[T], id: number): Record<string, DataPoint[]>
+  getItemProfile(
+    attrs: { matrix: MatrixType; alternatives: number; calcs: QuestTypesMap[T]['calcs'] },
+    id: number,
+  ): Record<string, DataPoint[]>
 }
 
 export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements PlotStrategy<T> {
@@ -70,7 +74,10 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
     })
   }
 
-  public getItemProfile(attrs: QuestTypesMap[T], id: number): Record<string, DataPoint[]> {
+  public getItemProfile(
+    attrs: { matrix: MatrixType; alternatives: number; calcs: QuestTypesMap[T]['calcs'] },
+    id: number,
+  ): Record<string, DataPoint[]> {
     const groupCount = 5
     const itemResponses = attrs.matrix.map(row => row[id])
     const min = Math.min(...attrs.calcs.users.directScore)

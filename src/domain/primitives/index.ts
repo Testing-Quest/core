@@ -2,26 +2,26 @@ import type { BinaryCalcsType, GraduCalcsType, MultiCalcsType } from './calcs/ca
 import type { QuestType, NewQuestType } from './quest'
 
 type BinaryQuestType = QuestType & {
-  type: 'binary'
+  readonly type: 'binary'
   calcs: BinaryCalcsType
 }
 
 type MultiQuestType = QuestType & {
-  type: 'multi'
+  readonly type: 'multi'
   calcs: MultiCalcsType
 }
 
 type GraduQuestType = QuestType & {
-  type: 'gradu'
+  readonly type: 'gradu'
   calcs: GraduCalcsType
 }
 
 type QuestTypes = BinaryQuestType | MultiQuestType | GraduQuestType
 
 type QuestTypesMap = {
-  binary: BinaryQuestType
-  multi: MultiQuestType
-  gradu: GraduQuestType
+  readonly binary: BinaryQuestType
+  readonly multi: MultiQuestType
+  readonly gradu: GraduQuestType
 }
 export const alternatives: string[] = [
   'A',

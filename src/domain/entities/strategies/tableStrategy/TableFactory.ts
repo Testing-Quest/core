@@ -1,6 +1,8 @@
 import type { QuestTypesMap } from '../../../primitives'
 import type { TableStrategy } from './TableStrategy'
-import { TableStrategyBinary, TableStrategyGradu, TableStrategyMulti } from './TableStrategy'
+import { TableStrategyBinary } from './TableStrategyBinary'
+import { TableStrategyGradu } from './TableStrategyGradu'
+import { TableStrategyMulti } from './TableStrategyMulti'
 
 export function tableFactory<T extends keyof QuestTypesMap>(type: T): TableStrategy<T> {
   switch (type) {
