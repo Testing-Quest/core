@@ -1,16 +1,14 @@
-import type { Metadata, Repository } from '../../src/domain/repository'
+import { Repository } from '../../src/domain/repository'
 import type { BaseQuest } from '../../src/domain/entities/Quest'
-import MetadataJson from '../../public/examples/metadata.json'
-import { readFile } from 'fs/promises'
-import { join } from 'path'
 
-export class RepositoryMock implements Repository {
+export class RepositoryMock extends Repository {
   private readonly saveMock: jest.Mock
   private readonly deleteMock: jest.Mock
   private readonly getMock: jest.Mock
   private quests: BaseQuest[] = []
 
   public constructor() {
+    super()
     this.saveMock = jest.fn()
     this.deleteMock = jest.fn()
     this.getMock = jest.fn()
@@ -33,14 +31,6 @@ export class RepositoryMock implements Repository {
   public async delete(id: string): Promise<void> {
     this.deleteMock(id)
     this.quests = this.quests.filter(quest => quest.getUuid() !== id)
-  }
-
-  public async loadMetadataFile(): Promise<Metadata[]> {
-    return MetadataJson as Metadata[]
-  }
-
-  public async loadQuestFile(path: string): Promise<string[][]> {
-    return JSON.parse(await readFile(join(__dirname, '../..', path), 'utf-8'))
   }
 
   public assertSaveHaveBeenCalled(): void {

@@ -1,4 +1,7 @@
 import type { BaseQuest } from './entities/Quest'
+import MetadataJson from '../../public/examples/metadata.json'
+import { readFile } from 'fs/promises'
+import { join } from 'path'
 
 type Quest = {
   scale: number
@@ -13,10 +16,15 @@ export type Metadata = {
   quests: Quest[]
 }
 
-export type Repository = {
-  get(uuid: string): Promise<BaseQuest>
-  save(quest: BaseQuest): Promise<void>
-  delete(uuid: string): Promise<void>
-  loadMetadataFile(): Promise<Metadata[]>
-  loadQuestFile(path: string): Promise<string[][]>
+export abstract class Repository {
+  abstract get(uuid: string): Promise<BaseQuest>
+  abstract save(quest: BaseQuest): Promise<void>
+  abstract delete(uuid: string): Promise<void>
+  public async loadMetadataFile(): Promise<Metadata[]> {
+    return MetadataJson as Metadata[]
+  }
+
+  public async loadQuestFile(path: string): Promise<string[][]> {
+    return JSON.parse(await readFile(join(__dirname, '../..', path), 'utf-8'))
+  }
 }
