@@ -11,7 +11,8 @@
     "preview": "vite preview --port 8080",
     "deploy": "gh-pages -d dist",
     "format": "prettier --write 'src/**/*' 'test/**/*' && eslint . --fix",
-    "test": "jest"
+    "test": "jest",
+    "validate": "echo \"Validating...\" \n eslint . \n jest --bail \n tsc --noEmit"
   },
   "dependencies": {
     "antd": "^5.20.5",

@@ -20,7 +20,7 @@ async function _createQuest(payload: CreateQuest, repository: Repository): Promi
   return { childs, error: null }
 }
 
-export async function createQuestHandler(payload: CreateQuest, repository: Repository): Promise<CreateQuestResponse> {
+export async function createQuest(payload: CreateQuest, repository: Repository): Promise<CreateQuestResponse> {
   try {
     return await _createQuest(payload, repository)
   } catch (error: unknown) {

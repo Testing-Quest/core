@@ -1,5 +1,5 @@
 import { RepositoryMock } from '../__mocks__/RepositoryMock'
-import { createQuestHandler } from '../../src/application/createQuest'
+import { createQuest } from '../../src/application/createQuest'
 import type { QuestData } from '../domain/QuestMother'
 import { allQuestsNames, QuestMother } from '../domain/QuestMother'
 import {
@@ -28,7 +28,7 @@ describe('createQuestHandler', () => {
     questData = await questMother.getQuestData(name)
 
     // When
-    const response = await createQuestHandler({ data: questData.matrix }, repositoryMock)
+    const response = await createQuest({ data: questData.matrix }, repositoryMock)
 
     // Then
     expect(response.error).toBeNull()
@@ -52,7 +52,7 @@ describe('createQuestHandler', () => {
     ]
 
     // When
-    const response = await createQuestHandler({ data }, repositoryMock)
+    const response = await createQuest({ data }, repositoryMock)
 
     // Then
     expect(response.error).toBe(FirstColumnsThreeRowsNotEmptyError.message)
@@ -67,7 +67,7 @@ describe('createQuestHandler', () => {
     ]
 
     // When
-    const response = await createQuestHandler({ data }, repositoryMock)
+    const response = await createQuest({ data }, repositoryMock)
 
     // Then
     expect(response.error).toBe(MatrixNotFoundError.message)
@@ -83,7 +83,7 @@ describe('createQuestHandler', () => {
     ]
 
     // When
-    const response = await createQuestHandler({ data }, repositoryMock)
+    const response = await createQuest({ data }, repositoryMock)
 
     // Then
     expect(response.error).toBe(FirstRowNotContainsAlphabeticCharactersError.message)
@@ -99,7 +99,7 @@ describe('createQuestHandler', () => {
     ]
 
     // When
-    const response = await createQuestHandler({ data }, repositoryMock)
+    const response = await createQuest({ data }, repositoryMock)
 
     // Then
     expect(response.error).toBe(SecondRowNotContainsNumbersError.message)
@@ -115,7 +115,7 @@ describe('createQuestHandler', () => {
     ]
 
     // When
-    const response = await createQuestHandler({ data }, repositoryMock)
+    const response = await createQuest({ data }, repositoryMock)
 
     // Then
     expect(response.error).toBe(ThirdRowNotContainsNumbersError.message)
@@ -131,7 +131,7 @@ describe('createQuestHandler', () => {
     ]
 
     // When
-    const response = await createQuestHandler({ data }, repositoryMock)
+    const response = await createQuest({ data }, repositoryMock)
 
     // Then
     expect(response.error).toBe(FirstColumnNotContainsNumbersError.message)
@@ -147,7 +147,7 @@ describe('createQuestHandler', () => {
     ]
 
     // When
-    const response = await createQuestHandler({ data }, repositoryMock)
+    const response = await createQuest({ data }, repositoryMock)
 
     // Then
     expect(response.error).toBe(ColumnCountMismatchKeysError.message)
@@ -163,7 +163,7 @@ describe('createQuestHandler', () => {
     ]
 
     // When
-    const response = await createQuestHandler({ data }, repositoryMock)
+    const response = await createQuest({ data }, repositoryMock)
 
     // Then
     expect(response.error).toBe(ColumnCountMismatchScalesError.message)
@@ -179,7 +179,7 @@ describe('createQuestHandler', () => {
     ]
 
     // When
-    const response = await createQuestHandler({ data }, repositoryMock)
+    const response = await createQuest({ data }, repositoryMock)
 
     // Then
     expect(response.error).toBe(ColumnCountMismatchAlternativesError.message)
