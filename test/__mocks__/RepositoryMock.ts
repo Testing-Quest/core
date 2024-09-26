@@ -1,14 +1,14 @@
-import { Metadata, Repository } from '../../src/domain/repository'
-import { BaseQuest } from '../../src/domain/entities/Quest'
+import type { Metadata, Repository } from '../../src/domain/repository'
+import type { BaseQuest } from '../../src/domain/entities/Quest'
 import MetadataJson from '../../public/examples/metadata.json'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 
 export class RepositoryMock implements Repository {
-  private saveMock: jest.Mock
-  private deleteMock: jest.Mock
-  private getMock: jest.Mock
-  private quests: Array<BaseQuest> = []
+  private readonly saveMock: jest.Mock
+  private readonly deleteMock: jest.Mock
+  private readonly getMock: jest.Mock
+  private quests: BaseQuest[] = []
 
   public constructor() {
     this.saveMock = jest.fn()

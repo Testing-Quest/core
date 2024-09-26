@@ -2,35 +2,40 @@ import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import path from 'path';
-import { fileURLToPath } from 'url';
+import tseslint from '@typescript-eslint/eslint-plugin'
+import tseslintParser from '@typescript-eslint/parser'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-export default tseslint.config(
-  { ignores: ['dist', 'node_modules'] },
+export default [
   {
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.all, // sigue extendiendo las configuraciones
-    ],
-    files: ['src/**/*.{ts,tsx}', 'test/**/*.{ts,tsx}'],
+    ignores: ['dist/**', 'node_modules/**', "build/**", "*.config.*"],
+  },
+  js.configs.recommended,
+  {
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      parser: tseslintParser,
       parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: 'module',
         project: './tsconfig.json',
         tsconfigRootDir: __dirname,
       },
     },
     plugins: {
+      '@typescript-eslint': tseslint,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
+      ...tseslint.configs['eslint-recommended'].rules,
+      ...tseslint.configs['all'].rules,
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
@@ -43,4 +48,4 @@ export default tseslint.config(
       '@typescript-eslint/class-methods-use-this': 'off',
     },
   },
-)
+]

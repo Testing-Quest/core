@@ -1,6 +1,7 @@
 import { RepositoryMock } from '../__mocks__/RepositoryMock'
 import { createQuestHandler } from '../../src/application/createQuest'
-import { QuestData, QuestMother } from '../domain/QuestMother'
+import type { QuestData } from '../domain/QuestMother'
+import { QuestMother } from '../domain/QuestMother'
 
 let repositoryMock: RepositoryMock
 let questData: QuestData

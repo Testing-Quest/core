@@ -1,4 +1,4 @@
-import { Metadata, Repository } from '../../src/domain/repository'
+import type { Metadata, Repository } from '../../src/domain/repository'
 
 export type QuestData = Metadata & {
   matrix: string[][]
