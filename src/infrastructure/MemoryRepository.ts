@@ -1,5 +1,5 @@
 import type { BaseQuest } from '../domain/entities/Quest'
-import type { Metadata } from '../domain/repository';
+import type { Metadata } from '../domain/repository'
 import { Repository } from '../domain/repository'
 
 class MemoryRepository extends Repository {

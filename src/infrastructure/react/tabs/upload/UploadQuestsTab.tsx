@@ -1,13 +1,13 @@
 import React from 'react'
 import { List, Upload, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
-import * as XLSX from 'xlsx';
-import { AnalysisQuest } from '../../types/AnalysisQuest'
-import { UploadQuest } from './UploadQuest'
+import * as XLSX from 'xlsx'
+import type { AnalysisQuest } from '../../types/AnalysisQuest'
+import type { UploadQuest } from './UploadQuest'
 import { v4 as uuidv4 } from 'uuid'
 import { Client } from '../../../Client'
 import ExampleItem from './UploadItem'
-import { UploadChangeParam } from 'antd/es/upload'
+import type { UploadChangeParam } from 'antd/es/upload'
 
 type UploadQuestsTabProps = {
   addAnalysisQuest(quest: AnalysisQuest): void
@@ -18,11 +18,11 @@ const UploadQuestsTab: React.FC<UploadQuestsTabProps> = ({ addAnalysisQuest }) =
 
   const customRequest = async ({ file, onSuccess, onError }: any) => {
     try {
-      const workbook = XLSX.read(await file.arrayBuffer());
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-      const data: string[][] = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+      const workbook = XLSX.read(await file.arrayBuffer())
+      const sheet = workbook.Sheets[workbook.SheetNames[0]]
+      const data: string[][] = XLSX.utils.sheet_to_json(sheet, { header: 1 })
       console.log(data)
-      const quests = await Client.createQuest({data})
+      const quests = await Client.createQuest({ data })
       if (quests.error) {
         message.error(quests.error)
         onError(quests.error)
@@ -61,16 +61,14 @@ const UploadQuestsTab: React.FC<UploadQuestsTabProps> = ({ addAnalysisQuest }) =
           <InboxOutlined className='text-4xl text-blue-500' />
         </p>
         <p className='ant-upload-text text-lg font-medium mt-4'>Click or drag file to this area to upload</p>
-        <p className='ant-upload-hint text-sm text-gray-500 mt-2'>
-          Support for single or bulk upload.
-        </p>
+        <p className='ant-upload-hint text-sm text-gray-500 mt-2'>Support for single or bulk upload.</p>
       </Upload.Dragger>
       <List
         dataSource={uploadedQuests}
         renderItem={item => (
           <ExampleItem
             item={item}
-            onDelete={() => { }}
+            onDelete={() => {}}
             onAddAnalysis={() => {
               addAnalysisQuest
             }}
