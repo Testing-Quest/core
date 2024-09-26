@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Quanty",
+    "path": "public/examples/quanty.json",
+    "quests": [
+      {
+        "scale": 1,
+        "type": "multi",
+        "users": 700,
+        "items": 29
+      }
+    ]
+  },
+  {
+    "name": "Boss",
+    "path": "public/examples/boss.json",
+    "quests": [
+      {
+        "scale": 1,
+        "type": "gradu",
+        "users": 100,
+        "items": 20
+      }
+    ]
+  },
+  {
+    "name": "Ji Cod Bo",
+    "path": "public/examples/jiCodBo.json",
+    "quests": [
+      {
+        "scale": 1,
+        "type": "multi",
+        "users": 30,
+        "items": 15
+      }
+    ]
+  },
+  {
+    "name": "Hlec Alec",
+    "path": "public/examples/hlecAlec.json",
+    "quests": [
+      {
+        "scale": 1,
+        "type": "multi",
+        "users": 100,
+        "items": 58
+      },
+      {
+        "scale": 2,
+        "type": "binary",
+        "users": 100,
+        "items": 30
+      },
+      {
+        "scale": 3,
+        "type": "gradu",
+        "users": 100,
+        "items": 20
+      }
+    ]
+  },
+  {
+    "name": "MC24",
+    "path": "public/examples/mc24.json",
+    "quests": [
+      {
+        "scale": 1,
+        "type": "gradu",
+        "users": 474,
+        "items": 24
+      }
+    ]
+  }
+]

@@ -15,10 +15,10 @@ type Quest = {
   keys: string[]
   scales: number[]
   alternatives: number[]
-  matrix: string[][]
+  matrix: (number | string | null)[][]
 }
 
-function validateFirstThreeColumns(data: string[][]): void {
+function validateFirstThreeColumns(data: (number | string | null)[][]): void {
   const firstThreeColumns = [data[0][0], data[1][0], data[2][0]]
   const nonEmptyColumns = firstThreeColumns.filter(Boolean)
   if (nonEmptyColumns.length > 0 && nonEmptyColumns.length < 3) {
@@ -26,12 +26,17 @@ function validateFirstThreeColumns(data: string[][]): void {
   }
 }
 
-function validateNumericRow(row: string[], error: Error): void {
+function validateNumericRow(row: (number | string | null)[], error: Error): void {
   if (row.some(cell => isNaN(Number(cell)))) {
     throw error
   }
 }
-function validateMatrixDimensions(matrix: string[][], keys: string[], scales: number[], alternatives: number[]): void {
+function validateMatrixDimensions(
+  matrix: (number | string | null)[][],
+  keys: string[],
+  scales: number[],
+  alternatives: number[],
+): void {
   const columnCount = matrix[0].length
 
   if (columnCount !== keys.length) {
@@ -52,7 +57,7 @@ function validateAlphabeticKeys(keys: string[]): void {
   }
 }
 
-function cleanMatrix(matrix: string[][]): string[][] {
+function cleanMatrix(matrix: (number | string | null)[][]): (number | string | null)[][] {
   return matrix.filter(row => row[0] !== undefined)
 }
 
@@ -60,27 +65,27 @@ function cleanArray<T>(array: T[], condition: (item: T) => boolean): T[] {
   return array.filter(condition)
 }
 
-function prepareData(data: string[][]): {
+function prepareData(data: (number | string | null)[][]): {
   usersID: number[]
   keys: string[]
   scales: number[]
   alternatives: number[]
-  matrix: string[][]
+  matrix: (number | string | null)[][]
 } {
   const [firstRow, secondRow, thirdRow] = data
   const firstThreeColumnsEmpty = [firstRow[0], secondRow[0], thirdRow[0]].every(cell => cell === undefined)
 
-  let usersID: number[], keys: string[], scales: number[], alternatives: number[], matrix: string[][]
+  let usersID: number[], keys: string[], scales: number[], alternatives: number[], matrix: (number | string | null)[][]
 
   if (firstThreeColumnsEmpty) {
-    usersID = Array.from({ length: data.length - 3 }, (_, i) => i + 1)
-    keys = firstRow.map(cell => cell.trim())
+    usersID = Array.from({ length }, (_, i) => i + 1)
+    keys = firstRow.map(cell => (cell as string).trim())
     scales = secondRow.map(Number)
     alternatives = thirdRow.map(Number)
     matrix = data.slice(3)
   } else {
-    usersID = data.slice(3).map(row => parseInt(row[0]))
-    keys = firstRow.slice(1).map(cell => cell.trim())
+    usersID = data.slice(3).map(row => Number(row[0]))
+    keys = firstRow.slice(1).map(cell => (cell as string).trim())
     scales = secondRow.slice(1).map(Number)
     alternatives = thirdRow.slice(1).map(Number)
     matrix = data.slice(3).map(row => row.slice(1))
@@ -107,7 +112,9 @@ function generateQuestsData({ keys, scales, alternatives, matrix }: Quest): NewQ
       return indexes
     }, [])
 
-    const filteredMatrix = matrix.map(row => matchingIndexes.map(i => row[i].trim()))
+    const filteredMatrix = matrix.map(row =>
+      matchingIndexes.map(i => (typeof row[i] === 'string' ? row[i].trim() : row[i])),
+    )
     const filteredKeys = matchingIndexes.map(i => keys[i])
     const filteredAlternatives = matchingIndexes.map(i => alternatives[i])
 
@@ -129,7 +136,7 @@ function generateQuestsData({ keys, scales, alternatives, matrix }: Quest): NewQ
   })
 }
 
-async function loadQuest(data: string[][]): Promise<NewQuestType[]> {
+async function loadQuest(data: (number | string | null)[][]): Promise<NewQuestType[]> {
   validateFirstThreeColumns(data)
   validateNumericRow(data[1].slice(1), new SecondRowNotContainsNumbersError())
   validateNumericRow(data[2].slice(1), new ThirdRowNotContainsNumbersError())
