@@ -5,6 +5,7 @@ import {
   FirstColumnNotContainsNumbersError,
   FirstColumnsThreeRowsNotEmptyError,
   FirstRowNotContainsAlphabeticCharactersError,
+  MatrixNotFoundError,
   SecondRowNotContainsNumbersError,
   ThirdRowNotContainsNumbersError,
 } from '../errors/loadErrors'
@@ -37,6 +38,10 @@ function validateMatrixDimensions(
   scales: number[],
   alternatives: number[],
 ): void {
+  if (matrix.length === 0) {
+    throw new MatrixNotFoundError()
+  }
+
   const columnCount = matrix[0].length
 
   if (columnCount !== keys.length) {

@@ -1,8 +1,10 @@
 import js from '@eslint/js'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import jest from 'eslint-plugin-jest'
 import tseslint from '@typescript-eslint/eslint-plugin'
 import tseslintParser from '@typescript-eslint/parser'
+import globals from "globals";
 import path from 'path'
 import { fileURLToPath } from 'url'
 
@@ -18,6 +20,9 @@ export default [
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parser: tseslintParser,
+      globals: {
+        ...globals.jest,
+      },
       parserOptions: {
         ecmaVersion: 2020,
         sourceType: 'module',
@@ -29,6 +34,7 @@ export default [
       '@typescript-eslint': tseslint,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      'jest': jest,
     },
     rules: {
       ...tseslint.configs['all'].rules,
