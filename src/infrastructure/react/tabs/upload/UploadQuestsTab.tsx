@@ -21,7 +21,6 @@ const UploadQuestsTab: React.FC<UploadQuestsTabProps> = ({ addAnalysisQuest }) =
       const workbook = XLSX.read(await file.arrayBuffer())
       const sheet = workbook.Sheets[workbook.SheetNames[0]]
       const data: string[][] = XLSX.utils.sheet_to_json(sheet, { header: 1 })
-      console.log(data)
       const quests = await Client.createQuest({ data })
       if (quests.error) {
         message.error(quests.error)

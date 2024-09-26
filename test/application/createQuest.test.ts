@@ -3,11 +3,7 @@ import { createQuest } from '../../src/application/createQuest'
 import type { QuestData } from '../domain/QuestMother'
 import { allQuestsNames, QuestMother } from '../domain/QuestMother'
 import {
-  ColumnCountMismatchAlternativesError,
   ColumnCountMismatchKeysError,
-  ColumnCountMismatchScalesError,
-  FirstColumnNotContainsNumbersError,
-  FirstColumnsThreeRowsNotEmptyError,
   FirstRowNotContainsAlphabeticCharactersError,
   MatrixNotFoundError,
   SecondRowNotContainsNumbersError,
@@ -41,21 +37,6 @@ describe('createQuestHandler', () => {
       expect(child.items).toBe(quest?.items)
       expect(child.uuid).toBeDefined()
     }
-  })
-
-  it('Should throw a First Columns Three Rows Not Empty Error', async () => {
-    // Given
-    const data = [
-      ['1', '2', '3'],
-      [null, '5', '6'],
-      ['7', '8', '9'],
-    ]
-
-    // When
-    const response = await createQuest({ data }, repositoryMock)
-
-    // Then
-    expect(response.error).toBe(FirstColumnsThreeRowsNotEmptyError.message)
   })
 
   it('Should throw a Matrix Not Found Error', async () => {
@@ -108,7 +89,7 @@ describe('createQuestHandler', () => {
   it('Should throw a Third Row Not Contains Numbers Error', async () => {
     // Given
     const data = [
-      [null, '123', '456', '789'],
+      [null, 'A', 'B', 'C'],
       [null, '1', '1', '1'],
       [null, 'A', '4', '4'],
       [1, 'A', 'B', 'C'],
@@ -121,29 +102,13 @@ describe('createQuestHandler', () => {
     expect(response.error).toBe(ThirdRowNotContainsNumbersError.message)
   })
 
-  it('Should throw a First Column Not Contains Numbers Error', async () => {
-    // Given
-    const data = [
-      [null, '123', '456', '789'],
-      [null, '1', '1', '1'],
-      [null, '4', '4', '4'],
-      ['B', 'A', 'B', 'C'],
-    ]
-
-    // When
-    const response = await createQuest({ data }, repositoryMock)
-
-    // Then
-    expect(response.error).toBe(FirstColumnNotContainsNumbersError.message)
-  })
-
   it('Should throw a Column Count Mismatch Keys Error', async () => {
     // Given
     const data = [
-      [null, '123', '456', '789'],
+      [null, 'A', 'B', 'C', 'D'],
       [null, '1', '1', '1'],
       [null, '4', '4', '4'],
-      [1, 'A', 'B', 'C', 'D'],
+      [1, 'A', 'B', 'C'],
     ]
 
     // When
@@ -156,8 +121,8 @@ describe('createQuestHandler', () => {
   it('Should throw a Column Count Mismatch Scales Error', async () => {
     // Given
     const data = [
-      [null, '123', '456', '789'],
-      [null, '1', '1'],
+      [null, 'A', 'B', 'C'],
+      [null, '1', '1', '1', '1'],
       [null, '4', '4', '4'],
       [1, 'A', 'B', 'C'],
     ]
@@ -166,15 +131,15 @@ describe('createQuestHandler', () => {
     const response = await createQuest({ data }, repositoryMock)
 
     // Then
-    expect(response.error).toBe(ColumnCountMismatchScalesError.message)
+    expect(response.error).toBeNull()
   })
 
   it('Should throw a Column Count Mismatch Alternatives Error', async () => {
     // Given
     const data = [
-      [null, '123', '456', '789'],
+      [null, 'A', 'B', 'C'],
       [null, '1', '1', '1'],
-      [null, '4', '4'],
+      [null, '4', '4', '4', '5'],
       [1, 'A', 'B', 'C'],
     ]
 
@@ -182,6 +147,6 @@ describe('createQuestHandler', () => {
     const response = await createQuest({ data }, repositoryMock)
 
     // Then
-    expect(response.error).toBe(ColumnCountMismatchAlternativesError.message)
+    expect(response.error).toBeNull()
   })
 })

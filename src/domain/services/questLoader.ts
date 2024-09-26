@@ -1,9 +1,5 @@
 import {
-  ColumnCountMismatchAlternativesError,
   ColumnCountMismatchKeysError,
-  ColumnCountMismatchScalesError,
-  FirstColumnNotContainsNumbersError,
-  FirstColumnsThreeRowsNotEmptyError,
   FirstRowNotContainsAlphabeticCharactersError,
   MatrixNotFoundError,
   SecondRowNotContainsNumbersError,
@@ -19,95 +15,69 @@ type Quest = {
   matrix: (number | string | null)[][]
 }
 
-function validateFirstThreeColumns(data: (number | string | null)[][]): void {
-  const firstThreeColumns = [data[0][0], data[1][0], data[2][0]]
-  const nonEmptyColumns = firstThreeColumns.filter(Boolean)
-  if (nonEmptyColumns.length > 0 && nonEmptyColumns.length < 3) {
-    throw new FirstColumnsThreeRowsNotEmptyError()
+function parseInitialData(data: (number | string | null)[][]): Quest {
+  let start = data[0].findIndex(v => typeof v === 'string' && v !== '')
+  let end = data[0].length
+
+  const keys: string[] = []
+  const scales: number[] = []
+  const alternatives: number[] = []
+
+  for (let i = start; i < data[0].length; i++) {
+    const key = data[0][i]
+    const scale = data[1][i]
+    const alternative = data[2][i]
+
+    if (key === null || key === '') {
+      end = i
+      break
+    }
+
+    keys.push(String(key).trim())
+
+    if (scale !== null) {
+      scales.push(Number(scale))
+    }
+
+    if (alternative !== null) {
+      alternatives.push(Number(alternative))
+    }
   }
+
+  // Detener la matriz cuando se encuentra una lista vacía
+  const matrix: (number | string | null)[][] = []
+  for (let row of data.slice(3)) {
+    const trimmedRow = row.slice(start, end).map(cell => (typeof cell === 'string' ? cell.trim() : cell))
+    if (trimmedRow.length === 0 || trimmedRow.every(cell => cell === null || cell === '')) {
+      break
+    }
+    matrix.push(trimmedRow)
+  }
+
+  return { keys, scales, alternatives, matrix }
 }
 
-function validateNumericRow(row: (number | string | null)[], error: Error): void {
-  if (row.some(cell => isNaN(Number(cell)))) {
-    throw error
-  }
-}
-function validateMatrixDimensions(
-  matrix: (number | string | null)[][],
-  keys: string[],
-  scales: number[],
-  alternatives: number[],
-): void {
-  if (matrix.length === 0) {
+function validate(quest: Quest): void {
+  if (quest.matrix.length === 0) {
     throw new MatrixNotFoundError()
   }
+  const columnCount = quest.matrix[0].length
 
-  const columnCount = matrix[0].length
-  console.log(matrix)
-
-  if (columnCount !== keys.length) {
+  if (columnCount !== quest.keys.length) {
     throw new ColumnCountMismatchKeysError()
   }
-  if (columnCount !== scales.length) {
-    throw new ColumnCountMismatchScalesError()
-  }
-  if (columnCount !== alternatives.length) {
-    throw new ColumnCountMismatchAlternativesError()
-  }
-}
-
-function validateAlphabeticKeys(keys: string[]): void {
-  const alphabeticRegex = /^[A-Za-z+ -]+$/
-  if (keys.some(key => !alphabeticRegex.test(key))) {
+  if (quest.keys.some(key => !/^[A-Za-z+ -]+$/.test(key))) {
+    console.log(quest.keys)
     throw new FirstRowNotContainsAlphabeticCharactersError()
   }
-}
-
-function cleanMatrix(matrix: (number | string | null)[][]): (number | string | null)[][] {
-  return matrix.filter(row => row[0] !== undefined)
-}
-
-function cleanArray<T>(array: T[], condition: (item: T) => boolean): T[] {
-  return array.filter(condition)
-}
-
-function prepareData(data: (number | string | null)[][]): {
-  usersID: number[]
-  keys: string[]
-  scales: number[]
-  alternatives: number[]
-  matrix: (number | string | null)[][]
-} {
-  const [firstRow, secondRow, thirdRow] = data
-  const firstThreeColumnsEmpty = [firstRow[0], secondRow[0], thirdRow[0]].every(cell => cell === undefined)
-
-  let usersID: number[], keys: string[], scales: number[], alternatives: number[], matrix: (number | string | null)[][]
-
-  if (firstThreeColumnsEmpty) {
-    usersID = Array.from({ length: data.length - 3 }, (_, i) => i + 1)
-    keys = firstRow.map(cell => (cell as string).trim())
-    scales = secondRow.map(Number)
-    alternatives = thirdRow.map(Number)
-    matrix = data.slice(3).map(row => row.slice(1))
-  } else {
-    usersID = Array.from({ length: data.length }, (_, i) => i + 1)
-    keys = firstRow.slice(1).map(cell => (cell as string).trim())
-    scales = secondRow.slice(1).map(Number)
-    alternatives = thirdRow.slice(1).map(Number)
-    matrix = data.slice(3).map(row => row.slice(1))
+  if (quest.scales.some(cell => isNaN(Number(cell)))) {
+    throw new SecondRowNotContainsNumbersError()
   }
-
-  matrix = cleanMatrix(matrix)
-  usersID = cleanArray(usersID, user => !isNaN(user))
-  keys = cleanArray(keys, key => !!key)
-  scales = cleanArray(scales, scale => !isNaN(scale))
-  alternatives = cleanArray(alternatives, alt => !isNaN(alt))
-
-  if (matrix.length !== usersID.length) {
-    throw new FirstColumnNotContainsNumbersError()
+  if (quest.alternatives.some(cell => isNaN(Number(cell)))) {
+    console.log(columnCount)
+    console.log(quest.alternatives)
+    throw new ThirdRowNotContainsNumbersError()
   }
-
-  return { usersID, keys, scales, alternatives, matrix }
 }
 
 function generateQuestsData({ keys, scales, alternatives, matrix }: Quest): NewQuestType[] {
@@ -143,16 +113,9 @@ function generateQuestsData({ keys, scales, alternatives, matrix }: Quest): NewQ
 }
 
 async function loadQuest(data: (number | string | null)[][]): Promise<NewQuestType[]> {
-  validateFirstThreeColumns(data)
-  validateNumericRow(data[1].slice(1), new SecondRowNotContainsNumbersError())
-  validateNumericRow(data[2].slice(1), new ThirdRowNotContainsNumbersError())
-
-  const { keys, scales, alternatives, matrix } = prepareData(data)
-
-  validateMatrixDimensions(matrix, keys, scales, alternatives)
-  validateAlphabeticKeys(keys)
-
-  return generateQuestsData({ keys, scales, alternatives, matrix })
+  const quest = parseInitialData(data)
+  validate(quest)
+  return generateQuestsData(quest)
 }
 
 export default loadQuest
