@@ -1,10 +1,10 @@
 import { Quest } from '../domain/entities/Quest'
 import type { Repository } from '../domain/repository'
 import loadQuest from '../domain/services/questLoader'
-import type { CreateQuest } from './requests/createQuestRequest'
+import type { CreateQuestRequest } from './requests/createQuestRequest'
 import type { CreateQuestResponse, QuestChild } from './responses/createQuestResponse'
 
-async function _createQuest(payload: CreateQuest, repository: Repository): Promise<CreateQuestResponse> {
+async function _createQuest(payload: CreateQuestRequest, repository: Repository): Promise<CreateQuestResponse> {
   const quests = await loadQuest(payload.data)
   const childs: QuestChild[] = []
   for (const quest of quests) {
@@ -13,14 +13,14 @@ async function _createQuest(payload: CreateQuest, repository: Repository): Promi
       uuid: quest.uuid,
       scale: quest.scale,
       type: quest.type,
-      useres: quest.matrix.length,
+      users: quest.matrix.length,
       items: quest.matrix[0].length,
     })
   }
   return { childs, error: null }
 }
 
-export async function createQuest(payload: CreateQuest, repository: Repository): Promise<CreateQuestResponse> {
+export async function createQuest(payload: CreateQuestRequest, repository: Repository): Promise<CreateQuestResponse> {
   try {
     return await _createQuest(payload, repository)
   } catch (error: unknown) {

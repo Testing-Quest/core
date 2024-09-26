@@ -37,7 +37,7 @@ describe('createQuestHandler', () => {
     for (const child of response.childs!) {
       const quest = questData.quests.find(quest => quest.scale === child.scale)
       expect(child.type).toBe(quest?.type)
-      expect(child.useres).toBe(quest?.users)
+      expect(child.users).toBe(quest?.users)
       expect(child.items).toBe(quest?.items)
       expect(child.uuid).toBeDefined()
     }

@@ -1,50 +1,51 @@
-import Examples from './components/examples/Examples'
-import { GlobalStateProvider } from './components/GlobalState'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import Analysis from './components/analysis/Analysis'
-import Navbar from './components/Navbar'
-import UploadFile from './components/loader/UploadFile'
-import { useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React, { useState } from 'react'
+import { Layout, Tabs } from 'antd'
+import { FileTextOutlined } from '@ant-design/icons'
+import ExampleQuestsTab from './tabs/examples/ExampleQuestsTab'
+import UploadQuestsTab from './tabs/upload/UploadQuestsTab'
+import AnalysisTab from './tabs/analysis/AnalysisTab'
+import type { AnalysisQuest } from './types/AnalysisQuest'
 
-const Home: React.FC = () => {
-  const navigate = useNavigate()
-  useEffect(() => {
-    navigate('/examples')
-  }, [navigate])
-  return null
+const { Content } = Layout
+const { TabPane } = Tabs
+
+export const App: React.FC = () => {
+  const [activeKey, setActiveKey] = useState('1')
+  const [dynamicTabs, setDynamicTabs] = useState<AnalysisQuest[]>([])
+
+  const addAnalysisQuest = (quest: AnalysisQuest) => {
+    if (!dynamicTabs.includes(quest)) {
+      setDynamicTabs([...dynamicTabs, quest])
+    }
+    setActiveKey(quest.uuid)
+  }
+
+  return (
+    <Layout className='min-h-screen bg-gray-100'>
+      <Content className='p-4'>
+        <Tabs activeKey={activeKey} onChange={setActiveKey} type='card' className='bg-white h-full'>
+          <TabPane tab='Upload' key='2'>
+            <UploadQuestsTab addAnalysisQuest={addAnalysisQuest} />
+          </TabPane>
+          <TabPane tab='Examples' key='1'>
+            <ExampleQuestsTab addAnalysisQuest={addAnalysisQuest} />
+          </TabPane>
+          {dynamicTabs.map(tab => (
+            <TabPane
+              tab={
+                <span>
+                  <FileTextOutlined className='mr-2' />
+                  {tab.name}
+                </span>
+              }
+              key={tab.uuid}
+              closable={true}
+            >
+              <AnalysisTab tabName={`${tab.name}-Scale${tab.scale}`} />
+            </TabPane>
+          ))}
+        </Tabs>
+      </Content>
+    </Layout>
+  )
 }
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <GlobalStateProvider>
-      <Router>
-        <div style={{ height: 'calc(98vh - 50px)', width: '98vw' }}>
-          <div
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              height: '50px',
-              width: '100%',
-              backgroundColor: 'white',
-              zIndex: 999,
-            }}
-          >
-            <Navbar />
-          </div>
-          <div style={{ height: '90%', width: '100%', marginTop: '50px' }}>
-            <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/examples' element={<Examples />} />
-              <Route path='/upload' element={<UploadFile />} />
-              <Route path='/analysis' element={<Analysis />} />
-            </Routes>
-          </div>
-        </div>
-      </Router>
-    </GlobalStateProvider>
-  </React.StrictMode>,
-)

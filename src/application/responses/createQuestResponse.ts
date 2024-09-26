@@ -4,7 +4,7 @@ export type QuestChild = {
   uuid: string
   scale: number
   type: 'multi' | 'gradu' | 'binary'
-  useres: number
+  users: number
   items: number
 }
 

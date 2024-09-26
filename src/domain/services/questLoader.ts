@@ -43,6 +43,7 @@ function validateMatrixDimensions(
   }
 
   const columnCount = matrix[0].length
+  console.log(matrix)
 
   if (columnCount !== keys.length) {
     throw new ColumnCountMismatchKeysError()
@@ -83,13 +84,13 @@ function prepareData(data: (number | string | null)[][]): {
   let usersID: number[], keys: string[], scales: number[], alternatives: number[], matrix: (number | string | null)[][]
 
   if (firstThreeColumnsEmpty) {
-    usersID = Array.from({ length }, (_, i) => i + 1)
+    usersID = Array.from({ length: data.length - 3 }, (_, i) => i + 1)
     keys = firstRow.map(cell => (cell as string).trim())
     scales = secondRow.map(Number)
     alternatives = thirdRow.map(Number)
-    matrix = data.slice(3)
+    matrix = data.slice(3).map(row => row.slice(1))
   } else {
-    usersID = data.slice(3).map(row => Number(row[0]))
+    usersID = Array.from({ length: data.length }, (_, i) => i + 1)
     keys = firstRow.slice(1).map(cell => (cell as string).trim())
     scales = secondRow.slice(1).map(Number)
     alternatives = thirdRow.slice(1).map(Number)

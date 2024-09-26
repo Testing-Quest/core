@@ -1,3 +1,3 @@
-export type CreateQuest = {
+export type CreateQuestRequest = {
   data: (string | number | null)[][]
 }

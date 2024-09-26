@@ -1,7 +1,8 @@
 [
   {
     "name": "Quanty",
-    "path": "public/examples/quanty.json",
+    "path": "quanty.json",
+    "uuid": "quanty",
     "quests": [
       {
         "scale": 1,
@@ -13,7 +14,8 @@
   },
   {
     "name": "Boss",
-    "path": "public/examples/boss.json",
+    "path": "boss.json",
+    "uuid": "boss",
     "quests": [
       {
         "scale": 1,
@@ -25,7 +27,8 @@
   },
   {
     "name": "Ji Cod Bo",
-    "path": "public/examples/jiCodBo.json",
+    "path": "jiCodBo.json",
+    "uuid": "jiCodBo",
     "quests": [
       {
         "scale": 1,
@@ -37,7 +40,8 @@
   },
   {
     "name": "Hlec Alec",
-    "path": "public/examples/hlecAlec.json",
+    "path": "hlecAlec.json",
+    "uuid": "hlecAlec",
     "quests": [
       {
         "scale": 1,
@@ -61,7 +65,8 @@
   },
   {
     "name": "MC24",
-    "path": "public/examples/mc24.json",
+    "path": "mc24.json",
+    "uuid": "mc24",
     "quests": [
       {
         "scale": 1,
