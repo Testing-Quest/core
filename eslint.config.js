@@ -1,5 +1,4 @@
 import js from '@eslint/js'
-import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from '@typescript-eslint/eslint-plugin'
@@ -32,7 +31,6 @@ export default [
       'react-refresh': reactRefresh,
     },
     rules: {
-      ...tseslint.configs['eslint-recommended'].rules,
       ...tseslint.configs['all'].rules,
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
