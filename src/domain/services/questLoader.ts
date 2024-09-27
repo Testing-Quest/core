@@ -36,15 +36,12 @@ function parseInitialData(data: (number | string | null)[][]): Quest {
     if (alternative !== null) alternatives.push(Number(alternative))
   }
 
-  const matrix = data.slice(3).reduce<(number | string | null)[][]>(
-    (acc, row) => {
-      const trimmedRow = row.slice(start, end).map(cell => (typeof cell === 'string' ? cell.trim() : cell))
-      if (trimmedRow.every(cell => cell === null || cell === '')) return acc
-      acc.push(trimmedRow)
-      return acc
-    },
-    [],
-  )
+  const matrix = data.slice(3).reduce<(number | string | null)[][]>((acc, row) => {
+    const trimmedRow = row.slice(start, end).map(cell => (typeof cell === 'string' ? cell.trim() : cell))
+    if (trimmedRow.every(cell => cell === null || cell === '')) return acc
+    acc.push(trimmedRow)
+    return acc
+  }, [])
 
   return { keys, scales, alternatives, matrix }
 }

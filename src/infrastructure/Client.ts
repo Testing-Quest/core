@@ -9,6 +9,7 @@ export class Client {
 
   public constructor(uuid: string) {
     this.questUuid = uuid
+    console.log(this.questUuid)
   }
 
   public static async createQuestfromMetadata(payload: Metadata): Promise<CreateQuestResponse> {

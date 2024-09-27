@@ -1,0 +1,55 @@
+.appLayout {
+  min-height: 100vh;
+  background-color: white;
+}
+
+.appContent {
+}
+
+.tabsContainer {
+  background-color: white;
+  border-radius: 8px;
+}
+
+.tabPane {
+  padding: 24px;
+}
+
+.tabIcon {
+  margin-right: 8px;
+}
+
+.dynamicTab {
+  display: flex;
+  align-items: center;
+}
+
+.closeButton {
+  margin-left: 8px;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.closeButton:hover {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+/* Override Ant Design styles for a more professional look */
+:global(.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab) {
+  border-color: #d9d9d9;
+  background: #fafafa;
+}
+
+:global(.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active) {
+  border-color: #d9d9d9;
+  border-bottom-color: #fff;
+  background: #fff;
+}
+
+:global(.ant-tabs-card > .ant-tabs-nav::before) {
+  border-bottom: 1px solid #d9d9d9;
+}
+
+:global(.ant-tabs-top > .ant-tabs-nav) {
+  margin-bottom: 0;
+}

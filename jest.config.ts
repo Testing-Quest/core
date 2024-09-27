@@ -1,6 +1,6 @@
 export default {
   preset: 'ts-jest',
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   moduleFileExtensions: ['ts', 'tsx', 'js'],
   testMatch: ['**/?(*.)+(spec|test).[t]s?(x)'],
   transform: {
