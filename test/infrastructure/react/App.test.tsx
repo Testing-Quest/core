@@ -4,6 +4,15 @@ import { App } from '../../../src/infrastructure/react/App'
 import '@testing-library/jest-dom'
 import { Client } from '../../../src/infrastructure/Client'
 
+jest.mock('../../../src/infrastructure/react/context/SettingContext', () => ({
+  useSettings: jest.fn(() => ({
+    fontSize: '16px',
+    highContrast: false,
+    setFontSize: jest.fn(),
+    setHighContrast: jest.fn(),
+  })),
+}))
+
 jest.mock('../../../src/infrastructure/react/App.module.css', () => ({
   appLayout: 'appLayout',
   appContent: 'appContent',

@@ -1,15 +1,22 @@
 import styles from './App.module.css'
 import React, { useState } from 'react'
 import { Layout, Tabs, Button } from 'antd'
-import { FileTextOutlined, CloseOutlined } from '@ant-design/icons'
+import { FileTextOutlined, CloseOutlined, SettingOutlined } from '@ant-design/icons'
 import ExampleQuestsTab from './tabs/examples/ExampleQuestsTab'
 import UploadQuestsTab from './tabs/upload/UploadQuestsTab'
 import AnalysisTab from './tabs/analysis/AnalysisTab'
 import type { AnalysisQuest } from './types/AnalysisQuest'
+import { useSettings } from './context/SettingContext'
+import SettingsModal from './components/SettingsModal'
 
 export const App: React.FC = () => {
   const [activeKey, setActiveKey] = useState('1')
   const [dynamicTabs, setDynamicTabs] = useState<AnalysisQuest[]>([])
+  const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false)
+  const { fontSize, highContrast } = useSettings()
+
+  const color = highContrast ? 'black' : 'white'
+  console.log(color)
 
   const addAnalysisQuest = (quest: AnalysisQuest) => {
     if (!dynamicTabs.find(tab => tab.uuid === quest.uuid)) {
@@ -50,7 +57,7 @@ export const App: React.FC = () => {
     ...dynamicTabs.map(tab => ({
       key: tab.uuid,
       label: (
-        <span className={styles.dynamicTab}>
+        <span className={styles.dynamicTab} style={{ fontSize: fontSize }}>
           <FileTextOutlined className={styles.tabIcon} />
           {`${tab.name} - scale: ${tab.scale}`}
           <Button
@@ -72,8 +79,30 @@ export const App: React.FC = () => {
   ]
 
   return (
-    <Layout className={styles.appLayout}>
-      <Tabs activeKey={activeKey} onChange={setActiveKey} type='editable-card' onEdit={onEdit} hideAdd items={items} />
+    <Layout className={styles.appLayout} style={{ fontSize }}>
+      <Tabs
+        activeKey={activeKey}
+        onChange={setActiveKey}
+        type='editable-card'
+        onEdit={onEdit}
+        hideAdd
+        items={items}
+        className={styles.tabs}
+        style={{ fontSize: fontSize }}
+      />
+      <Button
+        icon={<SettingOutlined />}
+        onClick={() => {
+          setIsSettingsModalVisible(true)
+        }}
+        style={{ position: 'fixed', bottom: '20px', right: '20px' }}
+      />
+      <SettingsModal
+        isVisible={isSettingsModalVisible}
+        onClose={() => {
+          setIsSettingsModalVisible(false)
+        }}
+      />
     </Layout>
   )
 }

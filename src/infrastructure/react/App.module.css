@@ -1,6 +1,9 @@
 .appLayout {
   min-height: 100vh;
   background-color: white;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 .appContent {
@@ -41,6 +44,11 @@
   color: rgba(0, 0, 0, 0.85);
 }
 
+.tabs :global(.ant-tabs-tab),
+.tabs :global(.ant-tabs-tab-btn) {
+  font-size: inherit;
+}
+
 :global(.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab) {
   border-color: #d9d9d9;
   background: #fafafa;
@@ -66,4 +74,23 @@
 
 :global(.ant-collapse-content) {
   transition: none !important;
+}
+
+:global(.high-contrast) {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+:global(.high-contrast) .ant-tabs-tab,
+:global(.high-contrast) .ant-tabs-tab-btn {
+  color: #fff !important;
+}
+
+:global(.high-contrast) .ant-tabs-tab-active {
+  background-color: #333 !important;
+}
+
+:global(.high-contrast) .ant-tabs-content {
+  background-color: #000 !important;
+  color: #fff !important;
 }

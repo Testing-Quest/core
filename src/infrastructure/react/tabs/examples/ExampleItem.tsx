@@ -3,6 +3,7 @@ import { List, Collapse, Button, Typography } from 'antd'
 import type { ExampleQuest } from './ExampleQuest'
 import type { AnalysisQuest } from '../../types/AnalysisQuest'
 import { Client } from '../../../Client'
+import { useSettings } from '../../context/SettingContext'
 
 const { Text } = Typography
 
@@ -12,6 +13,7 @@ type QuestItemProps = {
 }
 
 const ExampleItem: React.FC<QuestItemProps> = ({ item, onAddAnalysis }) => {
+  const { fontSize } = useSettings()
   const addAnalysis = async (scale: number) => {
     const quest = await Client.createQuestfromMetadata(item)
     if (quest.error) {
@@ -34,7 +36,9 @@ const ExampleItem: React.FC<QuestItemProps> = ({ item, onAddAnalysis }) => {
             key: item.name,
             label: (
               <div className='flex items-center justify-between w-full'>
-                <Text strong className='text-base'>{item.name}</Text>
+                <Text strong className='text-base' style={{ fontSize }}>
+                  {item.name}
+                </Text>
               </div>
             ),
             children: (
@@ -42,7 +46,12 @@ const ExampleItem: React.FC<QuestItemProps> = ({ item, onAddAnalysis }) => {
                 dataSource={item.quests}
                 renderItem={(quest, index) => (
                   <List.Item key={`${item.name}-${index}`} className='py-2'>
-                    <Button type='link' onClick={async () => addAnalysis(quest.scale)} className='text-left w-full'>
+                    <Button
+                      type='link'
+                      onClick={async () => addAnalysis(quest.scale)}
+                      className='text-left w-full'
+                      style={{ fontSize }}
+                    >
                       {`Scale: ${quest.scale} | Type: ${quest.type} | Users: ${quest.users} | Items: ${quest.items}`}
                     </Button>
                   </List.Item>

@@ -4,6 +4,7 @@ import { DeleteOutlined } from '@ant-design/icons'
 import type { AnalysisQuest } from '../../types/AnalysisQuest'
 import type { UploadQuest } from './UploadQuest'
 import type { QuestChild } from '../../../../application/responses/createQuestResponse'
+import { useSettings } from '../../context/SettingContext'
 
 const { Text } = Typography
 
@@ -14,6 +15,7 @@ type QuestItemProps = {
 }
 
 const UploadItem: React.FC<QuestItemProps> = ({ item, onDelete, onAddAnalysis }) => {
+  const { fontSize } = useSettings()
   const addAnalysis = async (child: QuestChild) => {
     onAddAnalysis({ uuid: child.uuid, scale: child.scale, name: item.name, type: child.type })
   }
@@ -26,7 +28,9 @@ const UploadItem: React.FC<QuestItemProps> = ({ item, onDelete, onAddAnalysis })
             key: item.name,
             label: (
               <div className='flex items-center justify-between w-full'>
-                <Text strong className='text-base'>{item.name}</Text>
+                <Text strong className='text-base' style={{ fontSize }}>
+                  {item.name}
+                </Text>
               </div>
             ),
             extra: (
@@ -43,7 +47,12 @@ const UploadItem: React.FC<QuestItemProps> = ({ item, onDelete, onAddAnalysis })
                 dataSource={item.quests}
                 renderItem={(quest, index) => (
                   <List.Item key={`${item.name}-${index}`} className='py-2'>
-                    <Button type='link' onClick={async () => addAnalysis(quest)} className='text-left w-full'>
+                    <Button
+                      type='link'
+                      onClick={async () => addAnalysis(quest)}
+                      className='text-left w-full'
+                      style={{ fontSize }}
+                    >
                       {`Scale: ${quest.scale} | Type: ${quest.type} | Users: ${quest.users} | Items: ${quest.items}`}
                     </Button>
                   </List.Item>
