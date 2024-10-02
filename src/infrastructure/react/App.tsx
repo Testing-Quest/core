@@ -59,6 +59,7 @@ export const App: React.FC = () => {
             type='text'
             icon={<CloseOutlined />}
             size='small'
+            test-id='close-button'
             className={styles.closeButton}
             onClick={e => {
               e.stopPropagation()

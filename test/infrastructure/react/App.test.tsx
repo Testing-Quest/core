@@ -117,17 +117,45 @@ describe('App Component', () => {
 
     render(<App />)
 
-    // Switch to Upload tab
     fireEvent.click(screen.getByText('Upload'))
 
-    // Wait for the input element to appear
     const input = await screen.findByTestId('file-input')
 
-    // Wait for the file name to appear in the document
     await waitFor(() => {
       // Upload the file
       userEvent.upload(input, file)
       expect(screen.getByText('test.xlsx')).toBeInTheDocument()
+    })
+  })
+
+  it('adds a new analysis tab when an uploaded quest is selected', async () => {
+    const file = new File(['dummy content'], 'test.xlsx', {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    })
+    file.arrayBuffer = jest.fn().mockResolvedValue(new ArrayBuffer(8))
+
+    Client.createQuest = jest.fn().mockResolvedValue({
+      childs: [{ uuid: 'mocked-uuid', scale: 5, type: 'multi', users: 10, items: 20 }],
+    })
+
+    render(<App />)
+
+    fireEvent.click(screen.getByText('Upload'))
+
+    const input = await screen.findByTestId('file-input')
+
+    await waitFor(() => {
+      // Upload the file
+      userEvent.upload(input, file)
+      expect(screen.getByText('test.xlsx')).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByText('test.xlsx'))
+
+    fireEvent.click(screen.getByText('Scale: 5 | Type: multi | Users: 10 | Items: 20'))
+
+    await waitFor(() => {
+      expect(screen.getByText('test.xlsx - scale: 5')).toBeInTheDocument()
     })
   })
 
@@ -140,7 +168,6 @@ describe('App Component', () => {
 
     render(<App />)
 
-    // Add a dynamic tab
     await waitFor(() => {
       fireEvent.click(screen.getByText('Example Quest'))
     })
@@ -150,7 +177,6 @@ describe('App Component', () => {
       expect(screen.getByText('Example Quest - scale: 5')).toBeInTheDocument()
     })
 
-    // Close the dynamic tab
     fireEvent.click(screen.getByLabelText('close'))
 
     await waitFor(() => {
