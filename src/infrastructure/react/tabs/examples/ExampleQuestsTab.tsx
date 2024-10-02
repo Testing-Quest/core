@@ -1,3 +1,4 @@
+import styles from '../../App.module.css'
 import React, { useEffect, useState } from 'react'
 import { List, Spin, Alert } from 'antd'
 import { Client } from '../../../Client'
@@ -41,12 +42,10 @@ const ExampleQuestsTab: React.FC<ExampleQuestsTabProps> = ({ addAnalysisQuest })
   }
 
   return (
-    <div className='p-4'>
+    <div className={styles.appContent}>
       <List
         dataSource={exampleQuests}
-        renderItem={item => (
-          <ExampleItem item={item} onDelete={() => {}} onAddAnalysis={addAnalysisQuest} showDeleteButton={false} />
-        )}
+        renderItem={item => <ExampleItem item={item} onAddAnalysis={addAnalysisQuest} />}
       />
     </div>
   )

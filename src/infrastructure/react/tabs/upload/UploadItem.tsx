@@ -9,12 +9,11 @@ const { Text } = Typography
 
 type QuestItemProps = {
   item: UploadQuest
-  onDelete(): void
+  onDelete(uuid: string): void
   onAddAnalysis(quest: AnalysisQuest): void
-  showDeleteButton: boolean
 }
 
-const UploadItem: React.FC<QuestItemProps> = ({ item, onDelete, onAddAnalysis, showDeleteButton }) => {
+const UploadItem: React.FC<QuestItemProps> = ({ item, onDelete, onAddAnalysis }) => {
   const addAnalysis = async (child: QuestChild) => {
     onAddAnalysis({ uuid: child.uuid, scale: child.scale, name: item.name, type: child.type })
   }
@@ -27,22 +26,17 @@ const UploadItem: React.FC<QuestItemProps> = ({ item, onDelete, onAddAnalysis, s
             key: item.name,
             label: (
               <div className='flex items-center justify-between w-full'>
-                <Text strong className='text-base'>
-                  {item.name}
-                </Text>
-                {showDeleteButton && (
-                  <Button
-                    icon={<DeleteOutlined />}
-                    danger
-                    onClick={e => {
-                      e.stopPropagation()
-                      onDelete()
-                    }}
-                  >
-                    Delete
-                  </Button>
-                )}
+                <Text className='text-base'>{item.name}</Text>
               </div>
+            ),
+            extra: (
+              <Button
+                type='text'
+                icon={<DeleteOutlined />}
+                onClick={() => {
+                  onDelete(item.uuid)
+                }}
+              />
             ),
             children: (
               <List
@@ -50,9 +44,7 @@ const UploadItem: React.FC<QuestItemProps> = ({ item, onDelete, onAddAnalysis, s
                 renderItem={(quest, index) => (
                   <List.Item key={`${item.name}-${index}`} className='py-2'>
                     <Button type='link' onClick={async () => addAnalysis(quest)} className='text-left w-full'>
-                      <Text className='text-sm'>
-                        {`Scale: ${quest.scale} | Type: ${quest.type} | Users: ${quest.users} | Items: ${quest.items}`}
-                      </Text>
+                      {`Scale: ${quest.scale} | Type: ${quest.type} | Users: ${quest.users} | Items: ${quest.items}`}
                     </Button>
                   </List.Item>
                 )}

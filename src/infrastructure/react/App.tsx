@@ -73,15 +73,7 @@ export const App: React.FC = () => {
 
   return (
     <Layout className={styles.appLayout}>
-      <Tabs
-        activeKey={activeKey}
-        onChange={setActiveKey}
-        type='editable-card'
-        onEdit={onEdit}
-        hideAdd
-        className={styles.appContent}
-        items={items}
-      />
+      <Tabs activeKey={activeKey} onChange={setActiveKey} type='editable-card' onEdit={onEdit} hideAdd items={items} />
     </Layout>
   )
 }

@@ -1,3 +1,4 @@
+import styles from '../../App.module.css'
 import React from 'react'
 import { List, Upload, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
@@ -38,6 +39,11 @@ const UploadQuestsTab: React.FC<UploadQuestsTabProps> = ({ addAnalysisQuest }) =
       onError(err)
     }
   }
+
+  const onDelete = (uuid: string) => {
+    setUploadedQuests(uploadedQuests.filter(q => q.uuid !== uuid))
+  }
+
   const handleChange = (info: UploadChangeParam) => {
     const { file } = info
     if (file.status === 'done') {
@@ -48,7 +54,7 @@ const UploadQuestsTab: React.FC<UploadQuestsTabProps> = ({ addAnalysisQuest }) =
   }
 
   return (
-    <div className='p-4'>
+    <div className={styles.appContent}>
       <Upload.Dragger
         name='file'
         customRequest={customRequest}
@@ -65,9 +71,7 @@ const UploadQuestsTab: React.FC<UploadQuestsTabProps> = ({ addAnalysisQuest }) =
       </Upload.Dragger>
       <List
         dataSource={uploadedQuests}
-        renderItem={item => (
-          <UploadItem item={item} onDelete={() => {}} onAddAnalysis={addAnalysisQuest} showDeleteButton={true} />
-        )}
+        renderItem={item => <UploadItem item={item} onDelete={onDelete} onAddAnalysis={addAnalysisQuest} />}
       />
     </div>
   )

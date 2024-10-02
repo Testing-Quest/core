@@ -4,9 +4,11 @@
 }
 
 .appContent {
-  display: flex;
   justify-content: center;
-  padding: 24px;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  padding-left: 48px;
+  padding-right: 48px;
 }
 
 .tabsContainer {
