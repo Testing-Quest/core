@@ -16,7 +16,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isVisible, onClose }) => 
         <label style={{ marginRight: '8px' }}>Font Size:</label>
         <Slider
           min={12}
-          max={30}
+          max={25}
           onChange={value => {
             setFontSize(`${value}px`)
           }}

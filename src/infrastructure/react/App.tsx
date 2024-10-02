@@ -91,11 +91,17 @@ export const App: React.FC = () => {
         style={{ fontSize: fontSize }}
       />
       <Button
-        icon={<SettingOutlined />}
+        icon={<SettingOutlined style={{ fontSize: '24px' }} />}
         onClick={() => {
           setIsSettingsModalVisible(true)
         }}
-        style={{ position: 'fixed', bottom: '20px', right: '20px' }}
+        style={{
+          position: 'fixed',
+          bottom: '32px',
+          right: '32px',
+          zIndex: 1000,
+          padding: '24px', // Aumentar el padding para un botón más grande
+        }}
       />
       <SettingsModal
         isVisible={isSettingsModalVisible}
