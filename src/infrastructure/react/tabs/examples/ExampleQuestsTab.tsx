@@ -25,12 +25,15 @@ const ExampleQuestsTab: React.FC<ExampleQuestsTabProps> = ({ addAnalysisQuest })
         setLoading(false)
       }
     }
-
     fetchExampleQuests()
   }, [])
 
   if (loading) {
-    return <Spin tip='Loading quests...' />
+    return (
+      <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Spin tip='Loading quests...' size='large' />
+      </div>
+    )
   }
 
   if (error) {

@@ -6,7 +6,7 @@ import type { AnalysisQuest } from '../../types/AnalysisQuest'
 import type { UploadQuest } from './UploadQuest'
 import { v4 as uuidv4 } from 'uuid'
 import { Client } from '../../../Client'
-import ExampleItem from './UploadItem'
+import UploadItem from './UploadItem'
 import type { UploadChangeParam } from 'antd/es/upload'
 
 type UploadQuestsTabProps = {
@@ -55,6 +55,7 @@ const UploadQuestsTab: React.FC<UploadQuestsTabProps> = ({ addAnalysisQuest }) =
         showUploadList={false}
         onChange={handleChange}
         className='bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 mb-6'
+        data-testid='file-input'
       >
         <p className='ant-upload-drag-icon'>
           <InboxOutlined className='text-4xl text-blue-500' />
@@ -65,14 +66,7 @@ const UploadQuestsTab: React.FC<UploadQuestsTabProps> = ({ addAnalysisQuest }) =
       <List
         dataSource={uploadedQuests}
         renderItem={item => (
-          <ExampleItem
-            item={item}
-            onDelete={() => {}}
-            onAddAnalysis={() => {
-              addAnalysisQuest
-            }}
-            showDeleteButton={true}
-          />
+          <UploadItem item={item} onDelete={() => {}} onAddAnalysis={addAnalysisQuest} showDeleteButton={true} />
         )}
       />
     </div>

@@ -14,7 +14,7 @@ type QuestItemProps = {
   showDeleteButton: boolean
 }
 
-const ExampleItem: React.FC<QuestItemProps> = ({ item, onDelete, onAddAnalysis, showDeleteButton }) => {
+const UploadItem: React.FC<QuestItemProps> = ({ item, onDelete, onAddAnalysis, showDeleteButton }) => {
   const addAnalysis = async (child: QuestChild) => {
     onAddAnalysis({ uuid: child.uuid, scale: child.scale, name: item.name, type: child.type })
   }
@@ -65,4 +65,4 @@ const ExampleItem: React.FC<QuestItemProps> = ({ item, onDelete, onAddAnalysis, 
   )
 }
 
-export default ExampleItem
+export default UploadItem

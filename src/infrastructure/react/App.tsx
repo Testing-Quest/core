@@ -8,7 +8,6 @@ import AnalysisTab from './tabs/analysis/AnalysisTab'
 import type { AnalysisQuest } from './types/AnalysisQuest'
 
 const { Content } = Layout
-const { TabPane } = Tabs
 
 export const App: React.FC = () => {
   const [activeKey, setActiveKey] = useState('1')
@@ -37,6 +36,42 @@ export const App: React.FC = () => {
     }
   }
 
+  const items = [
+    {
+      key: '2',
+      label: 'Upload',
+      children: <UploadQuestsTab addAnalysisQuest={addAnalysisQuest} />,
+      closable: false,
+    },
+    {
+      key: '1',
+      label: 'Examples',
+      children: <ExampleQuestsTab addAnalysisQuest={addAnalysisQuest} />,
+      closable: false,
+    },
+    ...dynamicTabs.map(tab => ({
+      key: tab.uuid,
+      label: (
+        <span className={styles.dynamicTab}>
+          <FileTextOutlined className={styles.tabIcon} />
+          {`${tab.name} - scale: ${tab.scale}`}
+          <Button
+            type='text'
+            icon={<CloseOutlined />}
+            size='small'
+            className={styles.closeButton}
+            onClick={e => {
+              e.stopPropagation()
+              removeTab(tab.uuid)
+            }}
+          />
+        </span>
+      ),
+      children: <AnalysisTab tabName={`${tab.name}-Scale${tab.scale}`} />,
+      closable: false,
+    })),
+  ]
+
   return (
     <Layout className={styles.appLayout}>
       <Content className={styles.appContent}>
@@ -47,39 +82,8 @@ export const App: React.FC = () => {
           onEdit={onEdit}
           hideAdd
           className={styles.tabsContainer}
-        >
-          <TabPane tab='Upload' key='2' className={styles.tabPane} closable={false}>
-            <UploadQuestsTab addAnalysisQuest={addAnalysisQuest} />
-          </TabPane>
-          <TabPane tab='Examples' key='1' className={styles.tabPane} closable={false}>
-            <ExampleQuestsTab addAnalysisQuest={addAnalysisQuest} />
-          </TabPane>
-          {dynamicTabs.map(tab => (
-            <TabPane
-              tab={
-                <span className={styles.dynamicTab}>
-                  <FileTextOutlined className={styles.tabIcon} />
-                  {`${tab.name} - scale: ${tab.scale}`}
-                  <Button
-                    type='text'
-                    icon={<CloseOutlined />}
-                    size='small'
-                    className={styles.closeButton}
-                    onClick={e => {
-                      e.stopPropagation()
-                      removeTab(tab.uuid)
-                    }}
-                  />
-                </span>
-              }
-              key={tab.uuid}
-              closable={false}
-              className={styles.tabPane}
-            >
-              <AnalysisTab tabName={`${tab.name}-Scale${tab.scale}`} />
-            </TabPane>
-          ))}
-        </Tabs>
+          items={items}
+        />
       </Content>
     </Layout>
   )
