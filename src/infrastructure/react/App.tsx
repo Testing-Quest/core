@@ -7,8 +7,6 @@ import UploadQuestsTab from './tabs/upload/UploadQuestsTab'
 import AnalysisTab from './tabs/analysis/AnalysisTab'
 import type { AnalysisQuest } from './types/AnalysisQuest'
 
-const { Content } = Layout
-
 export const App: React.FC = () => {
   const [activeKey, setActiveKey] = useState('1')
   const [dynamicTabs, setDynamicTabs] = useState<AnalysisQuest[]>([])
@@ -75,17 +73,15 @@ export const App: React.FC = () => {
 
   return (
     <Layout className={styles.appLayout}>
-      <Content className={styles.appContent}>
-        <Tabs
-          activeKey={activeKey}
-          onChange={setActiveKey}
-          type='editable-card'
-          onEdit={onEdit}
-          hideAdd
-          className={styles.tabsContainer}
-          items={items}
-        />
-      </Content>
+      <Tabs
+        activeKey={activeKey}
+        onChange={setActiveKey}
+        type='editable-card'
+        onEdit={onEdit}
+        hideAdd
+        className={styles.appContent}
+        items={items}
+      />
     </Layout>
   )
 }

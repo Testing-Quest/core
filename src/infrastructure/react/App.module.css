@@ -4,11 +4,16 @@
 }
 
 .appContent {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
 }
 
 .tabsContainer {
   background-color: white;
   border-radius: 8px;
+  width: 100%;
+  max-width: 800px;
 }
 
 .tabPane {
@@ -34,7 +39,6 @@
   color: rgba(0, 0, 0, 0.85);
 }
 
-/* Override Ant Design styles for a more professional look */
 :global(.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab) {
   border-color: #d9d9d9;
   background: #fafafa;
@@ -52,4 +56,12 @@
 
 :global(.ant-tabs-top > .ant-tabs-nav) {
   margin-bottom: 0;
+}
+
+:global(.ant-collapse) {
+  width: 100%;
+}
+
+:global(.ant-collapse-content) {
+  transition: none !important;
 }
