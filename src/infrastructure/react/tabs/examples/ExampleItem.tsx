@@ -34,7 +34,7 @@ const ExampleItem: React.FC<QuestItemProps> = ({ item, onAddAnalysis }) => {
             key: item.name,
             label: (
               <div className='flex items-center justify-between w-full'>
-                <Text className='text-base'>{item.name}</Text>
+                <Text strong className='text-base'>{item.name}</Text>
               </div>
             ),
             children: (

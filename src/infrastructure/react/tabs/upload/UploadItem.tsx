@@ -26,7 +26,7 @@ const UploadItem: React.FC<QuestItemProps> = ({ item, onDelete, onAddAnalysis })
             key: item.name,
             label: (
               <div className='flex items-center justify-between w-full'>
-                <Text className='text-base'>{item.name}</Text>
+                <Text strong className='text-base'>{item.name}</Text>
               </div>
             ),
             extra: (
