@@ -4,7 +4,7 @@ import { List, Spin, Alert } from 'antd'
 import { Client } from '../../../Client'
 import type { ExampleQuest } from './ExampleQuest'
 import ExampleItem from './ExampleItem'
-import type { AnalysisQuest } from '../analysis/AnalysisQuest'
+import type { AnalysisQuest } from '../analysis/types'
 
 type ExampleQuestsTabProps = {
   addAnalysisQuest(quest: AnalysisQuest): void

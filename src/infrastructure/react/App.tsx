@@ -5,7 +5,7 @@ import { FileTextOutlined, CloseOutlined, SettingOutlined } from '@ant-design/ic
 import ExampleQuestsTab from './tabs/examples/ExampleQuestsTab'
 import UploadQuestsTab from './tabs/upload/UploadQuestsTab'
 import AnalysisTab from './tabs/analysis/AnalysisTab'
-import type { AnalysisQuest } from './tabs/analysis/AnalysisQuest'
+import type { AnalysisQuest } from './tabs/analysis/types'
 import { useSettings } from './context/SettingContext'
 import SettingsModal from './context/SettingsModal'
 

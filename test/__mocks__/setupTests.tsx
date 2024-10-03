@@ -9,6 +9,12 @@ jest.mock('../../src/infrastructure/react/App.module.css', () => ({
   tabIcon: 'tabIcon',
 }))
 
+jest.mock('../../src/infrastructure/react/tabs/analysis/Sidebar.module.css', () => ({
+  sidebar: 'sidebar',
+  logo: 'logo',
+  menu: 'menu',
+}))
+
 jest.mock('antd', () => {
   const antd = jest.requireActual('antd')
   const MockSpin = (props: any) => <>{props.children ?? null}</>

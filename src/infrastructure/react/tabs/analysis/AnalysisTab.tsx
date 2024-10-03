@@ -1,43 +1,48 @@
 import React from 'react'
-import { Typography } from 'antd'
-import type { AnalysisQuest } from './AnalysisQuest'
 import { Client } from '../../../Client'
-
-const { Text } = Typography
+import { HealthMulti } from './components/Health'
+import { VisualizationProvider } from './VisualizationContext'
+import VisualizationRenderer from './VisualizationRenderer'
+import type { AnalysisVisualization } from './types'
+import Sidebar from './Sidebar'
+import type { AnalysisQuest } from './types'
 
 type AnalysisTabProps = {
   quest: AnalysisQuest
 }
 
-// type AnalysisVisualization = {
-//   label: string
-//   icon: string
-//   multi: React.FC<any> | null
-//   gradu: React.FC<any> | null
-//   binary: React.FC<any> | null
-// }
-
-// const AnalysisVisualizations: AnalysisVisualization[] = [
-//   { label: "Health", icon: "basic", multi: HealthMulti, gradu: HealthGradu, binary: HealthBinary },
-//   { label: "Reliability", icon: "plot", multi: Reliability, gradu: Reliability, binary: Reliability },
-//   { label: "Items Map", icon: "plot", multi: ItemMaps, gradu: ItemMaps, binary: ItemMaps },
-//   { label: "Direct Weighted", icon: "plot", multi: DirectVsWeighted, gradu: null, binary: DirectVsWeighted },
-//   { label: "Direct Blank", icon: "plot", multi: DirectVsBlank, gradu: DirectVsBlank, binary: DirectVsBlank },
-//   { label: "Direct Coherency", icon: "plot", multi: DirectVsCoherency, gradu: null, binary: DirectVsCoherency },
-//   { label: "Direct MCI", icon: "plot", multi: DirectVsMCI, gradu: null, binary: DirectVsMCI },
-//   { label: "Score Distribution", icon: "plot", multi: ScoreDistribution, gradu: ScoreDistribution, binary: ScoreDistribution },
-//   { label: "Items Table", icon: "table", multi: ItemTable, gradu: ItemTable, binary: ItemTable },
-//   { label: "Examinees Table", icon: "table", multi: ExamineeTable, gradu: ExamineeTable, binary: ExamineeTable }
-// ]
+export const analysisVisualizations: AnalysisVisualization[] = [
+  { label: 'Health', icon: 'basic', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Health1', icon: 'basic', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Health2', icon: 'basic', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Health3', icon: 'basic', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Health4', icon: 'basic', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Health5', icon: 'basic', multi: HealthMulti, gradu: null, binary: null },
+]
 
 const AnalysisTab: React.FC<AnalysisTabProps> = ({ quest }) => {
   const client = new Client(quest)
-  console.log(client)
+  const questType = client.getQuestType()
+
+  const questVisualizations = analysisVisualizations.filter(visualization => {
+    return visualization[questType as keyof AnalysisVisualization] !== null
+  })
+
+  if (questVisualizations.length === 0) {
+    return <div>No hay visualizaciones disponibles para este tipo de quest.</div>
+  }
 
   return (
-    <div className='p-4'>
-      <Text className='text-base'>Analysis content for {quest.name} goes here.</Text>
-    </div>
+    <VisualizationProvider initialVisualization={questVisualizations[0]}>
+      <div style={{ display: 'flex' }}>
+        <div style={{ position: 'fixed', left: 0, height: '100%', width: '14.7%', zIndex: 999 }}>
+          <Sidebar visualizations={questVisualizations} />
+        </div>
+        <div style={{ marginLeft: '16%', width: '84%' }}>
+          <VisualizationRenderer client={client} />
+        </div>
+      </div>
+    </VisualizationProvider>
   )
 }
 

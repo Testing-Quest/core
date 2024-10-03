@@ -3,7 +3,7 @@ import type { CreateQuestRequest } from '../application/requests/createQuestRequ
 import type { CreateQuestResponse } from '../application/responses/createQuestResponse'
 import type { Metadata } from '../domain/repository'
 import memoryRepository from './MemoryRepository'
-import type { AnalysisQuest } from './react/tabs/analysis/AnalysisQuest'
+import type { AnalysisQuest } from './react/tabs/analysis/types'
 
 export class Client {
   private readonly quest: AnalysisQuest
@@ -24,5 +24,17 @@ export class Client {
 
   public static async getMetadata(): Promise<Metadata[]> {
     return memoryRepository.loadMetadataFile()
+  }
+
+  public getQuestType(): AnalysisQuest['type'] {
+    return this.quest.type
+  }
+
+  public getQuestScale(): AnalysisQuest['scale'] {
+    return this.quest.scale
+  }
+
+  public getQuestName(): AnalysisQuest['name'] {
+    return this.quest.name
   }
 }

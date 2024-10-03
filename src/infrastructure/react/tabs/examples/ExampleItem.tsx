@@ -1,7 +1,7 @@
 import React from 'react'
 import { List, Collapse, Button, Typography } from 'antd'
 import type { ExampleQuest } from './ExampleQuest'
-import type { AnalysisQuest } from '../analysis/AnalysisQuest'
+import type { AnalysisQuest } from '../analysis/types'
 import { Client } from '../../../Client'
 import { useSettings } from '../../context/SettingContext'
 
