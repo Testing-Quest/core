@@ -1,3 +1,4 @@
+import type { RenderResult } from '@testing-library/react';
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { App } from '../../../src/infrastructure/react/App'
@@ -67,7 +68,10 @@ describe('App Component', () => {
   })
 
   it('should render Upload and Examples tabs', async () => {
-    const result = render(<App />)
+    let result: RenderResult
+    await act(async () => {
+      result = render(<App />)
+    })
 
     await waitFor(
       () => {
@@ -85,7 +89,10 @@ describe('App Component', () => {
     ]
     ;(Client.getMetadata as jest.Mock).mockResolvedValue(mockQuests)
 
-    const result = render(<App />)
+    let result: RenderResult
+    await act(async () => {
+      result = render(<App />)
+    })
 
     await waitFor(() => {
       expect(result.getByText('Example Quest 1')).toBeInTheDocument()
@@ -100,15 +107,22 @@ describe('App Component', () => {
       childs: [{ uuid: 'mocked-uuid', scale: 1, type: 'multi' }],
     })
 
-    const result = render(<App />)
+    let result: RenderResult
+    await act(async () => {
+      result = render(<App />)
+    })
 
     await waitFor(() => {
       expect(result.getByText('Example Quest')).toBeInTheDocument()
     })
 
-    fireEvent.click(result.getByText('Example Quest'))
+    await act(async () => {
+      fireEvent.click(result.getByText('Example Quest'))
+    })
 
-    fireEvent.click(result.getByText('Scale: 1 | Type: multi | Users: 10 | Items: 20'))
+    await act(async () => {
+      fireEvent.click(result.getByText('Scale: 1 | Type: multi | Users: 10 | Items: 20'))
+    })
 
     await waitFor(() => {
       expect(result.getByText('Example Quest - scale: 1')).toBeInTheDocument()
@@ -125,18 +139,26 @@ describe('App Component', () => {
       childs: [{ uuid: 'mocked-uuid', scale: 5, type: 'multi', users: 10, items: 20 }],
     })
 
-    const result = render(<App />)
+    let result: RenderResult
+    await act(async () => {
+      result = render(<App />)
+    })
 
-    fireEvent.click(result.getByText('Upload'))
+    await act(async () => {
+      fireEvent.click(result.getByText('Upload'))
+    })
 
-    const input = await result.findByTestId('file-input')
-
-    act(() => {
+    await act(async () => {
+      const input = await result.findByTestId('file-input')
       userEvent.upload(input, file)
     })
 
     await waitFor(() => {
       expect(result.getByText('test.xlsx')).toBeInTheDocument()
+    })
+
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0))
     })
   })
 
@@ -150,13 +172,17 @@ describe('App Component', () => {
       childs: [{ uuid: 'mocked-uuid', scale: 5, type: 'multi', users: 10, items: 20 }],
     })
 
-    const result = render(<App />)
+    let result: RenderResult
+    await act(async () => {
+      result = render(<App />)
+    })
 
-    fireEvent.click(result.getByText('Upload'))
+    await act(async () => {
+      fireEvent.click(result.getByText('Upload'))
+    })
 
-    const input = await result.findByTestId('file-input')
-
-    act(() => {
+    await act(async () => {
+      const input = await result.findByTestId('file-input')
       userEvent.upload(input, file)
     })
 
@@ -164,10 +190,15 @@ describe('App Component', () => {
       expect(result.getByText('test.xlsx')).toBeInTheDocument()
     })
 
-    fireEvent.click(result.getByText('test.xlsx'))
-
-    fireEvent.click(result.getByText('Scale: 5 | Type: multi | Users: 10 | Items: 20'))
-
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0))
+    })
+    await act(async () => {
+      fireEvent.click(result.getByText('test.xlsx'))
+    })
+    await act(async () => {
+      fireEvent.click(result.getByText('Scale: 5 | Type: multi | Users: 10 | Items: 20'))
+    })
     await waitFor(() => {
       expect(result.getByText('test.xlsx - scale: 5')).toBeInTheDocument()
     })
@@ -180,18 +211,26 @@ describe('App Component', () => {
       childs: [{ uuid: 'mocked-uuid', scale: 5, type: 'multi' }],
     })
 
-    const result = render(<App />)
+    let result: RenderResult
+    await act(async () => {
+      result = render(<App />)
+    })
 
     await waitFor(() => {
       fireEvent.click(result.getByText('Example Quest'))
     })
-    fireEvent.click(result.getByText('Scale: 5 | Type: multi | Users: 10 | Items: 20'))
+
+    await act(async () => {
+      fireEvent.click(result.getByText('Scale: 5 | Type: multi | Users: 10 | Items: 20'))
+    })
 
     await waitFor(() => {
       expect(result.getByText('Example Quest - scale: 5')).toBeInTheDocument()
     })
 
-    fireEvent.click(result.getByLabelText('close'))
+    await act(async () => {
+      fireEvent.click(result.getByLabelText('close'))
+    })
 
     await waitFor(() => {
       expect(result.queryByText('Example Quest - scale: 5')).not.toBeInTheDocument()
