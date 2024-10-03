@@ -105,8 +105,20 @@ describe('SettingsContext', () => {
           <div data-testid={`component-${id}`}>
             <span data-testid='font-size'>{fontSize}</span>
             <span data-testid='high-contrast'>{highContrast.toString()}</span>
-            <button onClick={() => { setFontSize('22px'); }}>Update Font Size</button>
-            <button onClick={() => { setHighContrast(true); }}>Update High Contrast</button>
+            <button
+              onClick={() => {
+                setFontSize('22px')
+              }}
+            >
+              Update Font Size
+            </button>
+            <button
+              onClick={() => {
+                setHighContrast(true)
+              }}
+            >
+              Update High Contrast
+            </button>
           </div>
         )
       }

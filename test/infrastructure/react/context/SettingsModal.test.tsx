@@ -1,90 +1,92 @@
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { useSettings } from '../../../../src/infrastructure/react/context/SettingContext'
 import SettingsModal from '../../../../src/infrastructure/react/context/SettingsModal'
 import { act } from 'react'
 
-// Mockear el useSettings
 jest.mock('../../../../src/infrastructure/react/context/SettingContext')
+
+jest.mock('antd', () => {
+  const antd = jest.requireActual('antd')
+  const MockSlider = jest.fn(props => {
+    return (
+      <div data-testid='mock-slider' onClick={() => props.onChange(20)}>
+        {props.value}
+      </div>
+    )
+  })
+  return { ...antd, Slider: MockSlider }
+})
 
 describe('SettingsModal', () => {
   const mockUseSettings = useSettings as jest.Mock
+  const mockSetFontSize = jest.fn()
+  const mockSetHighContrast = jest.fn()
+  const mockOnClose = jest.fn()
 
   beforeEach(() => {
     jest.clearAllMocks()
-  })
-
-  it('renders modal with correct initial values', () => {
-    // Given
     mockUseSettings.mockReturnValue({
       fontSize: '16px',
       highContrast: false,
-      setFontSize: jest.fn(),
-      setHighContrast: jest.fn(),
+      setFontSize: mockSetFontSize,
+      setHighContrast: mockSetHighContrast,
     })
+  })
 
-    // When
-    const result = render(<SettingsModal isVisible={true} onClose={jest.fn()} />)
+  it('renders modal with correct initial values', () => {
+    render(<SettingsModal isVisible={true} onClose={mockOnClose} />)
 
-    // Then
-    expect(result.getByText('Settings')).toBeInTheDocument()
-    expect(result.getByText('Font Size:')).toBeInTheDocument()
-    expect(result.getByText('High Contrast:')).toBeInTheDocument()
+    expect(screen.getByText('Settings')).toBeInTheDocument()
+    expect(screen.getByText('Font Size:')).toBeInTheDocument()
+    expect(screen.getByText('High Contrast:')).toBeInTheDocument()
 
-    // Verifica el valor inicial del Slider
-    const slider = result.getByRole('slider')
-    expect(slider).toHaveAttribute('aria-valuenow', '16')
+    const slider = screen.getByTestId('mock-slider')
+    expect(slider).toHaveTextContent('16')
 
-    // Verifica que el Switch esté en el estado inicial (apagado)
-    const highContrastSwitch = result.getByRole('switch')
+    const highContrastSwitch = screen.getByRole('switch')
     expect(highContrastSwitch).not.toBeChecked()
   })
 
   it('toggles high contrast when switch is clicked', () => {
-    // Mockear funciones
-    const mockSetHighContrast = jest.fn()
+    render(<SettingsModal isVisible={true} onClose={mockOnClose} />)
 
-    // Given
-    mockUseSettings.mockReturnValue({
-      fontSize: '16px',
-      highContrast: false,
-      setFontSize: jest.fn(),
-      setHighContrast: mockSetHighContrast,
-    })
+    const highContrastSwitch = screen.getByRole('switch')
 
-    // When
-    const result = render(<SettingsModal isVisible={true} onClose={jest.fn()} />)
-
-    // Simula un clic en el Switch de "High Contrast"
     act(() => {
-      const highContrastSwitch = result.getByRole('switch')
       fireEvent.click(highContrastSwitch)
     })
 
-    // Then
     expect(mockSetHighContrast).toHaveBeenCalledWith(true, expect.anything())
   })
 
-  it('calls onClose when modal is closed', () => {
-    // Mockear la función de cierre
-    const mockOnClose = jest.fn()
+  it('updates font size when slider is moved', () => {
+    render(<SettingsModal isVisible={true} onClose={mockOnClose} />)
 
-    // Given
-    mockUseSettings.mockReturnValue({
-      fontSize: '16px',
-      highContrast: false,
-      setFontSize: jest.fn(),
-      setHighContrast: jest.fn(),
-    })
-
-    // When
-    const result = render(<SettingsModal isVisible={true} onClose={mockOnClose} />)
+    const slider = screen.getByTestId('mock-slider')
 
     act(() => {
-      fireEvent.click(result.getByRole('button', { name: /close/i })) // Encuentra el botón de cierre del modal
+      fireEvent.click(slider)
     })
 
-    // Then
-    expect(mockOnClose).toHaveBeenCalledTimes(1) // Asegura que se ha llamado al cierre
+    expect(mockSetFontSize).toHaveBeenCalledWith('20px')
+  })
+
+  it('calls onClose when modal is closed', () => {
+    render(<SettingsModal isVisible={true} onClose={mockOnClose} />)
+
+    const closeButton = screen.getByRole('button', { name: /close/i })
+
+    act(() => {
+      fireEvent.click(closeButton)
+    })
+
+    expect(mockOnClose).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not render modal when isVisible is false', () => {
+    render(<SettingsModal isVisible={false} onClose={mockOnClose} />)
+
+    expect(screen.queryByText('Settings')).not.toBeInTheDocument()
   })
 })
