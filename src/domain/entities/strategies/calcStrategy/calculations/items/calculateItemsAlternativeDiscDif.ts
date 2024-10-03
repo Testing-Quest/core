@@ -1,4 +1,4 @@
-import { alternatives } from '../../../../../primitives'
+import { allAlternatives } from '../../../../../primitives'
 import { calculatePearson } from '../calculatePearson'
 
 export function calculateItemsAlternativeDiscriminationDifficulty(
@@ -31,7 +31,7 @@ export function calculateItemsAlternativeDiscriminationDifficulty(
   }
 
   for (let i = 0; i < numAlternatives; i++) {
-    const alternative = alternatives[i]
+    const alternative = allAlternatives[i]
     processAlternative(alternative)
   }
   processAlternative('X')

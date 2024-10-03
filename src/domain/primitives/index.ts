@@ -23,7 +23,7 @@ type QuestTypesMap = {
   readonly multi: MultiQuestType
   readonly gradu: GraduQuestType
 }
-export const alternatives: string[] = [
+export const allAlternatives: string[] = [
   'A',
   'B',
   'C',

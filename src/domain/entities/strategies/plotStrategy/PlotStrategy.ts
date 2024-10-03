@@ -1,4 +1,4 @@
-import { alternatives, type QuestTypesMap } from '../../../primitives'
+import { allAlternatives, type QuestTypesMap } from '../../../primitives'
 import type { MatrixType } from '../../../primitives/quest'
 import type { DataPoint, StringDataPoint } from '../../Quest'
 
@@ -83,7 +83,7 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
     const min = Math.min(...attrs.calcs.users.directScore)
     const max = Math.max(...attrs.calcs.users.directScore)
     const range = max - min || 1
-    const validAlternatives = [...alternatives.slice(0, attrs.alternatives), 'X']
+    const validAlternatives = [...allAlternatives.slice(0, attrs.alternatives), 'X']
 
     const usersGroups = attrs.calcs.users.directScore.map(score =>
       Math.min(groupCount - 1, Math.floor(((score - min) / range) * groupCount)),
