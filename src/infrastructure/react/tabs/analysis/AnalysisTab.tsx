@@ -13,11 +13,15 @@ type AnalysisTabProps = {
 
 export const analysisVisualizations: AnalysisVisualization[] = [
   { label: 'Health', icon: 'basic', multi: HealthMulti, gradu: null, binary: null },
-  { label: 'Health1', icon: 'basic', multi: HealthMulti, gradu: null, binary: null },
-  { label: 'Health2', icon: 'basic', multi: HealthMulti, gradu: null, binary: null },
-  { label: 'Health3', icon: 'basic', multi: HealthMulti, gradu: null, binary: null },
-  { label: 'Health4', icon: 'basic', multi: HealthMulti, gradu: null, binary: null },
-  { label: 'Health5', icon: 'basic', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Reliability', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Items Map', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Direct Weighted', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Direct Blank', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Direct Coherency', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Direct MCI', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Score Distribution', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Items Table', icon: 'table', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Examinees Table', icon: 'table', multi: HealthMulti, gradu: null, binary: null },
 ]
 
 const AnalysisTab: React.FC<AnalysisTabProps> = ({ quest }) => {
