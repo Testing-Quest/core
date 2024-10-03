@@ -1,6 +1,6 @@
 import React from 'react'
 import { useVisualization } from './VisualizationContext'
-import type { VisualizationComponentProps, QuestType } from './types'
+import type { VisualizationComponentProps, QuestType } from '../types'
 
 type VisualizationRendererProps = {
   client: VisualizationComponentProps['client']

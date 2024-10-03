@@ -4,7 +4,7 @@ import type { MenuProps } from 'antd'
 import { LineChartOutlined, TableOutlined, AppstoreOutlined } from '@ant-design/icons'
 import styles from './Sidebar.module.css'
 import type { AnalysisVisualization } from './types'
-import { useVisualization } from './VisualizationContext'
+import { useVisualization } from './context/VisualizationContext'
 import { useSettings } from '../../context/SettingContext'
 
 const iconMap = {

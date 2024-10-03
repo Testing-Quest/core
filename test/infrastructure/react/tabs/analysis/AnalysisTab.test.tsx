@@ -2,7 +2,7 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import Sidebar from '../../../../../src/infrastructure/react/tabs/analysis/Sidebar'
-import { VisualizationProvider } from '../../../../../src/infrastructure/react/tabs/analysis/VisualizationContext'
+import { VisualizationProvider } from '../../../../../src/infrastructure/react/tabs/analysis/context/VisualizationContext'
 
 jest.mock('antd', () => ({
   Menu: ({ children, items, selectedKeys, onClick, ...props }: any) => {

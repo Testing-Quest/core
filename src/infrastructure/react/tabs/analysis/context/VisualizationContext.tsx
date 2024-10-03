@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import React, { createContext, useState, useContext } from 'react'
-import type { AnalysisVisualization } from './types'
+import type { AnalysisVisualization } from '../types'
 
 type VisualizationContextType = {
   selectedVisualization: AnalysisVisualization | null
