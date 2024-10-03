@@ -1,0 +1,26 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #fff;
+  border-right: 1px solid #f0f0f0;
+}
+
+.logo {
+  width: 80%;
+  height: auto;
+  margin: 16px auto;
+  display: block;
+}
+
+.menu {
+  border-right: none;
+}
+
+.menu :global(.ant-menu-item-selected) {
+  background-color: #e6f7ff;
+}
+
+.menu :global(.ant-menu-item:hover) {
+  color: #1890ff;
+}

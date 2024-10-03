@@ -15,6 +15,7 @@ jest.mock('../../../src/infrastructure/react/context/SettingContext', () => ({
   })),
 }))
 jest.mock('../../../src/infrastructure/Client')
+jest.mock('../../../src/infrastructure/react/tabs/analysis/AnalysisTab')
 jest.mock('uuid', () => ({ v4: () => 'mocked-uuid' }))
 
 // Constants

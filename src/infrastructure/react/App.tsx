@@ -73,7 +73,7 @@ export const App: React.FC = () => {
           />
         </span>
       ),
-      children: <AnalysisTab tabName={`${tab.name}-Scale${tab.scale}`} />,
+      children: <AnalysisTab quest={tab} />,
       closable: false,
     })),
   ]

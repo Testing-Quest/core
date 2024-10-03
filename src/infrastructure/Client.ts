@@ -3,13 +3,14 @@ import type { CreateQuestRequest } from '../application/requests/createQuestRequ
 import type { CreateQuestResponse } from '../application/responses/createQuestResponse'
 import type { Metadata } from '../domain/repository'
 import memoryRepository from './MemoryRepository'
+import type { AnalysisQuest } from './react/tabs/analysis/AnalysisQuest'
 
 export class Client {
-  private readonly questUuid: string
+  private readonly quest: AnalysisQuest
 
-  public constructor(uuid: string) {
-    this.questUuid = uuid
-    console.log(this.questUuid)
+  public constructor(quest: AnalysisQuest) {
+    this.quest = quest
+    console.log('Client created with quest:', this.quest)
   }
 
   public static async createQuestfromMetadata(payload: Metadata): Promise<CreateQuestResponse> {
