@@ -1,4 +1,4 @@
-import type { RenderResult } from '@testing-library/react';
+import type { RenderResult } from '@testing-library/react'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { App } from '../../../src/infrastructure/react/App'
@@ -14,53 +14,66 @@ jest.mock('../../../src/infrastructure/react/context/SettingContext', () => ({
     setHighContrast: jest.fn(),
   })),
 }))
+jest.mock('../../../src/infrastructure/Client')
+jest.mock('uuid', () => ({ v4: () => 'mocked-uuid' }))
 
-jest.mock('../../../src/infrastructure/react/App.module.css', () => ({
-  appLayout: 'appLayout',
-  appContent: 'appContent',
-  tabsContainer: 'tabsContainer',
-  tabPane: 'tabPane',
-  dynamicTab: 'dynamicTab',
-  tabIcon: 'tabIcon',
-}))
+// Constants
+const UPLOAD_TAB = 'Upload'
+const EXAMPLES_TAB = 'Examples'
+const EXAMPLE_QUEST_1 = 'Example Quest 1'
+const EXAMPLE_QUEST_2 = 'Example Quest 2'
+const TEST_FILE_NAME = 'test.xlsx'
 
-jest.mock('../../../src/infrastructure/Client', () => ({
-  Client: {
-    getMetadata: jest.fn(async () => Promise.resolve([])),
-  },
-}))
-
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
+const createMockQuest = (name: string, scale: number, type: string, users: number, items: number) => ({
+  name,
+  quests: [{ scale, type, users, items }],
 })
 
-jest.mock('antd', () => {
-  const antd = jest.requireActual('antd')
+const renderApp = async (): Promise<RenderResult> => {
+  let result: RenderResult
+  await act(async () => {
+    result = render(<App />)
+  })
+  return result!
+}
 
-  const MockSpin: typeof antd.Spin = (props: any) => {
-    const { children } = props as { children?: React.ReactNode }
-    return <>{children ?? null}</>
-  }
+const uploadFile = async (result: RenderResult, fileName: string) => {
+  const file = new File(['dummy content'], fileName, {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  })
+  file.arrayBuffer = jest.fn().mockResolvedValue(new ArrayBuffer(8))
 
-  return {
-    ...antd,
-    Spin: MockSpin,
-  }
-})
+  await act(async () => {
+    fireEvent.click(result.getByText(UPLOAD_TAB))
+  })
 
-jest.mock('uuid', () => ({
-  v4: jest.fn(() => 'mocked-uuid'),
-}))
+  await act(async () => {
+    const input = await result.findByTestId('file-input')
+    userEvent.upload(input, file)
+  })
+
+  await waitFor(() => {
+    expect(result.getByText(fileName)).toBeInTheDocument()
+  })
+
+  await act(async () => {
+    await new Promise(resolve => setTimeout(resolve, 0))
+  })
+}
+
+const selectExampleQuest = async (result: RenderResult, questName: string, questDetails: string) => {
+  await act(async () => {
+    fireEvent.click(result.getByText(questName))
+  })
+
+  await waitFor(() => {
+    expect(result.getByText(questDetails)).toBeInTheDocument()
+  })
+
+  await act(async () => {
+    fireEvent.click(result.getByText(questDetails))
+  })
+}
 
 describe('App Component', () => {
   beforeEach(() => {
@@ -68,161 +81,84 @@ describe('App Component', () => {
   })
 
   it('should render Upload and Examples tabs', async () => {
-    let result: RenderResult
-    await act(async () => {
-      result = render(<App />)
-    })
+    const result = await renderApp()
 
-    await waitFor(
-      () => {
-        expect(result.getByText('Upload')).toBeInTheDocument()
-        expect(result.getByText('Examples')).toBeInTheDocument()
-      },
-      { timeout: 1000 },
-    )
+    await waitFor(() => {
+      expect(result.getByText(UPLOAD_TAB)).toBeInTheDocument()
+      expect(result.getByText(EXAMPLES_TAB)).toBeInTheDocument()
+    })
   })
 
-  it('loads example quests on mount', async () => {
+  describe('Example Quests', () => {
     const mockQuests = [
-      { name: 'Example Quest 1', quests: [{ scale: 5, type: 'multi', users: 10, items: 20 }] },
-      { name: 'Example Quest 2', quests: [{ scale: 7, type: 'gradu', users: 15, items: 25 }] },
+      createMockQuest(EXAMPLE_QUEST_1, 5, 'multi', 10, 20),
+      createMockQuest(EXAMPLE_QUEST_2, 7, 'gradu', 15, 25),
     ]
-    ;(Client.getMetadata as jest.Mock).mockResolvedValue(mockQuests)
 
-    let result: RenderResult
-    await act(async () => {
-      result = render(<App />)
+    beforeEach(() => {
+      ;(Client.getMetadata as jest.Mock).mockResolvedValue(mockQuests)
     })
 
-    await waitFor(() => {
-      expect(result.getByText('Example Quest 1')).toBeInTheDocument()
-      expect(result.getByText('Example Quest 2')).toBeInTheDocument()
+    it('loads example quests on mount', async () => {
+      const result = await renderApp()
+
+      await waitFor(() => {
+        expect(result.getByText(EXAMPLE_QUEST_1)).toBeInTheDocument()
+        expect(result.getByText(EXAMPLE_QUEST_2)).toBeInTheDocument()
+      })
+    })
+
+    it('adds a new analysis tab when an example quest is selected', async () => {
+      ;(Client.createQuestfromMetadata as jest.Mock).mockResolvedValue({
+        childs: [{ uuid: 'mocked-uuid', scale: 5, type: 'multi' }],
+      })
+
+      const result = await renderApp()
+
+      await selectExampleQuest(result, EXAMPLE_QUEST_1, 'Scale: 5 | Type: multi | Users: 10 | Items: 20')
+
+      await waitFor(() => {
+        expect(result.getByText('Example Quest 1 - scale: 5')).toBeInTheDocument()
+      })
     })
   })
 
-  it('adds a new analysis tab when an example quest is selected', async () => {
-    const mockQuests = [{ name: 'Example Quest', quests: [{ scale: 1, type: 'multi', users: 10, items: 20 }] }]
-    ;(Client.getMetadata as jest.Mock).mockResolvedValue(mockQuests)
-    Client.createQuestfromMetadata = jest.fn().mockResolvedValue({
-      childs: [{ uuid: 'mocked-uuid', scale: 1, type: 'multi' }],
+  describe('File Upload', () => {
+    beforeEach(() => {
+      Client.createQuest = jest.fn().mockResolvedValue({
+        childs: [{ uuid: 'mocked-uuid', scale: 5, type: 'multi', users: 10, items: 20 }],
+      })
     })
 
-    let result: RenderResult
-    await act(async () => {
-      result = render(<App />)
+    it('uploads a file and adds it to the list', async () => {
+      const result = await renderApp()
+      await uploadFile(result, TEST_FILE_NAME)
+
+      expect(result.getByText(TEST_FILE_NAME)).toBeInTheDocument()
     })
 
-    await waitFor(() => {
-      expect(result.getByText('Example Quest')).toBeInTheDocument()
-    })
+    it('adds a new analysis tab when an uploaded quest is selected', async () => {
+      const result = await renderApp()
+      await uploadFile(result, TEST_FILE_NAME)
 
-    await act(async () => {
-      fireEvent.click(result.getByText('Example Quest'))
-    })
+      await selectExampleQuest(result, TEST_FILE_NAME, 'Scale: 5 | Type: multi | Users: 10 | Items: 20')
 
-    await act(async () => {
-      fireEvent.click(result.getByText('Scale: 1 | Type: multi | Users: 10 | Items: 20'))
-    })
-
-    await waitFor(() => {
-      expect(result.getByText('Example Quest - scale: 1')).toBeInTheDocument()
-    })
-  })
-
-  it('uploads a file and adds it to the list', async () => {
-    const file = new File(['dummy content'], 'test.xlsx', {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    })
-    file.arrayBuffer = jest.fn().mockResolvedValue(new ArrayBuffer(8))
-
-    Client.createQuest = jest.fn().mockResolvedValue({
-      childs: [{ uuid: 'mocked-uuid', scale: 5, type: 'multi', users: 10, items: 20 }],
-    })
-
-    let result: RenderResult
-    await act(async () => {
-      result = render(<App />)
-    })
-
-    await act(async () => {
-      fireEvent.click(result.getByText('Upload'))
-    })
-
-    await act(async () => {
-      const input = await result.findByTestId('file-input')
-      userEvent.upload(input, file)
-    })
-
-    await waitFor(() => {
-      expect(result.getByText('test.xlsx')).toBeInTheDocument()
-    })
-
-    await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 0))
-    })
-  })
-
-  it('adds a new analysis tab when an uploaded quest is selected', async () => {
-    const file = new File(['dummy content'], 'test.xlsx', {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    })
-    file.arrayBuffer = jest.fn().mockResolvedValue(new ArrayBuffer(8))
-
-    Client.createQuest = jest.fn().mockResolvedValue({
-      childs: [{ uuid: 'mocked-uuid', scale: 5, type: 'multi', users: 10, items: 20 }],
-    })
-
-    let result: RenderResult
-    await act(async () => {
-      result = render(<App />)
-    })
-
-    await act(async () => {
-      fireEvent.click(result.getByText('Upload'))
-    })
-
-    await act(async () => {
-      const input = await result.findByTestId('file-input')
-      userEvent.upload(input, file)
-    })
-
-    await waitFor(() => {
-      expect(result.getByText('test.xlsx')).toBeInTheDocument()
-    })
-
-    await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 0))
-    })
-    await act(async () => {
-      fireEvent.click(result.getByText('test.xlsx'))
-    })
-    await act(async () => {
-      fireEvent.click(result.getByText('Scale: 5 | Type: multi | Users: 10 | Items: 20'))
-    })
-    await waitFor(() => {
-      expect(result.getByText('test.xlsx - scale: 5')).toBeInTheDocument()
+      await waitFor(() => {
+        expect(result.getByText(`${TEST_FILE_NAME} - scale: 5`)).toBeInTheDocument()
+      })
     })
   })
 
   it('removes a dynamic tab when close button is clicked', async () => {
-    const mockQuests = [{ name: 'Example Quest', quests: [{ scale: 5, type: 'multi', users: 10, items: 20 }] }]
+    const mockQuests = [createMockQuest('Example Quest', 5, 'multi', 10, 20)]
     ;(Client.getMetadata as jest.Mock).mockResolvedValue(mockQuests)
-    Client.createQuestfromMetadata = jest.fn().mockResolvedValue({
+    ;(Client.createQuestfromMetadata as jest.Mock).mockResolvedValue({
       childs: [{ uuid: 'mocked-uuid', scale: 5, type: 'multi' }],
     })
 
-    let result: RenderResult
-    await act(async () => {
-      result = render(<App />)
-    })
+    const result = await renderApp()
 
-    await waitFor(() => {
-      fireEvent.click(result.getByText('Example Quest'))
-    })
-
-    await act(async () => {
-      fireEvent.click(result.getByText('Scale: 5 | Type: multi | Users: 10 | Items: 20'))
-    })
+    await selectExampleQuest(result, 'Example Quest', 'Scale: 5 | Type: multi | Users: 10 | Items: 20')
 
     await waitFor(() => {
       expect(result.getByText('Example Quest - scale: 5')).toBeInTheDocument()
