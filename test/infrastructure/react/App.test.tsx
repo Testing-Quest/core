@@ -1,8 +1,9 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react'
+import { render, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { App } from '../../../src/infrastructure/react/App'
 import '@testing-library/jest-dom'
 import { Client } from '../../../src/infrastructure/Client'
+import { act } from 'react'
 
 jest.mock('../../../src/infrastructure/react/context/SettingContext', () => ({
   useSettings: jest.fn(() => ({
@@ -66,12 +67,12 @@ describe('App Component', () => {
   })
 
   it('should render Upload and Examples tabs', async () => {
-    render(<App />)
+    const result = render(<App />)
 
     await waitFor(
       () => {
-        expect(screen.getByText('Upload')).toBeInTheDocument()
-        expect(screen.getByText('Examples')).toBeInTheDocument()
+        expect(result.getByText('Upload')).toBeInTheDocument()
+        expect(result.getByText('Examples')).toBeInTheDocument()
       },
       { timeout: 1000 },
     )
@@ -84,11 +85,11 @@ describe('App Component', () => {
     ]
     ;(Client.getMetadata as jest.Mock).mockResolvedValue(mockQuests)
 
-    render(<App />)
+    const result = render(<App />)
 
     await waitFor(() => {
-      expect(screen.getByText('Example Quest 1')).toBeInTheDocument()
-      expect(screen.getByText('Example Quest 2')).toBeInTheDocument()
+      expect(result.getByText('Example Quest 1')).toBeInTheDocument()
+      expect(result.getByText('Example Quest 2')).toBeInTheDocument()
     })
   })
 
@@ -99,18 +100,18 @@ describe('App Component', () => {
       childs: [{ uuid: 'mocked-uuid', scale: 1, type: 'multi' }],
     })
 
-    render(<App />)
+    const result = render(<App />)
 
     await waitFor(() => {
-      expect(screen.getByText('Example Quest')).toBeInTheDocument()
+      expect(result.getByText('Example Quest')).toBeInTheDocument()
     })
 
-    fireEvent.click(screen.getByText('Example Quest'))
+    fireEvent.click(result.getByText('Example Quest'))
 
-    fireEvent.click(screen.getByText('Scale: 1 | Type: multi | Users: 10 | Items: 20'))
+    fireEvent.click(result.getByText('Scale: 1 | Type: multi | Users: 10 | Items: 20'))
 
     await waitFor(() => {
-      expect(screen.getByText('Example Quest - scale: 1')).toBeInTheDocument()
+      expect(result.getByText('Example Quest - scale: 1')).toBeInTheDocument()
     })
   })
 
@@ -124,16 +125,18 @@ describe('App Component', () => {
       childs: [{ uuid: 'mocked-uuid', scale: 5, type: 'multi', users: 10, items: 20 }],
     })
 
-    render(<App />)
+    const result = render(<App />)
 
-    fireEvent.click(screen.getByText('Upload'))
+    fireEvent.click(result.getByText('Upload'))
 
-    const input = await screen.findByTestId('file-input')
+    const input = await result.findByTestId('file-input')
+
+    act(() => {
+      userEvent.upload(input, file)
+    })
 
     await waitFor(() => {
-      // Upload the file
-      userEvent.upload(input, file)
-      expect(screen.getByText('test.xlsx')).toBeInTheDocument()
+      expect(result.getByText('test.xlsx')).toBeInTheDocument()
     })
   })
 
@@ -147,24 +150,26 @@ describe('App Component', () => {
       childs: [{ uuid: 'mocked-uuid', scale: 5, type: 'multi', users: 10, items: 20 }],
     })
 
-    render(<App />)
+    const result = render(<App />)
 
-    fireEvent.click(screen.getByText('Upload'))
+    fireEvent.click(result.getByText('Upload'))
 
-    const input = await screen.findByTestId('file-input')
+    const input = await result.findByTestId('file-input')
 
-    await waitFor(() => {
-      // Upload the file
+    act(() => {
       userEvent.upload(input, file)
-      expect(screen.getByText('test.xlsx')).toBeInTheDocument()
     })
 
-    fireEvent.click(screen.getByText('test.xlsx'))
+    await waitFor(() => {
+      expect(result.getByText('test.xlsx')).toBeInTheDocument()
+    })
 
-    fireEvent.click(screen.getByText('Scale: 5 | Type: multi | Users: 10 | Items: 20'))
+    fireEvent.click(result.getByText('test.xlsx'))
+
+    fireEvent.click(result.getByText('Scale: 5 | Type: multi | Users: 10 | Items: 20'))
 
     await waitFor(() => {
-      expect(screen.getByText('test.xlsx - scale: 5')).toBeInTheDocument()
+      expect(result.getByText('test.xlsx - scale: 5')).toBeInTheDocument()
     })
   })
 
@@ -175,21 +180,21 @@ describe('App Component', () => {
       childs: [{ uuid: 'mocked-uuid', scale: 5, type: 'multi' }],
     })
 
-    render(<App />)
+    const result = render(<App />)
 
     await waitFor(() => {
-      fireEvent.click(screen.getByText('Example Quest'))
+      fireEvent.click(result.getByText('Example Quest'))
     })
-    fireEvent.click(screen.getByText('Scale: 5 | Type: multi | Users: 10 | Items: 20'))
+    fireEvent.click(result.getByText('Scale: 5 | Type: multi | Users: 10 | Items: 20'))
 
     await waitFor(() => {
-      expect(screen.getByText('Example Quest - scale: 5')).toBeInTheDocument()
+      expect(result.getByText('Example Quest - scale: 5')).toBeInTheDocument()
     })
 
-    fireEvent.click(screen.getByLabelText('close'))
+    fireEvent.click(result.getByLabelText('close'))
 
     await waitFor(() => {
-      expect(screen.queryByText('Example Quest - scale: 5')).not.toBeInTheDocument()
+      expect(result.queryByText('Example Quest - scale: 5')).not.toBeInTheDocument()
     })
   })
 })

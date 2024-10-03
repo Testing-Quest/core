@@ -1,7 +1,7 @@
 import React from 'react'
 import { List, Collapse, Button, Typography } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
-import type { AnalysisQuest } from '../../types/AnalysisQuest'
+import type { AnalysisQuest } from '../analysis/AnalysisQuest'
 import type { UploadQuest } from './UploadQuest'
 import type { QuestChild } from '../../../../application/responses/createQuestResponse'
 import { useSettings } from '../../context/SettingContext'
