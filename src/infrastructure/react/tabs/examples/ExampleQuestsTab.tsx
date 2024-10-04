@@ -31,7 +31,7 @@ const ExampleQuestsTab: React.FC<ExampleQuestsTabProps> = ({ addAnalysisQuest })
 
   if (loading) {
     return (
-      <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div className={styles.loading}>
         <Spin tip='Loading quests...' size='large' />
       </div>
     )

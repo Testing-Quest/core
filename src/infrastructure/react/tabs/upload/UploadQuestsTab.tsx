@@ -1,6 +1,6 @@
 import styles from '../../App.module.css'
-import React from 'react'
-import { List, Upload, message } from 'antd'
+import React, { useState } from 'react'
+import { List, Upload, message, Spin } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 import * as XLSX from 'xlsx'
 import type { AnalysisQuest } from '../analysis/types'
@@ -15,9 +15,11 @@ type UploadQuestsTabProps = {
 }
 
 const UploadQuestsTab: React.FC<UploadQuestsTabProps> = ({ addAnalysisQuest }) => {
+  const [loading, setLoading] = useState<boolean>(false)
   const [uploadedQuests, setUploadedQuests] = React.useState<UploadQuest[]>([])
 
   const customRequest = async ({ file, onSuccess, onError }: any) => {
+    setLoading(true)
     try {
       const workbook = XLSX.read(await file.arrayBuffer())
       const sheet = workbook.Sheets[workbook.SheetNames[0]]
@@ -38,6 +40,7 @@ const UploadQuestsTab: React.FC<UploadQuestsTabProps> = ({ addAnalysisQuest }) =
     } catch (err) {
       onError(err)
     }
+    setLoading(false)
   }
 
   const onDelete = (uuid: string) => {
@@ -69,10 +72,16 @@ const UploadQuestsTab: React.FC<UploadQuestsTabProps> = ({ addAnalysisQuest }) =
         <p className='ant-upload-text text-lg font-medium mt-4'>Click or drag file to this area to upload</p>
         <p className='ant-upload-hint text-sm text-gray-500 mt-2'>Support for single or bulk upload.</p>
       </Upload.Dragger>
-      <List
-        dataSource={uploadedQuests}
-        renderItem={item => <UploadItem item={item} onDelete={onDelete} onAddAnalysis={addAnalysisQuest} />}
-      />
+      {loading ? (
+        <div className={styles.loading}>
+          <Spin tip='Loading quests...' size='large' />
+        </div>
+      ) : (
+        <List
+          dataSource={uploadedQuests}
+          renderItem={item => <UploadItem item={item} onDelete={onDelete} onAddAnalysis={addAnalysisQuest} />}
+        />
+      )}
     </div>
   )
 }

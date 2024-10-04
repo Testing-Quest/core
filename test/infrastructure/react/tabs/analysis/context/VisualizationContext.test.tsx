@@ -21,12 +21,12 @@ const TestComponent = () => {
     <div>
       <span data-testid='visualization'>{selectedVisualization?.label}</span>
       <button
-        onClick={() =>
-          { setSelectedVisualization({
+        onClick={() => {
+          setSelectedVisualization({
             ...mockVisualization,
             label: 'New Visualization',
-          }); }
-        }
+          })
+        }}
       >
         Change Visualization
       </button>
