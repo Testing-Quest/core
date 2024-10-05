@@ -4,6 +4,8 @@ import type { VisualizationComponentProps, QuestType } from '../types'
 
 type VisualizationRendererProps = {
   client: VisualizationComponentProps['client']
+  setDeactivatedItems(items: number[]): void
+  setDeactivatedExaminees(examinees: number[]): void
 }
 
 const VisualizationRenderer: React.FC<VisualizationRendererProps> = ({ client }) => {

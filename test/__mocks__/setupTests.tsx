@@ -1,19 +1,10 @@
 import '@testing-library/jest-dom'
 
-jest.mock('../../src/infrastructure/react/App.module.css', () => ({
-  appLayout: 'appLayout',
-  appContent: 'appContent',
-  tabsContainer: 'tabsContainer',
-  tabPane: 'tabPane',
-  dynamicTab: 'dynamicTab',
-  tabIcon: 'tabIcon',
-}))
+jest.mock('../../src/infrastructure/react/App.module.css', () => ({}))
 
-jest.mock('../../src/infrastructure/react/tabs/analysis/Sidebar.module.css', () => ({
-  sidebar: 'sidebar',
-  logo: 'logo',
-  menu: 'menu',
-}))
+jest.mock('../../src/infrastructure/react/tabs/analysis/AnalysisTab.module.css', () => ({}))
+
+jest.mock('../../src/infrastructure/react/tabs/analysis/components/Components.module.css', () => ({}))
 
 jest.mock('antd', () => {
   const antd = jest.requireActual('antd')
