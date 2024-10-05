@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Layout, Card } from 'antd'
 import { Client } from '../../../Client'
-import { HealthBinary, HealthGradu, HealthMulti } from './components/Health'
+import { Health } from './components/Health'
 import { VisualizationProvider } from './context/VisualizationContext'
 import VisualizationRenderer from './context/VisualizationRenderer'
 import type { AnalysisVisualization, AnalysisQuest } from './types'
@@ -16,16 +16,16 @@ type AnalysisTabProps = {
 }
 
 export const analysisVisualizations: AnalysisVisualization[] = [
-  { label: 'Health', icon: 'basic', multi: HealthMulti, gradu: HealthGradu, binary: HealthBinary },
-  { label: 'Reliability', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
-  { label: 'Items Map', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
-  { label: 'Direct Weighted', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
-  { label: 'Direct Blank', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
-  { label: 'Direct Coherency', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
-  { label: 'Direct MCI', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
-  { label: 'Score Distribution', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
-  { label: 'Items Table', icon: 'table', multi: HealthMulti, gradu: null, binary: null },
-  { label: 'Examinees Table', icon: 'table', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Health', icon: 'basic', multi: Health, gradu: Health, binary: Health },
+  { label: 'Reliability', icon: 'plot', multi: Health, gradu: null, binary: null },
+  { label: 'Items Map', icon: 'plot', multi: Health, gradu: null, binary: null },
+  { label: 'Direct Weighted', icon: 'plot', multi: Health, gradu: null, binary: null },
+  { label: 'Direct Blank', icon: 'plot', multi: Health, gradu: null, binary: null },
+  { label: 'Direct Coherency', icon: 'plot', multi: Health, gradu: null, binary: null },
+  { label: 'Direct MCI', icon: 'plot', multi: Health, gradu: null, binary: null },
+  { label: 'Score Distribution', icon: 'plot', multi: Health, gradu: null, binary: null },
+  { label: 'Items Table', icon: 'table', multi: Health, gradu: null, binary: null },
+  { label: 'Examinees Table', icon: 'table', multi: Health, gradu: null, binary: null },
 ]
 
 const AnalysisTab: React.FC<AnalysisTabProps> = ({ quest }) => {
