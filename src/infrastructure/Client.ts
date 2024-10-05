@@ -1,8 +1,10 @@
 import { createQuest } from '../application/createQuest'
 import { getHealth } from '../application/getHealth'
+import { getReliability } from '../application/getReliability'
 import type { CreateQuestRequest } from '../application/requests/createQuestRequest'
 import type { CreateQuestResponse } from '../application/responses/createQuestResponse'
 import type { GetHealthResponse } from '../application/responses/getHealthResponse'
+import type { GetReliabilityResponse } from '../application/responses/getReliabilityResponse'
 import type { Metadata, Repository } from '../domain/repository'
 import memoryRepository from './MemoryRepository'
 import type { AnalysisQuest } from './react/tabs/analysis/types'
@@ -49,5 +51,9 @@ export class Client {
 
   public async getHealth(): Promise<GetHealthResponse> {
     return getHealth({ uuid: this.quest.uuid }, this.repo)
+  }
+
+  public async getReliabilityData(): Promise<GetReliabilityResponse> {
+    return getReliability({ uuid: this.quest.uuid }, this.repo)
   }
 }

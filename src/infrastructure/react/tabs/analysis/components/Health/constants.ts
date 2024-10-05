@@ -1,7 +1,6 @@
 export const PERCENTAGE_PROPERTIES = [
   'choice',
   'keyConflict',
-  'score',
   'reliability',
   'discrimination',
   'variability',

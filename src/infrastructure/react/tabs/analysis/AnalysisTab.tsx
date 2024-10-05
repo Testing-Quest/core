@@ -8,6 +8,7 @@ import type { AnalysisVisualization, AnalysisQuest } from './types'
 import Sidebar from './Sidebar'
 import styles from './AnalysisTab.module.css'
 import DeactivatedList from './DeactivatedList'
+import { Reliability } from './components/DirectGraphs/Reliability'
 
 const { Content } = Layout
 
@@ -17,7 +18,7 @@ type AnalysisTabProps = {
 
 export const analysisVisualizations: AnalysisVisualization[] = [
   { label: 'Health', icon: 'basic', multi: Health, gradu: Health, binary: Health },
-  { label: 'Reliability', icon: 'plot', multi: Health, gradu: null, binary: null },
+  { label: 'Reliability', icon: 'plot', multi: Reliability, gradu: Reliability, binary: Reliability },
   { label: 'Items Map', icon: 'plot', multi: Health, gradu: null, binary: null },
   { label: 'Direct Weighted', icon: 'plot', multi: Health, gradu: null, binary: null },
   { label: 'Direct Blank', icon: 'plot', multi: Health, gradu: null, binary: null },
