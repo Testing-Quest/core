@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Spin, Card, Typography, Row, Col } from 'antd'
+import { Spin, Typography, Row, Col } from 'antd'
 import type { Client } from '../../../../../Client'
 import type { GetHealthResponse } from '../../../../../../application/responses/getHealthResponse'
 import spinnerStyles from '../../../../App.module.css'
@@ -64,7 +64,6 @@ export const HealthBinary: React.FC<PanelProps> = ({ client }) => {
 
   return (
     <div className={styles.healthBinaryPanel} style={{ fontSize }}>
-      <Card>
         {loading ? (
           <div className={spinnerStyles.loading}>
             <Spin tip='Loading health data...' size='large' />
@@ -74,7 +73,6 @@ export const HealthBinary: React.FC<PanelProps> = ({ client }) => {
         ) : (
           <Text>No health data available.</Text>
         )}
-      </Card>
     </div>
   )
 }
