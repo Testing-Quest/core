@@ -1,6 +1,6 @@
 import React from 'react'
 import { Client } from '../../../Client'
-import { HealthMulti } from './components/Health'
+import { HealthBinary, HealthGradu, HealthMulti } from './components/Health'
 import { VisualizationProvider } from './context/VisualizationContext'
 import VisualizationRenderer from './context/VisualizationRenderer'
 import type { AnalysisVisualization } from './types'
@@ -12,7 +12,7 @@ type AnalysisTabProps = {
 }
 
 export const analysisVisualizations: AnalysisVisualization[] = [
-  { label: 'Health', icon: 'basic', multi: HealthMulti, gradu: null, binary: null },
+  { label: 'Health', icon: 'basic', multi: HealthMulti, gradu: HealthGradu, binary: HealthBinary },
   { label: 'Reliability', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
   { label: 'Items Map', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },
   { label: 'Direct Weighted', icon: 'plot', multi: HealthMulti, gradu: null, binary: null },

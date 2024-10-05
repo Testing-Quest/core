@@ -20,6 +20,9 @@ export function calculateGraduCorrectMatrix(matrix: MatrixType, keys: string[], 
   return matrix.map(row =>
     row.map((answer: number | string | null, columnIndex: number) => {
       const newAnswer = Number(answer)
+      if (isNaN(newAnswer)) {
+        return 0
+      }
       if (keys[columnIndex] === '-' && newAnswer != 0 && newAnswer <= alternatives) {
         return alternatives - newAnswer + 1
       }

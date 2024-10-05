@@ -10,7 +10,7 @@ export function calculateUsersBlankAnswers(matrix: MatrixType, omissions: string
     const row = matrix[i]
     let blankCount = 0
     for (let j = 0; j < rowLength; j++) {
-      if (!row[j] || omissionSet.has(String(row[j]))) {
+      if (!row[j] || omissionSet.has(String(row[j])) || isNaN(Number(row[j]))) {
         blankCount++
       }
     }

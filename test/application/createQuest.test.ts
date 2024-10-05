@@ -19,14 +19,11 @@ beforeEach(() => {
 
 describe('createQuestHandler', () => {
   it.each(allQuestsNames)('should create a quest: %s', async (name: string) => {
-    // Given
     const questMother = new QuestMother(repositoryMock)
     questData = await questMother.getQuestData(name)
 
-    // When
     const response = await createQuest({ data: questData.matrix }, repositoryMock)
 
-    // Then
     expect(response.error).toBeNull()
     expect(response.childs).toBeDefined()
     repositoryMock.assertSaveHaveBeenCalled()
@@ -40,22 +37,18 @@ describe('createQuestHandler', () => {
   })
 
   it('Should throw a Matrix Not Found Error', async () => {
-    // Given
     const data = [
       [null, 'A', 'A', 'A'],
       [null, '1', '1', '1'],
       [null, '4', '4', '4'],
     ]
 
-    // When
     const response = await createQuest({ data }, repositoryMock)
 
-    // Then
     expect(response.error).toBe(MatrixNotFoundError.message)
   })
 
   it('Should throw a First Row Not Contains Alphabetic Characters Error', async () => {
-    // Given
     const data = [
       [null, '123', '456', '789'],
       [null, '1', '1', '1'],
@@ -63,15 +56,12 @@ describe('createQuestHandler', () => {
       [1, 'A', 'B', 'C'],
     ]
 
-    // When
     const response = await createQuest({ data }, repositoryMock)
 
-    // Then
     expect(response.error).toBe(FirstRowNotContainsAlphabeticCharactersError.message)
   })
 
   it('Should throw a Second Row Not Contains Numbers Error', async () => {
-    // Given
     const data = [
       [null, 'A', 'A', 'A'],
       [null, 'A', '1', '1'],
@@ -79,15 +69,12 @@ describe('createQuestHandler', () => {
       [1, 'A', 'B', 'C'],
     ]
 
-    // When
     const response = await createQuest({ data }, repositoryMock)
 
-    // Then
     expect(response.error).toBe(SecondRowNotContainsNumbersError.message)
   })
 
   it('Should throw a Third Row Not Contains Numbers Error', async () => {
-    // Given
     const data = [
       [null, 'A', 'B', 'C'],
       [null, '1', '1', '1'],
@@ -95,15 +82,12 @@ describe('createQuestHandler', () => {
       [1, 'A', 'B', 'C'],
     ]
 
-    // When
     const response = await createQuest({ data }, repositoryMock)
 
-    // Then
     expect(response.error).toBe(ThirdRowNotContainsNumbersError.message)
   })
 
   it('Should throw a Column Count Mismatch Keys Error', async () => {
-    // Given
     const data = [
       [null, 'A', 'B', 'C', 'D'],
       [null, '1', '1', '1'],
@@ -111,15 +95,12 @@ describe('createQuestHandler', () => {
       [1, 'A', 'B', 'C'],
     ]
 
-    // When
     const response = await createQuest({ data }, repositoryMock)
 
-    // Then
     expect(response.error).toBe(ColumnCountMismatchKeysError.message)
   })
 
   it('Should throw a Column Count Mismatch Scales Error', async () => {
-    // Given
     const data = [
       [null, 'A', 'B', 'C'],
       [null, '1', '1', '1', '1'],
@@ -127,15 +108,12 @@ describe('createQuestHandler', () => {
       [1, 'A', 'B', 'C'],
     ]
 
-    // When
     const response = await createQuest({ data }, repositoryMock)
 
-    // Then
     expect(response.error).toBeNull()
   })
 
   it('Should throw a Column Count Mismatch Alternatives Error', async () => {
-    // Given
     const data = [
       [null, 'A', 'B', 'C'],
       [null, '1', '1', '1'],
@@ -143,10 +121,8 @@ describe('createQuestHandler', () => {
       [1, 'A', 'B', 'C'],
     ]
 
-    // When
     const response = await createQuest({ data }, repositoryMock)
 
-    // Then
     expect(response.error).toBeNull()
   })
 })

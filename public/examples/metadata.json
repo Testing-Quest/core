@@ -1,14 +1,27 @@
 [
   {
-    "name": "Quanty",
-    "path": "quanty.json",
-    "uuid": "quanty",
+    "name": "CAL",
+    "path": "cal.json",
+    "uuid": "cal",
+    "quests": [
+      {
+        "scale": 1,
+        "type": "binary",
+        "users": 100,
+        "items": 30
+      }
+    ]
+  },
+  {
+    "name": "British",
+    "path": "british.json",
+    "uuid": "british",
     "quests": [
       {
         "scale": 1,
         "type": "multi",
-        "users": 700,
-        "items": 29
+        "users": 100,
+        "items": 58
       }
     ]
   },
@@ -26,15 +39,41 @@
     ]
   },
   {
-    "name": "Ji Cod Bo",
-    "path": "jiCodBo.json",
-    "uuid": "jiCodBo",
+    "name": "Quanty",
+    "path": "quanty.json",
+    "uuid": "quanty",
     "quests": [
       {
         "scale": 1,
         "type": "multi",
-        "users": 30,
-        "items": 15
+        "users": 700,
+        "items": 29
+      }
+    ]
+  },
+  {
+    "name": "Mood",
+    "path": "mood.json",
+    "uuid": "mood",
+    "quests": [
+      {
+        "scale": 1,
+        "type": "gradu",
+        "users": 97,
+        "items": 58
+      }
+    ]
+  },
+  {
+    "name": "MC24",
+    "path": "mc24.json",
+    "uuid": "mc24",
+    "quests": [
+      {
+        "scale": 1,
+        "type": "gradu",
+        "users": 474,
+        "items": 24
       }
     ]
   },
@@ -60,19 +99,6 @@
         "type": "gradu",
         "users": 100,
         "items": 20
-      }
-    ]
-  },
-  {
-    "name": "MC24",
-    "path": "mc24.json",
-    "uuid": "mc24",
-    "quests": [
-      {
-        "scale": 1,
-        "type": "gradu",
-        "users": 474,
-        "items": 24
       }
     ]
   }

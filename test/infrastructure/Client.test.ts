@@ -3,8 +3,11 @@ import type { Metadata } from '../../src/domain/repository'
 import { Client } from '../../src/infrastructure/Client'
 import type { AnalysisQuest } from '../../src/infrastructure/react/tabs/analysis/types'
 import memoryRepository from '../../src/infrastructure/MemoryRepository'
+import { RepositoryMock } from '../__mocks__/RepositoryMock'
+import { getHealth } from '../../src/application/getHealth'
 
 jest.mock('../../src/application/createQuest')
+jest.mock('../../src/application/getHealth')
 jest.mock('../../src/infrastructure/MemoryRepository')
 
 describe('Client', () => {
@@ -80,6 +83,27 @@ describe('Client', () => {
 
     it('should return quest name', () => {
       expect(client.getQuestName()).toBe('Test Quest')
+    })
+  })
+  describe('get Quest information', () => {
+    let client: Client
+    let repositoryMock: RepositoryMock
+
+    beforeEach(async () => {
+      repositoryMock = new RepositoryMock()
+      const quest: AnalysisQuest = { uuid: '123', name: 'Test Quest', type: 'multi', scale: 5 }
+      client = new Client(quest, repositoryMock)
+    })
+
+    it('should return health', async () => {
+      const mockResponse = { test: 1 }
+
+      ;(getHealth as jest.Mock).mockResolvedValue(mockResponse)
+
+      const result = await client.getHealth()
+
+      expect(result).toEqual(mockResponse)
+      expect(getHealth).toHaveBeenCalledWith({ uuid: '123' }, repositoryMock)
     })
   })
 })
