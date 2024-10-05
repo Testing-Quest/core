@@ -7,8 +7,8 @@ export class CalcStrategyMulti extends CalcStrategyBase<'multi'> {
   public calculate(matrix: MatrixType, keys: string[], alternatives: number): MultiCalcsType {
     const correctMatrix = mc.correctMatrix(matrix, keys)
     const baseCalcs = this.getBaseCalcs(correctMatrix, keys, matrix)
-    const itemsAltDiscDiff = mc.itemsAltDiscDiff(baseCalcs.users.directScore, correctMatrix, alternatives)
-    const itemsConflict = mc.itemsConflict(itemsAltDiscDiff[1], baseCalcs.items.discrimination)
+    const itemsAltDiscDiff = mc.itemsAltDiscDiff(baseCalcs.users.directScore, matrix, alternatives)
+    const itemsConflict = mc.itemsConflict(itemsAltDiscDiff[0], baseCalcs.items.discrimination)
     const mci = mc.mci(correctMatrix, baseCalcs.items.difficulty, baseCalcs.users.directScore)
     const coherency = mc.coherency(mci)
     const itemsChoice = mc.itemsChoice(keys, alternatives, itemsAltDiscDiff[1], matrix.length, matrix[0].length)

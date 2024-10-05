@@ -1,9 +1,10 @@
 import { allAlternatives } from '../../../../../primitives'
 import { calculatePearson } from '../calculatePearson'
+import { calculateItemsDirectScore } from './calculateItemsDirectScore'
 
 export function calculateItemsAlternativeDiscriminationDifficulty(
   usersDirectScore: number[],
-  matrix: string[][],
+  matrix: (number | string | null)[][],
   numAlternatives: number,
 ): [Map<string, number[]>, Map<string, number[]>] {
   const numUsers = usersDirectScore.length
@@ -22,9 +23,7 @@ export function calculateItemsAlternativeDiscriminationDifficulty(
 
   const processAlternative = (alternative: string): void => {
     const correctedMatrix = matrix.map(row => row.map(item => +(item === alternative)))
-    const itemsDirectScore = Array.from({ length: numUsers }, (_, colIndex) =>
-      correctedMatrix.reduce((acc, row) => acc + row[colIndex], 0),
-    )
+    const itemsDirectScore = calculateItemsDirectScore(correctedMatrix)
 
     alternativeDiscrimination.set(`Discrimination ${alternative}`, calculateDisrimination(correctedMatrix))
     alternativeDifficulty.set(`Difficulty ${alternative}`, calculateDifficulty(itemsDirectScore))

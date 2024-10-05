@@ -95,12 +95,20 @@ export const Health: React.FC<PanelProps> = ({ client }) => {
         <Text>Decimals:</Text>
         <Button
           icon={<MinusOutlined />}
-          onClick={() => { handleDecimalChange(-1); }}
+          onClick={() => {
+            handleDecimalChange(-1)
+          }}
           disabled={decimalPlaces === 2}
           size='small'
         />
         <Text>{decimalPlaces}</Text>
-        <Button icon={<PlusOutlined />} onClick={() => { handleDecimalChange(1); }} size='small' />
+        <Button
+          icon={<PlusOutlined />}
+          onClick={() => {
+            handleDecimalChange(1)
+          }}
+          size='small'
+        />
       </div>
       <Row gutter={[16, 16]} className={styles.propertiesRow}>
         {Object.entries(properties).map(([property, displayName]) => renderHealthProperty(property, displayName))}

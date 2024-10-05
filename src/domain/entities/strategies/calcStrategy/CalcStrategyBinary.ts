@@ -7,7 +7,7 @@ export class CalcStrategyBinary extends CalcStrategyBase<'binary'> {
   public calculate(matrix: MatrixType, keys: string[], alternatives: number): BinaryCalcsType {
     const correctMatrix = bc.correctMatrix(matrix, keys)
     const baseCalcs = this.getBaseCalcs(correctMatrix, keys, matrix)
-    const itemsAltDiscDiff = bc.itemsAltDiscDiff(baseCalcs.users.directScore, correctMatrix, alternatives)
+    const itemsAltDiscDiff = bc.itemsAltDiscDiff(baseCalcs.users.directScore, matrix, alternatives)
     const itemsConflict = bc.itemsConflict(itemsAltDiscDiff[1], baseCalcs.items.discrimination)
     const mci = bc.mci(correctMatrix, baseCalcs.items.difficulty, baseCalcs.users.directScore)
     const coherency = bc.coherency(mci)
