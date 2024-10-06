@@ -24,7 +24,7 @@ export const Health: React.FC<PanelProps> = ({ client }) => {
 
   const fetchHealth = useCallback(async () => {
     try {
-      const response = await client.getHealth()
+      const response = await client.getHealthData()
       setHealth(response)
     } catch (error) {
       console.error('Error fetching health data:', error)
@@ -61,11 +61,11 @@ export const Health: React.FC<PanelProps> = ({ client }) => {
 
   const renderHealthProperty = useCallback(
     (property: string, displayName: string) => {
-      if (health?.health?.[property] !== undefined) {
+      if (health?.data?.[property] !== undefined) {
         const value =
-          typeof health.health[property] === 'number'
-            ? formatValue(health.health[property], property)
-            : health.health[property]
+          typeof health.data[property] === 'number'
+            ? formatValue(health.data[property], property)
+            : health.data[property]
 
         return (
           <Col xs={24} sm={12} md={8} key={property} className={styles.propertyCol}>

@@ -27,9 +27,9 @@ export const HealthChart: React.FC<PanelProps> = ({ client }) => {
         let chartData: HealthData[]
         if (questType === 'gradu') {
           chartData = [
-            { name: 'Reliability', value: health.health!.reliability || 0 },
-            { name: 'Discrimination', value: health.health!.discrimination || 0 },
-            { name: 'Variability', value: health.health!.variability || 0 },
+            { name: 'Reliability', value: health.data!.reliability || 0 },
+            { name: 'Discrimination', value: health.data!.discrimination || 0 },
+            { name: 'Variability', value: health.data!.variability || 0 },
           ]
         } else {
           chartData = []

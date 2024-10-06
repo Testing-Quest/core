@@ -4,7 +4,7 @@ import type { GetHealthResponse } from './responses/getHealthResponse'
 
 async function _getHealth(payload: GetHealthRequest, repository: Repository): Promise<GetHealthResponse> {
   const quest = await repository.get(payload.uuid)
-  return { health: quest.getHealth(), error: null }
+  return { data: quest.getHealth(), error: null }
 }
 
 export async function getHealth(payload: GetHealthRequest, repository: Repository): Promise<GetHealthResponse> {
@@ -12,7 +12,7 @@ export async function getHealth(payload: GetHealthRequest, repository: Repositor
     return await _getHealth(payload, repository)
   } catch (error: unknown) {
     return {
-      health: null,
+      data: null,
       error: error instanceof Error ? error.message : String(error),
     }
   }

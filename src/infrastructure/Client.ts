@@ -1,10 +1,37 @@
 import { createQuest } from '../application/createQuest'
+import { getDirectBlanck } from '../application/getDirectBlank'
+import { getDirectCoherency } from '../application/getDirectCoherency'
+import { getDirectMci } from '../application/getDirectMci'
+import { getDirectWeight } from '../application/getDirectWeight'
 import { getHealth } from '../application/getHealth'
+import { getItemDiscrimination } from '../application/getItemDiscrimination'
+import { getItemFrequency } from '../application/getItemFrequency'
+import { getItemMap } from '../application/getItemMap'
+import { getItemProfile } from '../application/getItemProfile'
+import { getItemTable } from '../application/getItemTable'
+import { getModifications } from '../application/getModifications'
 import { getReliability } from '../application/getReliability'
+import { getScoreDistribution } from '../application/getScoreDistribution'
+import { getUsersTable } from '../application/getUsersTable'
 import type { CreateQuestRequest } from '../application/requests/createQuestRequest'
+import type { UpdateRequest } from '../application/requests/updateRequest'
 import type { CreateQuestResponse } from '../application/responses/createQuestResponse'
+import type { GetDirectBlankResponse } from '../application/responses/getDirectBlankResponse'
+import type { GetDirectCoherencyResponse } from '../application/responses/getDirectCoherencyResponse'
+import type { GetDirectMciResponse } from '../application/responses/getDirectMciResponse'
+import type { GetDirectWeightResponse } from '../application/responses/getDirectWeightResponse'
 import type { GetHealthResponse } from '../application/responses/getHealthResponse'
+import type { GetItemDiscriminationResponse } from '../application/responses/getItemDiscriminationResponse'
+import type { GetItemFrequencyResponse } from '../application/responses/getItemFrequencyResponse'
+import type { GetItemMapResponse } from '../application/responses/getItemMapResponse'
+import type { GetItemProfileResponse } from '../application/responses/getItemProfileResponse'
+import type { GetItemTableResponse } from '../application/responses/getItemTableResponse'
+import type { GetModificatinosResponse } from '../application/responses/getModificationsResponse'
 import type { GetReliabilityResponse } from '../application/responses/getReliabilityResponse'
+import type { GetScoreDistributionResponse } from '../application/responses/getScoreDistributionResponse'
+import type { GetUsersTableResponse } from '../application/responses/getUsersTableResponse'
+import type { UpdateResponse } from '../application/responses/updateResponse'
+import { updateQuest } from '../application/updateQuest'
 import type { Metadata, Repository } from '../domain/repository'
 import memoryRepository from './MemoryRepository'
 import type { AnalysisQuest } from './react/tabs/analysis/types'
@@ -15,13 +42,7 @@ export class Client {
 
   public constructor(quest: AnalysisQuest, repo?: Repository) {
     this.quest = quest
-    if (repo) {
-      this.repo = repo
-    } else {
-      this.repo = memoryRepository
-    }
-    console.log('Client created with quest:', this.quest)
-    console.log('Client created with repo:', this.repo)
+    this.repo = repo || memoryRepository
   }
 
   public static async createQuestfromMetadata(payload: Metadata): Promise<CreateQuestResponse> {
@@ -49,11 +70,63 @@ export class Client {
     return this.quest.name
   }
 
-  public async getHealth(): Promise<GetHealthResponse> {
+  public async getHealthData(): Promise<GetHealthResponse> {
     return getHealth({ uuid: this.quest.uuid }, this.repo)
   }
 
   public async getReliabilityData(): Promise<GetReliabilityResponse> {
     return getReliability({ uuid: this.quest.uuid }, this.repo)
+  }
+
+  public async getDirectBlankData(): Promise<GetDirectBlankResponse> {
+    return getDirectBlanck({ uuid: this.quest.uuid }, this.repo)
+  }
+
+  public async getDirectCoherencyData(): Promise<GetDirectCoherencyResponse> {
+    return getDirectCoherency({ uuid: this.quest.uuid }, this.repo)
+  }
+
+  public async getDirectMciData(): Promise<GetDirectMciResponse> {
+    return getDirectMci({ uuid: this.quest.uuid }, this.repo)
+  }
+
+  public async getdirectWeightData(): Promise<GetDirectWeightResponse> {
+    return getDirectWeight({ uuid: this.quest.uuid }, this.repo)
+  }
+
+  public async getItemDiscriminationData(id: number): Promise<GetItemDiscriminationResponse> {
+    return getItemDiscrimination({ uuid: this.quest.uuid, id }, this.repo)
+  }
+
+  public async getItemFrequencyData(id: number): Promise<GetItemFrequencyResponse> {
+    return getItemFrequency({ uuid: this.quest.uuid, id }, this.repo)
+  }
+
+  public async getItemMapData(): Promise<GetItemMapResponse> {
+    return getItemMap({ uuid: this.quest.uuid }, this.repo)
+  }
+
+  public async getItemProfileData(id: number): Promise<GetItemProfileResponse> {
+    return getItemProfile({ uuid: this.quest.uuid, id }, this.repo)
+  }
+
+  public async getItemTableData(): Promise<GetItemTableResponse> {
+    return getItemTable({ uuid: this.quest.uuid }, this.repo)
+  }
+
+  public async getModifications(): Promise<GetModificatinosResponse> {
+    return getModifications({ uuid: this.quest.uuid }, this.repo)
+  }
+
+  public async getScoreDistribution(): Promise<GetScoreDistributionResponse> {
+    return getScoreDistribution({ uuid: this.quest.uuid }, this.repo)
+  }
+
+  public async getUsersTable(): Promise<GetUsersTableResponse> {
+    return getUsersTable({ uuid: this.quest.uuid }, this.repo)
+  }
+
+  public async updateQuest(payload: UpdateRequest): Promise<UpdateResponse> {
+    return updateQuest(payload, this.repo)
   }
 }
