@@ -1,0 +1,45 @@
+.healthBinaryPanel {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.decimalControl {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.decimalControl > * {
+  margin-left: 0.5rem;
+}
+
+.propertiesRow {
+  margin: 0 -8px;
+}
+
+.propertyCol {
+  padding: 8px;
+  word-break: break-word;
+}
+
+@media (max-width: 576px) {
+  .propertyCol {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .propertyCol {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+@media (min-width: 769px) {
+  .propertyCol {
+    flex: 0 0 33.33%;
+    max-width: 33.33%;
+  }
+}
