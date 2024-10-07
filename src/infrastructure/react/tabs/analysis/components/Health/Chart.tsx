@@ -27,7 +27,7 @@ export const HealthChart: React.FC<PanelProps> = ({ data, propertyMap, fontSize 
         if (typeof value !== 'number') return null
         return {
           name,
-          value: Math.max(0, 100 - value * 100)
+          value: Math.max(0, 100 - value * 100),
         }
       })
       .filter((item): item is HealthData => item !== null && item.value > 0)
@@ -38,7 +38,7 @@ export const HealthChart: React.FC<PanelProps> = ({ data, propertyMap, fontSize 
   }, [data])
 
   if (loading) {
-    return <Spin tip="Loading chart data..." />
+    return <Spin tip='Loading chart data...' />
   }
 
   if (chartData.length === 0) {
@@ -48,32 +48,24 @@ export const HealthChart: React.FC<PanelProps> = ({ data, propertyMap, fontSize 
   const total = chartData.reduce((sum, item) => sum + item.value, 0)
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width='100%' height={400}>
       <PieChart>
         <Pie
           data={chartData}
-          cx="50%"
-          cy="50%"
+          cx='50%'
+          cy='50%'
           labelLine={false}
-          outerRadius={120}  // Increased outer radius
-          fill="#8884d8"
-          dataKey="value"
+          outerRadius={120} // Increased outer radius
+          fill='#8884d8'
+          dataKey='value'
           isAnimationActive={false}
         >
-          {chartData.map((entry, index) => (
+          {chartData.map((_, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip
-          formatter={(value: number) => `${((value / total) * 100).toFixed(2)}%`}
-          labelStyle={{ fontSize }}
-        />
-        <Legend
-          layout="vertical"
-          align="right"
-          verticalAlign="middle"
-          wrapperStyle={{ fontSize }}
-        />
+        <Tooltip formatter={(value: number) => `${((value / total) * 100).toFixed(2)}%`} labelStyle={{ fontSize }} />
+        <Legend layout='vertical' align='right' verticalAlign='middle' wrapperStyle={{ fontSize }} />
       </PieChart>
     </ResponsiveContainer>
   )

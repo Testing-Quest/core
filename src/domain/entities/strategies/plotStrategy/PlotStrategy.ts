@@ -94,7 +94,6 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
     )
 
     return [totalResponsesByGroup, usersGroups]
-
   }
 
   public abstract getItemProfile(

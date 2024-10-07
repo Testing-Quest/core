@@ -93,19 +93,17 @@ export const Health: React.FC<PanelProps> = ({ client }) => {
       <Row gutter={[16, 16]} className={styles.propertiesRow}>
         {Object.entries(properties).map(([property, displayName]) => renderHealthProperty(property, displayName))}
       </Row>
-      <div style={{ 
-        position: 'absolute', 
-        bottom: '20px', 
-        left: '20px', 
-        width: '30%', 
-        minWidth: '150px', 
-        height: '400px'
-      }}>
-        <HealthChart
-          data={health.data}
-          propertyMap={chartProperties}
-          fontSize={fontSize}
-        />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '20px',
+          left: '20px',
+          width: '30%',
+          minWidth: '150px',
+          height: '400px',
+        }}
+      >
+        <HealthChart data={health.data} propertyMap={chartProperties} fontSize={fontSize} />
       </div>
     </div>
   )

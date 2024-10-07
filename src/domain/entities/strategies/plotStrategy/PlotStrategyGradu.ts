@@ -23,7 +23,7 @@ export class PlotStrategyGradu extends PlotStrategyBase<'gradu'> {
     const groupCount = 5
     const [totalResponseByGroup, usersGroups] = this.sharedItemProfile(attrs, groupCount)
     const itemResponses = attrs.matrix.map(row => row[id])
-    const validAlternatives = [...Array.from({length: attrs.alternatives}, (_, i) => i + 1), 'X']
+    const validAlternatives = [...Array.from({ length: attrs.alternatives }, (_, i) => i + 1), 'X']
 
     return Object.fromEntries(
       validAlternatives.map(key => {

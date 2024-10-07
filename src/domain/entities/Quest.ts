@@ -7,7 +7,7 @@ import type { PlotStrategy } from './strategies/plotStrategy/PlotStrategy'
 import { tableFactory } from './strategies/tableStrategy/TableFactory'
 import type { Table, TableStrategy } from './strategies/tableStrategy/TableStrategy'
 
-export type DataPoint = { x: number; y: number, hover?: number }
+export type DataPoint = { x: number; y: number; hover?: number }
 export type StringDataPoint = { x: string; y: number }
 
 export type UpdatePayload = {
