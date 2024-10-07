@@ -16,6 +16,7 @@ export class CalcStrategyMulti extends CalcStrategyBase<'multi'> {
     const choice = mc.choice(itemsChoice)
 
     return {
+      altFrequencies: mc.altFrequencies(matrix, alternatives),
       correctMatrix: correctMatrix,
       items: {
         ...baseCalcs.items,

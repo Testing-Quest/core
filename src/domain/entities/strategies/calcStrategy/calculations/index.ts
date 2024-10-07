@@ -1,4 +1,5 @@
 import { calculateCronbachAlpha } from './calculateAlpha'
+import { calculateAltFrequencies, calculateGraduAltFrequencies } from './calculateAltFrequencies'
 import { calculateChoice } from './calculateChoice'
 import { calculateCoherency } from './calculateCoherency'
 import { calculateChoiceCorrectMatrix, calculateGraduCorrectMatrix } from './calculateCorrectMatrix'
@@ -57,6 +58,7 @@ export const baseCalculations: BasedCalculationsType = {
 }
 
 export const multipleChoiceCalculations: MultipleChoiceCalculationsType = {
+  altFrequencies: calculateAltFrequencies,
   correctMatrix: calculateChoiceCorrectMatrix,
   usersCoherence: calculateUsersCoherence,
   itemsAltDiscDiff: calculateItemsAlternativeDiscriminationDifficulty,
@@ -71,6 +73,7 @@ export const multipleChoiceCalculations: MultipleChoiceCalculationsType = {
 }
 
 export const binaryChoiceCalculations: BinaryChoiceCalculationsType = {
+  altFrequencies: calculateAltFrequencies,
   correctMatrix: calculateChoiceCorrectMatrix,
   usersCoherence: calculateUsersCoherence,
   itemsAltDiscDiff: calculateItemsAlternativeDiscriminationDifficulty,
@@ -82,6 +85,7 @@ export const binaryChoiceCalculations: BinaryChoiceCalculationsType = {
 }
 
 export const graduatedCalculations: GraduatedCalculationsType = {
+  altFrequencies: calculateGraduAltFrequencies,
   correctMatrix: calculateGraduCorrectMatrix,
   itemsAltDifficulty: calculateBinaryAlternativeDifficulty,
   score: calculateScore,

@@ -12,6 +12,7 @@ export class CalcStrategyBinary extends CalcStrategyBase<'binary'> {
     const mci = bc.mci(correctMatrix, baseCalcs.items.difficulty, baseCalcs.users.directScore)
     const coherency = bc.coherency(mci)
     return {
+      altFrequencies: bc.altFrequencies(matrix, alternatives),
       correctMatrix: correctMatrix,
       items: {
         ...baseCalcs.items,

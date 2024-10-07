@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { Spin, Typography, Row, Col } from 'antd'
+import { Spin, Typography, Row, Col, Card } from 'antd'
 import type { Client } from '../../../../../Client'
 import type { GetHealthResponse } from '../../../../../../application/responses/getHealthResponse'
 import spinnerStyles from '../../../../App.module.css'
@@ -7,6 +7,8 @@ import styles from '../Components.module.css'
 import { useSettings } from '../../../../context/SettingContext'
 import { PERCENTAGE_PROPERTIES, PROPERTY_MAP, PIE_CHART_PROPERTY_MAP } from './constants'
 import HealthChart from './Chart'
+import AttractiveTable from './AttractiveTable'
+import KeyTable from './KeyTable'
 
 const { Text } = Typography
 
@@ -16,6 +18,8 @@ type PanelProps = {
 
 export const Health: React.FC<PanelProps> = ({ client }) => {
   const [health, setHealth] = useState<GetHealthResponse | null>(null)
+  const [frequencies, setFrequencies] = useState<Record<string, number> | null>(null)
+  const [keys, setKeys] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const { fontSize } = useSettings()
   const properties = PROPERTY_MAP[client.getQuestType()]
@@ -24,7 +28,11 @@ export const Health: React.FC<PanelProps> = ({ client }) => {
   const fetchHealth = useCallback(async () => {
     try {
       const response = await client.getHealthData()
+      const frequencyData = await client.getFrequencyData()
+      const keys = await client.getModifications()
       setHealth(response)
+      setFrequencies(frequencyData)
+      setKeys(keys.response?.keys ?? [])
     } catch (error) {
       console.error('Error fetching health data:', error)
     } finally {
@@ -89,23 +97,40 @@ export const Health: React.FC<PanelProps> = ({ client }) => {
   }
 
   return (
-    <div className={styles.healthPanel} style={{ fontSize, position: 'relative', minHeight: '700px' }}>
+    <Card className={styles.healthPanel} style={{ fontSize, minHeight: '700px' }}>
       <Row gutter={[16, 16]} className={styles.propertiesRow}>
         {Object.entries(properties).map(([property, displayName]) => renderHealthProperty(property, displayName))}
       </Row>
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '20px',
-          left: '20px',
-          width: '30%',
-          minWidth: '150px',
-          height: '400px',
-        }}
-      >
-        <HealthChart data={health.data} propertyMap={chartProperties} fontSize={fontSize} />
-      </div>
-    </div>
+      <Row gutter={[16, 16]} style={{ marginTop: '20px' }}>
+        <Col span={12}>
+          <Card title={<div style={{ textAlign: 'center', fontWeight: 'bold' }}>Health Problems</div>}>
+            <HealthChart data={health.data} propertyMap={chartProperties} fontSize={fontSize} />
+          </Card>
+        </Col>
+        {(client.getQuestType() === 'multi' || client.getQuestType() === 'binary') && (
+          <Col span={12}>
+            <Row gutter={[8, 8]}>
+              <Col span={12}>
+                <Card
+                  title={<div style={{ textAlign: 'center', fontWeight: 'bold' }}>Attractive</div>}
+                  headStyle={{ backgroundColor: '#f0f2f5' }}
+                >
+                  {frequencies && <AttractiveTable data={frequencies} fontSize={fontSize} />}
+                </Card>
+              </Col>
+              <Col span={12}>
+                <Card
+                  title={<div style={{ textAlign: 'center', fontWeight: 'bold' }}>Key</div>}
+                  headStyle={{ backgroundColor: '#f0f2f5' }}
+                >
+                  <KeyTable keys={keys} fontSize={fontSize} />
+                </Card>
+              </Col>
+            </Row>
+          </Col>
+        )}
+      </Row>
+    </Card>
   )
 }
 

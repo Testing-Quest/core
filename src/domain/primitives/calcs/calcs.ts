@@ -6,6 +6,7 @@ export type CalcsType = {
   readonly health: HealthType
   readonly items: ItemsType
   readonly users: UsersType
+  readonly altFrequencies: Record<string, number>
 }
 
 type HealthType = {

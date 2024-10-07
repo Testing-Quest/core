@@ -10,6 +10,7 @@ export class CalcStrategyGradu extends CalcStrategyBase<'gradu'> {
     const variability = gc.variability(baseCalcs.items.variance, alternatives)
 
     return {
+      altFrequencies: gc.altFrequencies(matrix),
       correctMatrix: correctMatrix,
       items: {
         ...baseCalcs.items,

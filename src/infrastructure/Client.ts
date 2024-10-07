@@ -71,8 +71,15 @@ export class Client {
   }
 
   public async getNumberOfAlternatives(): Promise<number> {
+    // TODO: MOVE TO APPLICATION
     const quest = await this.repo.get(this.quest.uuid)
     return quest.getNumAlternatives()
+  }
+
+  public async getFrequencyData(): Promise<Record<string, number>> {
+    // TODO: MOVE TO APPLICATION
+    const quest = await this.repo.get(this.quest.uuid)
+    return quest.getAlternativeFrequency()
   }
 
   public async getHealthData(): Promise<GetHealthResponse> {

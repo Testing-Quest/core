@@ -33,6 +33,7 @@ export type BaseQuest = {
   getItemProfile(id: number): Record<string, DataPoint[]>
   update(payload: UpdatePayload): void
   getNumAlternatives(): number
+  getAlternativeFrequency(): Record<string, number>
   getModifications(): {
     keys: string[]
     originalKeys: string[]
@@ -121,6 +122,9 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
   }
   public getNumAlternatives(): number {
     return this._props.alternatives
+  }
+  public getAlternativeFrequency(): Record<string, number> {
+    return this._props.calcs.altFrequencies
   }
   public getItemsTable(): Table {
     return this._tblStrategy.getItemsTable(

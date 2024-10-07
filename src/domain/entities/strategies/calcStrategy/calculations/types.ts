@@ -20,6 +20,7 @@ export type BasedCalculationsType = {
 }
 
 export type MultipleChoiceCalculationsType = {
+  altFrequencies(matrix: MatrixType, alternatives: number): Record<string, number>
   correctMatrix(matrix: MatrixType, keys: string[]): number[][]
   usersCoherence(correctMatrix: number[][]): number[]
   itemsAltDiscDiff(
@@ -45,6 +46,7 @@ export type MultipleChoiceCalculationsType = {
 }
 
 export type BinaryChoiceCalculationsType = {
+  altFrequencies(matrix: MatrixType, alternatives: number): Record<string, number>
   correctMatrix(matrix: MatrixType, keys: string[]): number[][]
   usersCoherence(correctMatrix: number[][]): number[]
   itemsAltDiscDiff(
@@ -61,6 +63,7 @@ export type BinaryChoiceCalculationsType = {
 }
 
 export type GraduatedCalculationsType = {
+  altFrequencies(matrix: MatrixType): Record<string, number>
   correctMatrix(matrix: MatrixType, keys: string[], alternatives: number): number[][]
   itemsAltDifficulty(correctMatrix: number[][], alternatives: number): Map<string, number[]>
   score(correctMatrix: number[][]): number
