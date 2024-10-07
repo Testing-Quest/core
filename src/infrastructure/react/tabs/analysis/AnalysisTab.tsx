@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Layout, Card } from 'antd'
 import { Client } from '../../../Client'
 import { Health } from './components/Health'
@@ -52,16 +52,30 @@ const AnalysisTab: React.FC<AnalysisTabProps> = ({ quest }) => {
   })
 
   const [deactivatedItems, setDeactivatedItems] = useState<number[]>([])
-  const [deactivatedExaminees, setDeactivatedExaminees] = useState<number[]>(
-    Array.from({ length: 25 }, (_, i) => i + 1),
-  )
+  const [deactivatedExaminees, setDeactivatedExaminees] = useState<number[]>([])
+  const [updateTrigger, setUpdateTrigger] = useState(0)
 
-  const clearDeactivatedItems = () => {
+  const clearDeactivatedItems = useCallback(async () => {
+    const modifications = await client.getModifications()
+    if (modifications.error) {
+      return
+    }
+    const items = Array.from(modifications.response!.items).fill(true)
+    await client.updateQuest({ keys: null, activeItems: items, activeUsers: null })
     setDeactivatedItems([])
-  }
-  const clearDeactivatedExaminees = () => {
+    setUpdateTrigger(prev => prev + 1) // Forzar actualización
+  }, [client])
+
+  const clearDeactivatedExaminees = useCallback(async () => {
+    const modifications = await client.getModifications()
+    if (modifications.error) {
+      return
+    }
+    const examinees = Array.from(modifications.response!.users).fill(true)
+    await client.updateQuest({ keys: null, activeItems: null, activeUsers: examinees })
     setDeactivatedExaminees([])
-  }
+    setUpdateTrigger(prev => prev + 1) // Forzar actualización
+  }, [client])
 
   if (questVisualizations.length === 0) {
     return <div>No hay visualizaciones disponibles para este tipo de quest.</div>
@@ -89,6 +103,7 @@ const AnalysisTab: React.FC<AnalysisTabProps> = ({ quest }) => {
                 client={client}
                 setDeactivatedItems={setDeactivatedItems}
                 setDeactivatedExaminees={setDeactivatedExaminees}
+                updateTrigger={updateTrigger} // Nuevo prop
               />
             </div>
           </Card>

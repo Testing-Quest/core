@@ -6,26 +6,24 @@ import type { Client } from '../../../../../Client'
 import { useTableData } from './hooks/useTableData'
 import type { TableRow } from './types'
 import { createColumns } from './utils/columnCreator'
+import { ItemModal } from './modal/ItemModal'
 
 type PanelProps = {
   client: Client
+  setDeactivatedItems: (items: number[]) => void
 }
 
-export const ItemsTable: React.FC<PanelProps> = ({ client }) => {
+export const ItemsTable: React.FC<PanelProps> = ({ client, setDeactivatedItems }) => {
   const { data, loading, states, setStates, refreshData } = useTableData(client, 'getItemsTable')
   const [keyChanges, setKeyChanges] = useState<Record<number, string>>({})
   const { fontSize } = useSettings()
+  const [modalState, setModalState] = useState({ visible: false, selectedItemId: null as number | null })
 
   const handleCheckboxToggle = useCallback(
     (index: number) => {
-      setStates(prev => {
-        const newState = [...prev]
-        newState[index] = {
-          deactivated: !newState[index].deactivated,
-          changed: !newState[index].changed,
-        }
-        return newState
-      })
+      setStates(prev =>
+        prev.map((state, i) => (i === index ? { deactivated: !state.deactivated, changed: !state.changed } : state)),
+      )
     },
     [setStates],
   )
@@ -37,59 +35,69 @@ export const ItemsTable: React.FC<PanelProps> = ({ client }) => {
   }, [])
 
   const handleSubmit = useCallback(async () => {
-    const deactivatedItems = states.map(state => !state.deactivated)
-    const updatedKeys = data?.Key.map((key, index) => keyChanges[index] ?? key) || []
     try {
       await client.updateQuest({
         activeUsers: null,
-        activeItems: deactivatedItems,
-        keys: updatedKeys,
+        activeItems: states.map(state => !state.deactivated),
+        keys: data?.Key.map((key, index) => keyChanges[index] ?? key) || [],
       })
       refreshData()
       setKeyChanges({})
+      setDeactivatedItems(
+        states.map((state, index) => (state.deactivated ? index + 1 : -1)).filter(index => index !== -1),
+      )
     } catch (error) {
       console.error('Error updating items:', error)
     }
   }, [states, keyChanges, data, client, refreshData])
 
+  const handleRowClick = useCallback(
+    (record: TableRow) => {
+      if (!states[record.key].deactivated) {
+        setModalState({ visible: true, selectedItemId: record.Id as number })
+      }
+    },
+    [states],
+  )
+
   const columns = useMemo(() => {
     if (!data) return []
-    const initialColumns = createColumns(data, states, handleCheckboxToggle)
-    return initialColumns.map(column => {
-      if (column.key === 'Key') {
-        return {
-          ...column,
-          width: 80,
-          render: (_: any, record: TableRow) => (
-            <Input
-              value={keyChanges[record.key] ?? (data.Key[record.key] as string)}
-              onChange={e => handleKeyChange(record.key, e.target.value)}
-              maxLength={1}
-              style={{ width: '100%', minWidth: '50px' }} // Ensure the input takes full width of the column
-            />
-          ),
-        }
-      }
-      return column
-    })
+    return createColumns(data, states, handleCheckboxToggle).map(column =>
+      column.key === 'Key'
+        ? {
+            ...column,
+            width: 80,
+            render: (_: any, record: TableRow) => (
+              <Input
+                value={keyChanges[record.key] ?? data.Key[record.key]}
+                onChange={e => handleKeyChange(record.key, e.target.value)}
+                maxLength={1}
+                style={{ width: '100%', minWidth: '50px' }}
+                onClick={e => e.stopPropagation()}
+              />
+            ),
+          }
+        : column,
+    )
   }, [data, states, handleCheckboxToggle, handleKeyChange, keyChanges])
 
   const tableRows: TableRow[] = useMemo(() => {
     if (!data) return []
-    return data.Id.map((_, rowIndex) => {
-      const rowData: TableRow = { key: rowIndex }
-      Object.entries(data).forEach(([columnKey, columnValues]) => {
-        const cellValue = columnValues[rowIndex]
-        if (columnKey === 'Key') {
-          rowData[columnKey] = cellValue
-        } else {
-          rowData[columnKey] =
-            typeof cellValue === 'number' && !Number.isInteger(cellValue) ? Number(cellValue.toFixed(2)) : cellValue
-        }
-      })
-      return rowData
-    })
-  }, [data, keyChanges])
+    return data.Id.map((id, rowIndex) => ({
+      key: rowIndex,
+      Id: id,
+      ...Object.fromEntries(
+        Object.entries(data)
+          .filter(([key]) => key !== 'Id')
+          .map(([key, values]) => [
+            key,
+            typeof values[rowIndex] === 'number' && !Number.isInteger(values[rowIndex])
+              ? Number(values[rowIndex].toFixed(2))
+              : values[rowIndex],
+          ]),
+      ),
+    }))
+  }, [data])
 
   if (loading) {
     return (
@@ -103,10 +111,6 @@ export const ItemsTable: React.FC<PanelProps> = ({ client }) => {
     return <div>No data available</div>
   }
 
-  const rowClassName = (record: TableRow) => {
-    return states[record.key].deactivated ? 'deactivated-row' : ''
-  }
-
   const isAnyItemChanged = states.some(state => state.changed) || Object.keys(keyChanges).length > 0
 
   return (
@@ -116,9 +120,16 @@ export const ItemsTable: React.FC<PanelProps> = ({ client }) => {
         columns={columns}
         scroll={{ x: 1500 }}
         style={{ fontSize: `${fontSize}px` }}
-        rowClassName={rowClassName}
+        rowClassName={record => (states[record.key].deactivated ? 'deactivated-row' : 'clickable-row')}
+        onRow={record => ({ onClick: () => handleRowClick(record) })}
       />
       {isAnyItemChanged && <Button onClick={handleSubmit}>Update Items</Button>}
+      <ItemModal
+        visible={modalState.visible}
+        onClose={() => setModalState(prev => ({ ...prev, visible: false }))}
+        itemId={modalState.selectedItemId}
+        client={client}
+      />
     </div>
   )
 }

@@ -10,11 +10,11 @@ export class TableStrategyMulti extends TableStrategyBase<'multi'> {
       ...baseItems,
       conflict: mapArrayWithEnabled(
         attrs.itemsEnabled,
-        items.conflict.map(conflict => (conflict ? 'OK!' : 'NO!')),
+        items.conflict.map(conflict => (conflict ? 'NO!' : 'OK!')),
       ),
       choice: mapArrayWithEnabled(
         attrs.itemsEnabled,
-        items.choice.map(choice => (choice ? 'OK!' : 'NO!')),
+        items.choice.map(choice => (choice ? 'OK!' : 'NO')),
       ),
       ...Object.fromEntries(
         Object.entries(items.altDiscrimination).map(([key, value]) => [

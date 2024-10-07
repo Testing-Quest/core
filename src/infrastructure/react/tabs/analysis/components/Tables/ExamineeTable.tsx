@@ -9,9 +9,10 @@ import { createColumns } from './utils/columnCreator'
 
 type PanelProps = {
   client: Client
+  setDeactivatedExaminees(examinees: number[]): void
 }
 
-export const ExamineeTable: React.FC<PanelProps> = ({ client }) => {
+export const ExamineeTable: React.FC<PanelProps> = ({ client, setDeactivatedExaminees }) => {
   const { data, loading, states, setStates, refreshData } = useTableData(client, 'getUsersTable')
   const { fontSize } = useSettings()
 
@@ -37,7 +38,11 @@ export const ExamineeTable: React.FC<PanelProps> = ({ client }) => {
         activeItems: null,
         keys: null,
       })
+
       refreshData()
+      setDeactivatedExaminees(
+        deactivatedUsers.map((deactivated, index) => (!deactivated ? index + 1 : -1)).filter(index => index !== -1),
+      )
     } catch (error) {
       console.error('Error updating users:', error)
     }

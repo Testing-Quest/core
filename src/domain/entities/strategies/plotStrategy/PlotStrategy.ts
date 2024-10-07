@@ -84,17 +84,31 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
     const max = Math.max(...attrs.calcs.users.directScore)
     const range = max - min || 1
     const validAlternatives = [...allAlternatives.slice(0, attrs.alternatives), 'X']
-
     const usersGroups = attrs.calcs.users.directScore.map(score =>
       Math.min(groupCount - 1, Math.floor(((score - min) / range) * groupCount)),
     )
 
+    // Contar el total de respuestas por grupo
+    const totalResponsesByGroup = usersGroups.reduce(
+      (acc, group) => {
+        acc[group] = (acc[group] || 0) + 1
+        return acc
+      },
+      {} as Record<number, number>,
+    )
+
     return Object.fromEntries(
       validAlternatives.map(key => {
-        const dataPoints = Array.from({ length: groupCount }, (_, group) => ({
-          x: group,
-          y: itemResponses.filter((response, index) => response === key && usersGroups[index] === group).length,
-        }))
+        const dataPoints = Array.from({ length: groupCount }, (_, group) => {
+          const count = itemResponses.filter(
+            (response, index) => response === key && usersGroups[index] === group,
+          ).length
+          const total = totalResponsesByGroup[group] || 1 // Evitar división por cero
+          return {
+            x: group,
+            y: count / total, // Proporción en lugar del conteo directo
+          }
+        })
         return [key, dataPoints]
       }),
     )

@@ -4,7 +4,7 @@ import type { GetItemFrequencyResponse } from './responses/getItemFrequencyRespo
 
 async function _process(payload: GetItemFrequencyRequest, repository: Repository): Promise<GetItemFrequencyResponse> {
   const quest = await repository.get(payload.uuid)
-  return { data: quest.getItemDiscrimination(payload.id), error: null }
+  return { data: quest.getItemFrequency(payload.id), error: null }
 }
 
 export async function getItemFrequency(

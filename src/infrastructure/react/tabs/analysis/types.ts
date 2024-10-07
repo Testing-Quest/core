@@ -4,6 +4,8 @@ export type QuestType = 'multi' | 'gradu' | 'binary'
 
 export type VisualizationComponentProps = {
   client: Client
+  setDeactivatedItems(items: number[]): void
+  setDeactivatedExaminees(examinees: number[]): void
 }
 
 export type AnalysisVisualization = {

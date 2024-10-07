@@ -27,7 +27,7 @@ export abstract class TableStrategyBase<T extends keyof QuestTypesMap> implement
       Key: attrs.keys,
       Variance: mapArrayWithEnabled(attrs.itemsEnabled, items.variance),
       Discrimination: mapArrayWithEnabled(attrs.itemsEnabled, items.discrimination),
-      CorrDiscrimination: mapArrayWithEnabled(attrs.itemsEnabled, items.corrDiscrimination),
+      'Corr Disc': mapArrayWithEnabled(attrs.itemsEnabled, items.corrDiscrimination),
       Difficulty: mapArrayWithEnabled(attrs.itemsEnabled, items.difficulty),
       ...Object.fromEntries(
         Object.entries(items.altDifficulty).map(([key, value]) => [
