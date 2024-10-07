@@ -1,4 +1,6 @@
+import { allAlternatives } from '../../../primitives'
 import type { MultiCalcsType } from '../../../primitives/calcs/calcs'
+import { MatrixType } from '../../../primitives/quest'
 import type { DataPoint, StringDataPoint } from '../../Quest'
 import { PlotStrategyBase } from './PlotStrategy'
 
@@ -31,5 +33,30 @@ export class PlotStrategyMulti extends PlotStrategyBase<'multi'> {
         y: value[id],
       }
     })
+  }
+  public getItemProfile(
+    attrs: { matrix: MatrixType; alternatives: number; calcs: MultiCalcsType },
+    id: number,
+  ): Record<string, DataPoint[]> {
+    const groupCount = 5
+    const itemResponses = attrs.matrix.map(row => row[id])
+    const validAlternatives = [...allAlternatives.slice(0, attrs.alternatives), 'X']
+    const [totalResponseByGroup, usersGroups] = this.sharedItemProfile(attrs, groupCount)
+
+    return Object.fromEntries(
+      validAlternatives.map(key => {
+        const dataPoints = Array.from({ length: groupCount }, (_, group) => {
+          const count = itemResponses.filter(
+            (response, index) => response === key && usersGroups[index] === group,
+          ).length
+          const total = totalResponseByGroup[group] || 1 // Evitar división por cero
+          return {
+            x: group,
+            y: count / total, // Proporción en lugar del conteo directo
+          }
+        })
+        return [key, dataPoints]
+      }),
+    )
   }
 }

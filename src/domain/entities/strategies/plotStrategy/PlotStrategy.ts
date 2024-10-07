@@ -1,4 +1,4 @@
-import { allAlternatives, type QuestTypesMap } from '../../../primitives'
+import type { QuestTypesMap } from '../../../primitives'
 import type { MatrixType } from '../../../primitives/quest'
 import type { DataPoint, StringDataPoint } from '../../Quest'
 
@@ -31,14 +31,14 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
   public getItemsMap(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[] {
     const disc = attrs.items.discrimination
     const diff = attrs.items.difficulty
-    const activeUsers = users.map((u, i) => (u ? i+1 : -1)).filter(u => u !== -1)
+    const activeUsers = users.map((u, i) => (u ? i + 1 : -1)).filter(u => u !== -1)
     return disc.map((d, i) => ({ x: diff[i], y: d, hover: activeUsers[i] }))
   }
 
   public getDirectBlank(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[] {
     const blank = attrs.users.blankAnswer
     const direct = attrs.users.directScore
-    const activeUsers = users.map((u, i) => (u ? i+1 : -1)).filter(u => u !== -1)
+    const activeUsers = users.map((u, i) => (u ? i + 1 : -1)).filter(u => u !== -1)
     return blank.map((b, i) => ({ x: direct[i], y: b, hover: activeUsers[i] }))
   }
 
@@ -74,21 +74,17 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
     })
   }
 
-  public getItemProfile(
+  public sharedItemProfile(
     attrs: { matrix: MatrixType; alternatives: number; calcs: QuestTypesMap[T]['calcs'] },
-    id: number,
-  ): Record<string, DataPoint[]> {
-    const groupCount = 5
-    const itemResponses = attrs.matrix.map(row => row[id])
+    groupCount: number,
+  ): [Record<number, number>, number[]] {
     const min = Math.min(...attrs.calcs.users.directScore)
     const max = Math.max(...attrs.calcs.users.directScore)
     const range = max - min || 1
-    const validAlternatives = [...allAlternatives.slice(0, attrs.alternatives), 'X']
     const usersGroups = attrs.calcs.users.directScore.map(score =>
       Math.min(groupCount - 1, Math.floor(((score - min) / range) * groupCount)),
     )
 
-    // Contar el total de respuestas por grupo
     const totalResponsesByGroup = usersGroups.reduce(
       (acc, group) => {
         acc[group] = (acc[group] || 0) + 1
@@ -97,23 +93,14 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
       {} as Record<number, number>,
     )
 
-    return Object.fromEntries(
-      validAlternatives.map(key => {
-        const dataPoints = Array.from({ length: groupCount }, (_, group) => {
-          const count = itemResponses.filter(
-            (response, index) => response === key && usersGroups[index] === group,
-          ).length
-          const total = totalResponsesByGroup[group] || 1 // Evitar división por cero
-          return {
-            x: group,
-            y: count / total, // Proporción en lugar del conteo directo
-          }
-        })
-        return [key, dataPoints]
-      }),
-    )
+    return [totalResponsesByGroup, usersGroups]
+
   }
 
+  public abstract getItemProfile(
+    attrs: { matrix: MatrixType; alternatives: number; calcs: QuestTypesMap[T]['calcs'] },
+    id: number,
+  ): Record<string, DataPoint[]>
   public abstract getDirectWeight(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
   public abstract getDirectCohrency(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
   public abstract getDirectMci(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
