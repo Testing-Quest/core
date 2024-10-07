@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { Spin } from 'antd'
 import { ResponsiveContainer, PieChart, Pie, Cell, Legend, Tooltip } from 'recharts'
-import type { Client } from '../../../../../Client'
+import { GetHealthResponse } from '../../../../../../application/responses/getHealthResponse'
 
 type PanelProps = {
-  client: Client
+  data: GetHealthResponse['data']
+  propertyMap: Record<string, string>
+  fontSize: string
 }
 
 type HealthData = {
@@ -12,58 +14,67 @@ type HealthData = {
   value: number
 }
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28']
+const COLORS = ['#592E83', '#B27C66', '#6D8EA0', '#846954', '#230C33']
 
-export const HealthChart: React.FC<PanelProps> = ({ client }) => {
+export const HealthChart: React.FC<PanelProps> = ({ data, propertyMap, fontSize }) => {
   const [loading, setLoading] = useState(true)
-  const [data, setData] = useState<HealthData[]>([])
+
+  const chartData = useMemo(() => {
+    if (!data) return []
+    return Object.entries(propertyMap)
+      .map(([key, name]) => {
+        const value = data[key]
+        if (typeof value !== 'number') return null
+        return {
+          name,
+          value: Math.max(0, 100 - value * 100)
+        }
+      })
+      .filter((item): item is HealthData => item !== null && item.value > 0)
+  }, [data, propertyMap])
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const health = await client.getHealth()
-        const questType = client.getQuestType()
-
-        let chartData: HealthData[]
-        if (questType === 'gradu') {
-          chartData = [
-            { name: 'Reliability', value: health.data!.reliability || 0 },
-            { name: 'Discrimination', value: health.data!.discrimination || 0 },
-            { name: 'Variability', value: health.data!.variability || 0 },
-          ]
-        } else {
-          chartData = []
-        }
-
-        setData(chartData)
-      } catch (error) {
-        console.error('Error fetching health data:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [client])
+    setLoading(false)
+  }, [data])
 
   if (loading) {
-    return <Spin size='large' />
+    return <Spin tip="Loading chart data..." />
   }
 
+  if (chartData.length === 0) {
+    return <div>No health issues to display.</div>
+  }
+
+  const total = chartData.reduce((sum, item) => sum + item.value, 0)
+
   return (
-    <div style={{ width: '100%', height: 400 }}>
-      <ResponsiveContainer>
-        <PieChart>
-          <Pie data={data} cx='50%' cy='50%' labelLine={false} outerRadius={80} fill='#8884d8' dataKey='value'>
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip />
-          <Legend />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height={400}>
+      <PieChart>
+        <Pie
+          data={chartData}
+          cx="50%"
+          cy="50%"
+          labelLine={false}
+          outerRadius={120}  // Increased outer radius
+          fill="#8884d8"
+          dataKey="value"
+        >
+          {chartData.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip 
+          formatter={(value: number) => `${((value / total) * 100).toFixed(2)}%`} 
+          labelStyle={{ fontSize }}
+        />
+        <Legend 
+          layout="vertical" 
+          align="right" 
+          verticalAlign="middle" 
+          wrapperStyle={{ fontSize }}
+        />
+      </PieChart>
+    </ResponsiveContainer>
   )
 }
 

@@ -45,3 +45,29 @@ export const PROPERTY_MAP: Record<string, Record<string, string>> = {
   gradu: GRADU_QUEST_PROPERTIES,
   binary: BINARY_QUEST_PROPERTIES,
 }
+
+export const BINARY_PIE_CHART_PROPERTIES: Record<string, string> = {
+  reliability: 'Reliability',
+  discrimination: 'Discrimination',
+  coherency: 'Coherency',
+}
+
+export const MULTI_PIE_CHART_PROPERTIES: Record<string, string> = {
+  reliability: 'Reliability',
+  discrimination: 'Discrimination',
+  coherency: 'Coherency',
+  keyConflict: 'Key Conflict',
+  choice: 'Choice',
+}
+
+export const GRADU_PIE_CHART_PROPERTIES: Record<string, string> = {
+  reliability: 'Reliability',
+  discrimination: 'Discrimination',
+  variability: 'Variability',
+}
+
+export const PIE_CHART_PROPERTY_MAP: Record<string, Record<string, string>> = {
+  multi: MULTI_PIE_CHART_PROPERTIES,
+  gradu: GRADU_PIE_CHART_PROPERTIES,
+  binary: BINARY_PIE_CHART_PROPERTIES,
+}
