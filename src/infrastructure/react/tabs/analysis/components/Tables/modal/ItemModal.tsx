@@ -44,9 +44,7 @@ export const ItemModal: React.FC<ItemModalProps> = ({ visible, onClose, itemId, 
   )
 
   useEffect(() => {
-    if (visible && itemId !== null && (client.getQuestType() === 'multi' || client.getQuestType() === 'binary')) {
-      fetchData('discrimination')
-    }
+    fetchData('frequency')
   }, [visible, itemId, client, fetchData])
 
   const renderComponent = () => {
@@ -71,6 +69,9 @@ export const ItemModal: React.FC<ItemModalProps> = ({ visible, onClose, itemId, 
   return (
     <Modal title={`Item Details - ID: ${itemId}`} open={visible} onCancel={close} width={800} footer={null}>
       <Space style={{ marginBottom: 16 }}>
+        <Button onClick={() => fetchData('frequency')} type={activeComponent === 'frequency' ? 'primary' : 'default'}>
+          Frequency
+        </Button>
         {(client.getQuestType() === 'multi' || client.getQuestType() === 'binary') && (
           <Button
             onClick={() => fetchData('discrimination')}
@@ -79,9 +80,6 @@ export const ItemModal: React.FC<ItemModalProps> = ({ visible, onClose, itemId, 
             Discrimination
           </Button>
         )}
-        <Button onClick={() => fetchData('frequency')} type={activeComponent === 'frequency' ? 'primary' : 'default'}>
-          Frequency
-        </Button>
         <Button onClick={() => fetchData('profile')} type={activeComponent === 'profile' ? 'primary' : 'default'}>
           Profile
         </Button>

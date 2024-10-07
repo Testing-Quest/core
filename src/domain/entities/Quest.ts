@@ -7,7 +7,7 @@ import type { PlotStrategy } from './strategies/plotStrategy/PlotStrategy'
 import { tableFactory } from './strategies/tableStrategy/TableFactory'
 import type { Table, TableStrategy } from './strategies/tableStrategy/TableStrategy'
 
-export type DataPoint = { x: number; y: number }
+export type DataPoint = { x: number; y: number, hover?: number }
 export type StringDataPoint = { x: string; y: number }
 
 export type UpdatePayload = {
@@ -96,19 +96,19 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
     return this._pltStrategy.getReliability(this._props.calcs)
   }
   public getItemsMap(): DataPoint[] {
-    return this._pltStrategy.getItemsMap(this._props.calcs)
+    return this._pltStrategy.getItemsMap(this._props.calcs, this._props.usersEnabled)
   }
   public getDirectWeight(): DataPoint[] {
-    return this._pltStrategy.getDirectWeight(this._props.calcs)
+    return this._pltStrategy.getDirectWeight(this._props.calcs, this._props.usersEnabled)
   }
   public getDirectBlank(): DataPoint[] {
-    return this._pltStrategy.getDirectBlank(this._props.calcs)
+    return this._pltStrategy.getDirectBlank(this._props.calcs, this._props.usersEnabled)
   }
   public getDirectCohrency(): DataPoint[] {
-    return this._pltStrategy.getDirectCohrency(this._props.calcs)
+    return this._pltStrategy.getDirectCohrency(this._props.calcs, this._props.usersEnabled)
   }
   public getDirectMci(): DataPoint[] {
-    return this._pltStrategy.getDirectMci(this._props.calcs)
+    return this._pltStrategy.getDirectMci(this._props.calcs, this._props.usersEnabled)
   }
   public getScoreDistribution(): DataPoint[] {
     return this._pltStrategy.getScoreDistribution(this._props.calcs)

@@ -53,7 +53,7 @@ export function calculateBinaryAlternativeDifficulty(
     alternativeDifficulty.set(`Difficulty ${alternative}`, difficulty)
   }
 
-  for (let i = 0; i <= alternatives; i++) {
+  for (let i = 1; i <= alternatives; i++) {
     processAlternative(i)
   }
   return alternativeDifficulty

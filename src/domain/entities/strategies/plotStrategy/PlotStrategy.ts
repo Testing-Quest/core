@@ -4,11 +4,11 @@ import type { DataPoint, StringDataPoint } from '../../Quest'
 
 export type PlotStrategy<T extends keyof QuestTypesMap> = {
   getReliability(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
-  getItemsMap(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
-  getDirectBlank(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
-  getDirectWeight(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
-  getDirectCohrency(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
-  getDirectMci(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
+  getItemsMap(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
+  getDirectBlank(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
+  getDirectWeight(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
+  getDirectCohrency(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
+  getDirectMci(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
   getScoreDistribution(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
   getItemFrequency(attrs: QuestTypesMap[T]['calcs'], id: number): StringDataPoint[]
   getItemDiscrimination(attrs: QuestTypesMap[T]['calcs'], id: number): StringDataPoint[]
@@ -28,16 +28,18 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
     })
   }
 
-  public getItemsMap(attrs: QuestTypesMap[T]['calcs']): DataPoint[] {
+  public getItemsMap(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[] {
     const disc = attrs.items.discrimination
     const diff = attrs.items.difficulty
-    return disc.map((d, i) => ({ x: diff[i], y: d }))
+    const activeUsers = users.map((u, i) => (u ? i+1 : -1)).filter(u => u !== -1)
+    return disc.map((d, i) => ({ x: diff[i], y: d, hover: activeUsers[i] }))
   }
 
-  public getDirectBlank(attrs: QuestTypesMap[T]['calcs']): DataPoint[] {
+  public getDirectBlank(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[] {
     const blank = attrs.users.blankAnswer
     const direct = attrs.users.directScore
-    return blank.map((b, i) => ({ x: direct[i], y: b }))
+    const activeUsers = users.map((u, i) => (u ? i+1 : -1)).filter(u => u !== -1)
+    return blank.map((b, i) => ({ x: direct[i], y: b, hover: activeUsers[i] }))
   }
 
   public getScoreDistribution(attrs: QuestTypesMap[T]['calcs']): DataPoint[] {
@@ -64,12 +66,10 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
   }
 
   public getItemFrequency(attrs: QuestTypesMap[T]['calcs'], id: number): StringDataPoint[] {
-    const numUsers = attrs.correctMatrix.length
-
     return Array.from(Object.entries(attrs.items.altDifficulty)).map(([key, value]): StringDataPoint => {
       return {
         x: key.split(' ')[1],
-        y: value[id] * numUsers,
+        y: value[id],
       }
     })
   }
@@ -114,8 +114,8 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
     )
   }
 
-  public abstract getDirectWeight(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
-  public abstract getDirectCohrency(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
-  public abstract getDirectMci(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
+  public abstract getDirectWeight(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
+  public abstract getDirectCohrency(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
+  public abstract getDirectMci(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
   public abstract getItemDiscrimination(attrs: QuestTypesMap[T]['calcs'], id: number): StringDataPoint[]
 }
