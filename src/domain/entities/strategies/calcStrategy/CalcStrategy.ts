@@ -71,7 +71,7 @@ export abstract class CalcStrategyBase<T extends keyof QuestTypesMap> implements
         directScore: usersDirectScore,
         mean: Bc.usersMean(usersDirectScore, matrix.length),
         totalScore: usersDirectScore,
-        blankAnswer: Bc.usersBlankAnswers(matrix, keys),
+        blankAnswer: Bc.usersBlankAnswers(matrix, [0, '0', 'X', 'x', '', '*', '-', '_', '.', '', ' ']),
       },
     }
   }

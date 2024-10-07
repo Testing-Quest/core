@@ -100,7 +100,7 @@ describe('Client', () => {
 
       ;(getHealth as jest.Mock).mockResolvedValue(mockResponse)
 
-      const result = await client.getHealth()
+      const result = await client.getHealthData()
 
       expect(result).toEqual(mockResponse)
       expect(getHealth).toHaveBeenCalledWith({ uuid: '123' }, repositoryMock)

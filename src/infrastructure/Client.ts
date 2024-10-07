@@ -70,8 +70,14 @@ export class Client {
     return this.quest.name
   }
 
+  public async getNumberOfAlternatives(): Promise<number> {
+    const quest = await this.repo.get(this.quest.uuid)
+    return quest.getNumAlternatives()
+  }
+
   public async getHealthData(): Promise<GetHealthResponse> {
-    return getHealth({ uuid: this.quest.uuid }, this.repo)
+    const data = await getHealth({ uuid: this.quest.uuid }, this.repo)
+    return data
   }
 
   public async getReliabilityData(): Promise<GetReliabilityResponse> {
@@ -110,7 +116,7 @@ export class Client {
     return getItemProfile({ uuid: this.quest.uuid, id }, this.repo)
   }
 
-  public async getItemTableData(): Promise<GetItemTableResponse> {
+  public async getItemsTable(): Promise<GetItemTableResponse> {
     return getItemTable({ uuid: this.quest.uuid }, this.repo)
   }
 
@@ -126,7 +132,7 @@ export class Client {
     return getUsersTable({ uuid: this.quest.uuid }, this.repo)
   }
 
-  public async updateQuest(payload: UpdateRequest): Promise<UpdateResponse> {
-    return updateQuest(payload, this.repo)
+  public async updateQuest(payload: UpdateRequest['data']): Promise<UpdateResponse> {
+    return updateQuest({ uuid: this.quest.uuid, data: payload }, this.repo)
   }
 }

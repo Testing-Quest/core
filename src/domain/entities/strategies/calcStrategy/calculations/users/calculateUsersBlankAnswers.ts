@@ -1,6 +1,6 @@
 import type { MatrixType } from '../../../../../primitives/quest'
 
-export function calculateUsersBlankAnswers(matrix: MatrixType, omissions: string[]): number[] {
+export function calculateUsersBlankAnswers(matrix: MatrixType, omissions: (string | number)[]): number[] {
   const result = new Array(matrix.length)
   const omissionSet = new Set(omissions)
   const rowLength = matrix[0].length
@@ -10,7 +10,7 @@ export function calculateUsersBlankAnswers(matrix: MatrixType, omissions: string
     const row = matrix[i]
     let blankCount = 0
     for (let j = 0; j < rowLength; j++) {
-      if (!row[j] || omissionSet.has(String(row[j])) || isNaN(Number(row[j]))) {
+      if (!row[j] || omissionSet.has(String(row[j])) || (Number(row[j]) && isNaN(Number(row[j])))) {
         blankCount++
       }
     }

@@ -23,15 +23,15 @@ export abstract class TableStrategyBase<T extends keyof QuestTypesMap> implement
     return {
       Id: attrs.itemsIds.map(n => n + 1),
       Deactivate: attrs.itemsEnabled,
-      Key: attrs.itemsEnabled.map((enabled, index) => (enabled ? attrs.keys[index] : '-')),
-      Variance: attrs.itemsEnabled.map((enabled, index) => (enabled ? items.variance[index] : '-')),
-      Discrimination: attrs.itemsEnabled.map((enabled, index) => (enabled ? items.discrimination[index] : '-')),
-      CorrDiscrimination: attrs.itemsEnabled.map((enabled, index) => (enabled ? items.corrDiscrimination[index] : '-')),
-      Difficulty: attrs.itemsEnabled.map((enabled, index) => (enabled ? items.difficulty[index] : '-')), // TODO: revisar esto.
+      Key: mapArrayWithEnabled(attrs.itemsEnabled, attrs.keys),
+      Variance: mapArrayWithEnabled(attrs.itemsEnabled, items.variance),
+      Discrimination: mapArrayWithEnabled(attrs.itemsEnabled, items.discrimination),
+      CorrDiscrimination: mapArrayWithEnabled(attrs.itemsEnabled, items.corrDiscrimination),
+      Difficulty: mapArrayWithEnabled(attrs.itemsEnabled, items.difficulty),
       ...Object.fromEntries(
         Object.entries(items.altDifficulty).map(([key, value]) => [
           key,
-          attrs.itemsEnabled.map((enabled, index) => (enabled ? value[index] : '-')),
+          mapArrayWithEnabled(attrs.itemsEnabled, value),
         ]),
       ),
     }
@@ -41,13 +41,23 @@ export abstract class TableStrategyBase<T extends keyof QuestTypesMap> implement
     return {
       Id: attrs.usersIds.map(n => n + 1),
       Deactivate: attrs.usersEnabled,
-      'Direct Score': attrs.usersEnabled.map((enabled, index) => (enabled ? users.directScore[index] : '-')),
-      Mean: attrs.usersEnabled.map((enabled, index) => (enabled ? users.mean[index] : '-')),
-      'Total Score': attrs.usersEnabled.map((enabled, index) => (enabled ? users.totalScore[index] : '-')),
-      'Blank Answer': attrs.usersEnabled.map((enabled, index) => (enabled ? users.blankAnswer[index] : '-')),
+      'Direct Score': mapArrayWithEnabled(attrs.usersEnabled, users.directScore),
+      Mean: mapArrayWithEnabled(attrs.usersEnabled, users.mean),
+      'Total Score': mapArrayWithEnabled(attrs.usersEnabled, users.totalScore),
+      'Blank Answer': mapArrayWithEnabled(attrs.usersEnabled, users.blankAnswer),
     }
   }
 
   public abstract getItemsTable(attrs: ItemsTableAttrs, items: QuestTypesMap[T]['calcs']['items']): Table
   public abstract getUsersTable(attrs: UsersTableAttrs, users: QuestTypesMap[T]['calcs']['users']): Table
+}
+
+export function mapArrayWithEnabled(
+  enabledArray: boolean[],
+  valueArray: (string | number | boolean)[],
+  defaultValue = '-',
+) {
+  let valueIndex = 0 // Índice para recorrer el array de valores
+
+  return enabledArray.map(enabled => (enabled ? valueArray[valueIndex++] : defaultValue))
 }

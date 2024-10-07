@@ -32,6 +32,7 @@ export type BaseQuest = {
   getItemDiscrimination(id: number): StringDataPoint[]
   getItemProfile(id: number): Record<string, DataPoint[]>
   update(payload: UpdatePayload): void
+  getNumAlternatives(): number
   getModifications(): {
     keys: string[]
     originalKeys: string[]
@@ -118,6 +119,9 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
   public getItemDiscrimination(id: number): StringDataPoint[] {
     return this._pltStrategy.getItemDiscrimination(this._props.calcs, id)
   }
+  public getNumAlternatives(): number {
+    return this._props.alternatives
+  }
   public getItemsTable(): Table {
     return this._tblStrategy.getItemsTable(
       {
@@ -161,8 +165,9 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
     const matrix = this.filterMatrix()
     this._props = {
       ...this._props,
-      calculations: this._clsStrategy.calculate(matrix, keys, this._props.alternatives),
+      calcs: this._clsStrategy.calculate(matrix, keys, this._props.alternatives),
     }
+    console.log(this._props)
   }
   public getModifications(): {
     keys: string[]

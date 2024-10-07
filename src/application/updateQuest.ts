@@ -5,6 +5,7 @@ import type { UpdateResponse } from './responses/updateResponse'
 async function _process(payload: UpdateRequest, repository: Repository): Promise<void> {
   const quest = await repository.get(payload.uuid)
   quest.update(payload.data)
+  await repository.save(quest)
 }
 
 export async function updateQuest(payload: UpdateRequest, repository: Repository): Promise<UpdateResponse> {

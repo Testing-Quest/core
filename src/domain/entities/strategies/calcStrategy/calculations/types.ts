@@ -3,7 +3,7 @@ import type { MatrixType } from '../../../../primitives/quest'
 export type BasedCalculationsType = {
   usersDirectScore(correctMatrix: number[][]): number[]
   usersMean(usersDirectScore: number[], totalItems: number): number[]
-  usersBlankAnswers(matrix: MatrixType, omissions: string[]): number[]
+  usersBlankAnswers(matrix: MatrixType, omissions: (string | number)[]): number[]
   mean(usersDirectScore: number[]): number
   variance(usersDirectScore: number[], mean: number): number
   itemsDirectScore(correctMatrix: number[][]): number[]
