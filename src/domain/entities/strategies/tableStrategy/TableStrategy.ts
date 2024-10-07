@@ -20,10 +20,11 @@ export type TableStrategy<T extends keyof QuestTypesMap> = {
 
 export abstract class TableStrategyBase<T extends keyof QuestTypesMap> implements TableStrategy<T> {
   public getBaseItemsTable(attrs: ItemsTableAttrs, items: QuestTypesMap[T]['calcs']['items']): Table {
+    console.log('keys', attrs.keys)
     return {
       Id: attrs.itemsIds.map(n => n + 1),
       Deactivate: attrs.itemsEnabled,
-      Key: mapArrayWithEnabled(attrs.itemsEnabled, attrs.keys),
+      Key: attrs.keys,
       Variance: mapArrayWithEnabled(attrs.itemsEnabled, items.variance),
       Discrimination: mapArrayWithEnabled(attrs.itemsEnabled, items.discrimination),
       CorrDiscrimination: mapArrayWithEnabled(attrs.itemsEnabled, items.corrDiscrimination),

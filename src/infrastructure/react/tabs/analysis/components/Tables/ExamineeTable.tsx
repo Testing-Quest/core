@@ -82,7 +82,7 @@ export const ExamineeTable: React.FC<PanelProps> = ({ client }) => {
         style={{ fontSize: `${fontSize}px` }}
         rowClassName={rowClassName}
       />
-      {isAnyUserChanged && <Button onClick={handleSubmit}>Deactivate Examinees</Button>}
+      {isAnyUserChanged && <Button onClick={handleSubmit}>Update Examinees</Button>}
     </div>
   )
 }

@@ -31,7 +31,7 @@ export const createColumns = (
       width: 120,
       render: (value: string | number | boolean, record) => {
         const isDeactivated = itemStates[record.key].deactivated
-        return isDeactivated && key !== 'Id' ? '-' : value
+        return isDeactivated && key !== 'Id' && key !== 'Key' ? '-' : value
       },
     }
   })
