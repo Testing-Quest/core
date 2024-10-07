@@ -4,7 +4,7 @@ import type { DataPoint, StringDataPoint } from '../../Quest'
 
 export type PlotStrategy<T extends keyof QuestTypesMap> = {
   getReliability(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
-  getItemsMap(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
+  getItemsMap(attrs: QuestTypesMap[T]['calcs'], items: boolean[]): DataPoint[]
   getDirectBlank(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
   getDirectWeight(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
   getDirectCohrency(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
@@ -28,10 +28,10 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
     })
   }
 
-  public getItemsMap(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[] {
+  public getItemsMap(attrs: QuestTypesMap[T]['calcs'], items: boolean[]): DataPoint[] {
     const disc = attrs.items.discrimination
     const diff = attrs.items.difficulty
-    const activeUsers = users.map((u, i) => (u ? i + 1 : -1)).filter(u => u !== -1)
+    const activeUsers = items.map((u, i) => (u ? i + 1 : -1)).filter(u => u !== -1)
     return disc.map((d, i) => ({ x: diff[i], y: d, hover: activeUsers[i] }))
   }
 

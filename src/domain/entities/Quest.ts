@@ -97,7 +97,7 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
     return this._pltStrategy.getReliability(this._props.calcs)
   }
   public getItemsMap(): DataPoint[] {
-    return this._pltStrategy.getItemsMap(this._props.calcs, this._props.usersEnabled)
+    return this._pltStrategy.getItemsMap(this._props.calcs, this._props.itemsEnabled)
   }
   public getDirectWeight(): DataPoint[] {
     return this._pltStrategy.getDirectWeight(this._props.calcs, this._props.usersEnabled)
