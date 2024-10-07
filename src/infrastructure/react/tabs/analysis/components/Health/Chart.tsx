@@ -58,19 +58,20 @@ export const HealthChart: React.FC<PanelProps> = ({ data, propertyMap, fontSize 
           outerRadius={120}  // Increased outer radius
           fill="#8884d8"
           dataKey="value"
+          isAnimationActive={false}
         >
           {chartData.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip 
-          formatter={(value: number) => `${((value / total) * 100).toFixed(2)}%`} 
+        <Tooltip
+          formatter={(value: number) => `${((value / total) * 100).toFixed(2)}%`}
           labelStyle={{ fontSize }}
         />
-        <Legend 
-          layout="vertical" 
-          align="right" 
-          verticalAlign="middle" 
+        <Legend
+          layout="vertical"
+          align="right"
+          verticalAlign="middle"
           wrapperStyle={{ fontSize }}
         />
       </PieChart>
