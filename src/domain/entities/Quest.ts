@@ -167,7 +167,6 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
       ...this._props,
       calcs: this._clsStrategy.calculate(matrix, keys, this._props.alternatives),
     }
-    console.log(this._props)
   }
   public getModifications(): {
     keys: string[]

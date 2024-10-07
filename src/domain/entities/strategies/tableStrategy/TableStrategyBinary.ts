@@ -9,7 +9,10 @@ export class TableStrategyBinary extends TableStrategyBase<'binary'> {
 
     return {
       ...baseItems,
-      conflict: mapArrayWithEnabled(attrs.itemsEnabled, items.conflict),
+      conflict: mapArrayWithEnabled(
+        attrs.itemsEnabled,
+        items.conflict.map(conflict => (conflict ? 'OK!' : 'NO!')),
+      ),
       ...Object.fromEntries(
         Object.entries(items.altDiscrimination).map(([key, value]) => [
           key,

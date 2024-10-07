@@ -8,8 +8,14 @@ export class TableStrategyMulti extends TableStrategyBase<'multi'> {
     const baseItems = this.getBaseItemsTable(attrs, items)
     return {
       ...baseItems,
-      conflict: mapArrayWithEnabled(attrs.itemsEnabled, items.conflict),
-      choice: mapArrayWithEnabled(attrs.itemsEnabled, items.choice),
+      conflict: mapArrayWithEnabled(
+        attrs.itemsEnabled,
+        items.conflict.map(conflict => (conflict ? 'OK!' : 'NO!')),
+      ),
+      choice: mapArrayWithEnabled(
+        attrs.itemsEnabled,
+        items.choice.map(choice => (choice ? 'OK!' : 'NO!')),
+      ),
       ...Object.fromEntries(
         Object.entries(items.altDiscrimination).map(([key, value]) => [
           key,

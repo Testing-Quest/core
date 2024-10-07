@@ -15,7 +15,12 @@ export const createColumns = (
         key: key,
         width: 120,
         render: (_, record) => (
-          <Checkbox checked={itemStates[record.key].deactivated} onChange={() => { handleCheckboxToggle(record.key); }} />
+          <Checkbox
+            checked={itemStates[record.key].deactivated}
+            onChange={() => {
+              handleCheckboxToggle(record.key)
+            }}
+          />
         ),
       }
     }
