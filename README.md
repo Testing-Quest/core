@@ -1,6 +1,8 @@
 # Testing-Quest Core App
 
-![Testing-Quest Logo](public/tqLogo.png)
+<p align="center">
+  <img src="public/tqLogo.jpeg" alt="Testing-Quest Logo">
+</p>
 
 ## Description
 
@@ -31,8 +33,7 @@ For more information about the Testing-Quest project, visit:
 
 ### Prerequisites
 
-- Node.js (version X.X.X or higher)
-- npm (version X.X.X or higher)
+- npm (version 10.8.3 or higher)
 
 ### Installation
 
