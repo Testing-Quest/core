@@ -1,6 +1,6 @@
 import type { GraduCalcsType } from '../../../primitives/calcs/calcs'
 import { MatrixType } from '../../../primitives/quest'
-import type { DataPoint, StringDataPoint } from '../../Quest'
+import type { DataPoint, SimpleDataPoint, StringDataPoint } from '../../Quest'
 import { PlotStrategyBase } from './PlotStrategy'
 
 export class PlotStrategyGradu extends PlotStrategyBase<'gradu'> {
@@ -19,7 +19,7 @@ export class PlotStrategyGradu extends PlotStrategyBase<'gradu'> {
   public getItemProfile(
     attrs: { matrix: MatrixType; alternatives: number; calcs: GraduCalcsType },
     id: number,
-  ): Record<string, DataPoint[]> {
+  ): Record<string, SimpleDataPoint[]> {
     const groupCount = 5
     const [totalResponseByGroup, usersGroups] = this.sharedItemProfile(attrs, groupCount)
     const itemResponses = attrs.matrix.map(row => row[id])

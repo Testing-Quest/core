@@ -7,7 +7,8 @@ import type { PlotStrategy } from './strategies/plotStrategy/PlotStrategy'
 import { tableFactory } from './strategies/tableStrategy/TableFactory'
 import type { Table, TableStrategy } from './strategies/tableStrategy/TableStrategy'
 
-export type DataPoint = { x: number; y: number; hover?: number }
+export type DataPoint = { x: number; y: number; hover: number }
+export type SimpleDataPoint = { x: number; y: number }
 export type StringDataPoint = { x: string; y: number }
 
 export type UpdatePayload = {
@@ -19,18 +20,18 @@ export type UpdatePayload = {
 export type BaseQuest = {
   getUuid(): string
   getHealth(): Record<string, number>
-  getReliability(): DataPoint[]
+  getReliability(): SimpleDataPoint[]
   getItemsMap(): DataPoint[]
   getDirectWeight(): DataPoint[]
   getDirectBlank(): DataPoint[]
   getDirectCohrency(): DataPoint[]
   getDirectMci(): DataPoint[]
-  getScoreDistribution(): DataPoint[]
+  getScoreDistribution(): SimpleDataPoint[]
   getItemsTable(): Table
   getUsersTable(): Table
   getItemFrequency(id: number): StringDataPoint[]
   getItemDiscrimination(id: number): StringDataPoint[]
-  getItemProfile(id: number): Record<string, DataPoint[]>
+  getItemProfile(id: number): Record<string, SimpleDataPoint[]>
   update(payload: UpdatePayload): void
   getNumAlternatives(): number
   getAlternativeFrequency(): Record<string, number>
@@ -93,7 +94,7 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
   public getHealth(): Record<string, number> {
     return this._props.calcs.health
   }
-  public getReliability(): DataPoint[] {
+  public getReliability(): SimpleDataPoint[] {
     return this._pltStrategy.getReliability(this._props.calcs)
   }
   public getItemsMap(): DataPoint[] {
@@ -111,7 +112,7 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
   public getDirectMci(): DataPoint[] {
     return this._pltStrategy.getDirectMci(this._props.calcs, this._props.usersEnabled)
   }
-  public getScoreDistribution(): DataPoint[] {
+  public getScoreDistribution(): SimpleDataPoint[] {
     return this._pltStrategy.getScoreDistribution(this._props.calcs)
   }
   public getItemFrequency(id: number): StringDataPoint[] {
@@ -145,7 +146,7 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
       this._props.calcs.users,
     )
   }
-  public getItemProfile(id: number): Record<string, DataPoint[]> {
+  public getItemProfile(id: number): Record<string, SimpleDataPoint[]> {
     return this._pltStrategy.getItemProfile(
       {
         matrix: this.filterMatrix(),

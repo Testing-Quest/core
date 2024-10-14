@@ -1,11 +1,24 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Text } from 'recharts'
-import { ReferenceLine } from 'recharts'
-import { Label } from 'recharts'
+import React, { useCallback, useEffect, useState, useMemo } from 'react'
+import {
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Text,
+  ZAxis,
+  LabelList,
+  ReferenceLine,
+  Label,
+} from 'recharts'
 import type { Client } from '../../../../../Client'
-import { Spin } from 'antd'
+import { Spin, Input, GetProps } from 'antd'
 import spinnerStyles from '../../../../App.module.css'
 import { useSettings } from '../../../../context/SettingContext'
+
+const { Search } = Input
 
 type PanelProps = {
   client: Client
@@ -17,11 +30,14 @@ type DataPoint = {
   hover: number
 }
 
+type SearchProps = GetProps<typeof Input.Search>
+
 export const ItemsMap: React.FC<PanelProps> = ({ client }) => {
-  const [data, setData] = useState<{ x: number; y: number }[]>()
+  const [data, setData] = useState<DataPoint[]>([])
   const [alternatives, setAlternatives] = useState<number>(0)
   const [loading, setLoading] = useState(true)
   const { fontSize } = useSettings()
+  const [highlightedItem, setHighlightedItem] = useState<number | null>(null)
 
   const fetchHealth = useCallback(async () => {
     try {
@@ -39,6 +55,17 @@ export const ItemsMap: React.FC<PanelProps> = ({ client }) => {
   useEffect(() => {
     fetchHealth()
   }, [fetchHealth])
+
+  const onSearch: SearchProps['onSearch'] = (value, _e, _) => {
+    const itemId = parseInt(value)
+    if (!isNaN(itemId)) {
+      setHighlightedItem(itemId)
+    }
+  }
+
+  const highlightedData = useMemo(() => {
+    return data.filter(item => item.hover === highlightedItem)
+  }, [data, highlightedItem])
 
   if (loading) {
     return (
@@ -69,72 +96,87 @@ export const ItemsMap: React.FC<PanelProps> = ({ client }) => {
     x3 = 1 + 0.6 * (answers - 1)
     x4 = 1 + 0.8 * (answers - 1)
   }
-  // ticks es una lista de 0.1 en 0.1 desde -1 hasta 1
+
   const ticks = [
     -1, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1,
   ]
 
   return (
-    <div style={{ height: '600px', display: 'flex', alignItems: 'center', marginLeft: '50px' }}>
-      <ResponsiveContainer width='90%' height={500}>
-        <ScatterChart margin={{ bottom: 15 }}>
-          <CartesianGrid strokeDasharray='0 0' opacity={0.5} />
-          <XAxis type='number' dataKey='x' name='X' ticks={y_ticks} domain={y_domain}>
-            <Label value='Difficulty' position='insideBottom' offset={-8} fontSize={fontSize} fill='' />
-            <Text />
-          </XAxis>
-          <YAxis type='number' ticks={ticks} dataKey='y' name='Y' domain={[-1, 1]}>
-            <Label value='Discrimination' angle={-90} position='insideLeft' offset={8} fontSize={fontSize} fill='' />
-          </YAxis>
-          {/* COLORES */}
-          <rect x={60} y={1} width={'99%'} height={46 * 2.5} fill='green' fillOpacity={0.4} fontSize={fontSize} />
-          <rect x={60} y={115} width={'99%'} height={46} fill='yellow' fillOpacity={0.4} fontSize={fontSize} />
-          <rect x={60} y={160} width={'99%'} height={23} fill='orange' fillOpacity={0.4} fontSize={fontSize} />
-          <rect x={60} y={182} width={'99%'} height={46 * 2} fill='red' fillOpacity={0.4} fontSize={fontSize} />
-          <rect x={60} y={272} width={'99%'} height={46 * 4} fill='black' fillOpacity={0.4} fontSize={fontSize} />
-          {/* 4 Lineas Horizontales */}
-          <ReferenceLine y={0} stroke='black' />
-          {/* 4 Lineas Verticales */}
-          <ReferenceLine x={x1} stroke='black' />
-          <ReferenceLine x={x2} stroke='black' />
-          <ReferenceLine x={x3} stroke='black' />
-          <ReferenceLine x={x4} stroke='black' />
-          {/* Letras Horizontales */}
-          <text x='98%' y='74%' style={{ fontSize: fontSize, fill: '#000000' }}>
-            4
-          </text>
-          <text x='98%' y='45%' style={{ fontSize: fontSize, fill: '#000000' }}>
-            5
-          </text>
-          <text x='98%' y='35.4%' style={{ fontSize: fontSize, fill: '#000000' }}>
-            3
-          </text>
-          <text x='98%' y='28.5%' style={{ fontSize: fontSize, fill: '#000000' }}>
-            2
-          </text>
-          <text x='98%' y='15%' style={{ fontSize: fontSize, fill: '#000000' }}>
-            1
-          </text>
-          {/* Letras Verticales */}
-          <text x='90%' y='90%' style={{ fontSize: fontSize, fill: '#000000' }}>
-            A
-          </text>
-          <text x='71%' y='90%' style={{ fontSize: fontSize, fill: '#000000' }}>
-            B
-          </text>
-          <text x='51.7%' y='90%' style={{ fontSize: fontSize, fill: '#000000' }}>
-            C
-          </text>
-          <text x='32.6%' y='90%' style={{ fontSize: fontSize, fill: '#000000' }}>
-            D
-          </text>
-          <text x='13.5%' y='90%' style={{ fontSize: fontSize, fill: '#000000' }}>
-            E
-          </text>
-          <Scatter name='Items' data={data} fill='#4f4f4f' />
-          <Tooltip content={<CustomTooltip />} />
-        </ScatterChart>
-      </ResponsiveContainer>
+    <div>
+      <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+        <Search
+          placeholder='Item ID'
+          onSearch={onSearch}
+          onClear={() => setHighlightedItem(null)}
+          allowClear
+          style={{ width: '160px', marginRight: '10px' }}
+        />
+      </div>
+      <div style={{ height: '600px', display: 'flex', alignItems: 'center', marginLeft: '50px' }}>
+        <ResponsiveContainer width='90%' height={500}>
+          <ScatterChart margin={{ bottom: 15 }}>
+            <CartesianGrid strokeDasharray='0 0' opacity={0.5} />
+            <XAxis type='number' dataKey='x' name='X' ticks={y_ticks} domain={y_domain}>
+              <Label value='Difficulty' position='insideBottom' offset={-8} fontSize={fontSize} fill='' />
+              <Text />
+            </XAxis>
+            <YAxis type='number' ticks={ticks} dataKey='y' name='Y' domain={[-1, 1]}>
+              <Label value='Discrimination' angle={-90} position='insideLeft' offset={8} fontSize={fontSize} fill='' />
+            </YAxis>
+            <ZAxis type='number' range={[80, 80]} />
+            {/* COLORES */}
+            <rect x={60} y={1} width={'99%'} height={46 * 2.5} fill='green' fillOpacity={0.4} fontSize={fontSize} />
+            <rect x={60} y={115} width={'99%'} height={46} fill='yellow' fillOpacity={0.4} fontSize={fontSize} />
+            <rect x={60} y={160} width={'99%'} height={23} fill='orange' fillOpacity={0.4} fontSize={fontSize} />
+            <rect x={60} y={182} width={'99%'} height={46 * 2} fill='red' fillOpacity={0.4} fontSize={fontSize} />
+            <rect x={60} y={272} width={'99%'} height={46 * 4} fill='black' fillOpacity={0.4} fontSize={fontSize} />
+            {/* 4 Lineas Horizontales */}
+            <ReferenceLine y={0} stroke='black' />
+            {/* 4 Lineas Verticales */}
+            <ReferenceLine x={x1} stroke='black' />
+            <ReferenceLine x={x2} stroke='black' />
+            <ReferenceLine x={x3} stroke='black' />
+            <ReferenceLine x={x4} stroke='black' />
+            {/* Letras Horizontales */}
+            <text x='98%' y='74%' style={{ fontSize: fontSize, fill: '#000000' }}>
+              4
+            </text>
+            <text x='98%' y='45%' style={{ fontSize: fontSize, fill: '#000000' }}>
+              5
+            </text>
+            <text x='98%' y='35.4%' style={{ fontSize: fontSize, fill: '#000000' }}>
+              3
+            </text>
+            <text x='98%' y='28.5%' style={{ fontSize: fontSize, fill: '#000000' }}>
+              2
+            </text>
+            <text x='98%' y='15%' style={{ fontSize: fontSize, fill: '#000000' }}>
+              1
+            </text>
+            {/* Letras Verticales */}
+            <text x='90%' y='90%' style={{ fontSize: fontSize, fill: '#000000' }}>
+              A
+            </text>
+            <text x='71%' y='90%' style={{ fontSize: fontSize, fill: '#000000' }}>
+              B
+            </text>
+            <text x='51.7%' y='90%' style={{ fontSize: fontSize, fill: '#000000' }}>
+              C
+            </text>
+            <text x='32.6%' y='90%' style={{ fontSize: fontSize, fill: '#000000' }}>
+              D
+            </text>
+            <text x='13.5%' y='90%' style={{ fontSize: fontSize, fill: '#000000' }}>
+              E
+            </text>
+            <Scatter name='Items' data={data} fill='#4f4f4f' />
+            <Scatter name='Highlighted Item' data={highlightedData} fill='#8884d8' shape='circle' legendType='none'>
+              <LabelList dataKey='hover' position='top' content={<CustomizedLabel />} />
+            </Scatter>
+            <Tooltip content={<CustomTooltip />} />
+          </ScatterChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   )
 }
@@ -150,6 +192,14 @@ const CustomTooltip: React.FC<any> = ({ active, payload }) => {
       </div>
     )
   }
-
   return null
+}
+
+const CustomizedLabel = (props: any) => {
+  const { x, y, value } = props
+  return (
+    <text x={x} y={y} dy={-10} fill='#8884d8' fontSize={18} fontWeight='bold' textAnchor='middle'>
+      {value}
+    </text>
+  )
 }

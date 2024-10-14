@@ -12,6 +12,11 @@ export const createColumns = (
     dataIndex: 'Deactivate',
     key: 'Deactivate',
     width: 30,
+    filters: [
+      { text: 'Active', value: false },
+      { text: 'Deactivated', value: true },
+    ],
+    onFilter: (value, record) => itemStates[record.key].deactivated === value,
     render: (_, record) => (
       <div
         style={{
@@ -42,19 +47,27 @@ export const createColumns = (
       },
     }
 
-    if (key !== 'Id' && key !== 'Key') {
+    if (key === 'Id') {
+      const uniqueIdValues = Array.from(new Set(data.Id))
+      if (uniqueIdValues.length > 100) return column
+      column.filters = uniqueIdValues.map(id => ({ text: id.toString(), value: id }))
+      column.onFilter = (value, record) => record.Id === value
+      column.filterSearch = true
+    } else if (key === 'Key') {
+      const uniqueKeyValues = Array.from(new Set(data.Key))
+      column.filters = uniqueKeyValues.map(key => ({ text: key, value: key }))
+      column.onFilter = (value, record) => data.Key[record.key] === value
+    } else if (key !== 'Key') {
       column.sorter = (a: TableRow, b: TableRow, sortOrder) => {
         const aValue = a[key]
         const bValue = b[key]
         const aId = a['Id'] as number
         const bId = b['Id'] as number
-
         if (aValue === '-' && bValue === '-') {
           return aId - bId
         }
         if (aValue === '-') return sortOrder === 'ascend' ? 1 : -1
         if (bValue === '-') return sortOrder === 'ascend' ? -1 : 1
-
         if (typeof aValue === 'number' && typeof bValue === 'number') {
           return aValue - bValue
         }
@@ -67,7 +80,6 @@ export const createColumns = (
         return 0
       }
     }
-
     return column
   }
 

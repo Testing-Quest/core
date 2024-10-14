@@ -1,25 +1,25 @@
 import type { QuestTypesMap } from '../../../primitives'
 import type { MatrixType } from '../../../primitives/quest'
-import type { DataPoint, StringDataPoint } from '../../Quest'
+import type { DataPoint, SimpleDataPoint, StringDataPoint } from '../../Quest'
 
 export type PlotStrategy<T extends keyof QuestTypesMap> = {
-  getReliability(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
+  getReliability(attrs: QuestTypesMap[T]['calcs']): SimpleDataPoint[]
   getItemsMap(attrs: QuestTypesMap[T]['calcs'], items: boolean[]): DataPoint[]
   getDirectBlank(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
   getDirectWeight(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
   getDirectCohrency(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
   getDirectMci(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
-  getScoreDistribution(attrs: QuestTypesMap[T]['calcs']): DataPoint[]
+  getScoreDistribution(attrs: QuestTypesMap[T]['calcs']): SimpleDataPoint[]
   getItemFrequency(attrs: QuestTypesMap[T]['calcs'], id: number): StringDataPoint[]
   getItemDiscrimination(attrs: QuestTypesMap[T]['calcs'], id: number): StringDataPoint[]
   getItemProfile(
     attrs: { matrix: MatrixType; alternatives: number; calcs: QuestTypesMap[T]['calcs'] },
     id: number,
-  ): Record<string, DataPoint[]>
+  ): Record<string, SimpleDataPoint[]>
 }
 
 export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements PlotStrategy<T> {
-  public getReliability(attrs: QuestTypesMap[T]['calcs']): DataPoint[] {
+  public getReliability(attrs: QuestTypesMap[T]['calcs']): SimpleDataPoint[] {
     const alpha = attrs.health.cronbachAlpha
     return Array.from({ length: 11 }, (_, i) => {
       const x = 0.5 + i * 0.1
@@ -42,7 +42,7 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
     return blank.map((b, i) => ({ x: direct[i], y: b, hover: activeUsers[i] }))
   }
 
-  public getScoreDistribution(attrs: QuestTypesMap[T]['calcs']): DataPoint[] {
+  public getScoreDistribution(attrs: QuestTypesMap[T]['calcs']): SimpleDataPoint[] {
     const direct = attrs.users.directScore
     const min = Math.min(...direct)
     const max = Math.max(...direct)
@@ -58,7 +58,7 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
       binCounts[binIndex]++
     }
 
-    const data: DataPoint[] = binCounts.map((count, i) => ({
+    const data: SimpleDataPoint[] = binCounts.map((count, i) => ({
       x: bins[i],
       y: (count / direct.length) * 100,
     }))
@@ -99,7 +99,7 @@ export abstract class PlotStrategyBase<T extends keyof QuestTypesMap> implements
   public abstract getItemProfile(
     attrs: { matrix: MatrixType; alternatives: number; calcs: QuestTypesMap[T]['calcs'] },
     id: number,
-  ): Record<string, DataPoint[]>
+  ): Record<string, SimpleDataPoint[]>
   public abstract getDirectWeight(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
   public abstract getDirectCohrency(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]
   public abstract getDirectMci(attrs: QuestTypesMap[T]['calcs'], users: boolean[]): DataPoint[]

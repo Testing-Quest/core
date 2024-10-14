@@ -1,7 +1,7 @@
 import { allAlternatives } from '../../../primitives'
 import type { BinaryCalcsType } from '../../../primitives/calcs/calcs'
 import { MatrixType } from '../../../primitives/quest'
-import type { DataPoint, StringDataPoint } from '../../Quest'
+import type { DataPoint, SimpleDataPoint, StringDataPoint } from '../../Quest'
 import { PlotStrategyBase } from './PlotStrategy'
 
 export class PlotStrategyBinary extends PlotStrategyBase<'binary'> {
@@ -37,7 +37,7 @@ export class PlotStrategyBinary extends PlotStrategyBase<'binary'> {
   public getItemProfile(
     attrs: { matrix: MatrixType; alternatives: number; calcs: BinaryCalcsType },
     id: number,
-  ): Record<string, DataPoint[]> {
+  ): Record<string, SimpleDataPoint[]> {
     const groupCount = 5
     const itemResponses = attrs.matrix.map(row => row[id])
     const validAlternatives = [...allAlternatives.slice(0, attrs.alternatives), 'X']
