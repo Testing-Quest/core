@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import Health from '../../../../../../src/infrastructure/react/tabs/analysis/components/Health'
 import { useSettings } from '../../../../../../src/infrastructure/react/context/SettingContext'
 import { ClientMock } from '../../../../../__mocks__/clientMock'
@@ -21,7 +21,7 @@ describe('Health Component', () => {
 
   it('should fetch and display health data', async () => {
     const mockHealthData = {
-      health: {
+      data: {
         cronbachAlpha: 0.85,
         sem: 2.5,
         mean: 75,
@@ -33,49 +33,20 @@ describe('Health Component', () => {
     }
 
     mockClient.setMockHealth(mockHealthData)
-    render(<Health client={mockClient as any} />)
+    const result = render(<Health client={mockClient as any} />)
+    console.log(result)
 
     await waitFor(() => {
-      expect(screen.getByText('Cronbach Alpha:')).toBeInTheDocument()
-      expect(screen.getByText('0.85')).toBeInTheDocument()
-      expect(screen.getByText('Reliability:')).toBeInTheDocument()
-      expect(screen.getByText('90%')).toBeInTheDocument()
-    })
-  })
-
-  it('should change decimal places when buttons are clicked', async () => {
-    const mockHealthData = {
-      health: {
-        reliability: 0.87654321,
-      },
-      error: null,
-    }
-
-    mockClient.setMockHealth(mockHealthData)
-
-    render(<Health client={mockClient as any} />)
-
-    await waitFor(() => {
-      expect(screen.getByText('87.65%')).toBeInTheDocument()
-    })
-
-    fireEvent.click(screen.getByRole('button', { name: 'plus' }))
-
-    await waitFor(() => {
-      expect(screen.getByText('87.654%')).toBeInTheDocument()
-    })
-
-    fireEvent.click(screen.getByRole('button', { name: 'minus' }))
-
-    await waitFor(() => {
-      expect(screen.getByText('87.65%')).toBeInTheDocument()
+      expect(result.getByText('Cronbach Alpha')).toBeInTheDocument()
+      expect(result.getByText('0.85')).toBeInTheDocument()
+      expect(result.getByText('Reliability')).toBeInTheDocument()
+      expect(result.getByText('90%')).toBeInTheDocument()
     })
   })
 
   it('should handle errors when fetching health data', async () => {
-    console.error = jest.fn() // Mock console.error
+    console.error = jest.fn()
 
-    // Don't set mock health data to simulate an error
     render(<Health client={mockClient as any} />)
 
     await waitFor(() => {

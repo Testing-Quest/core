@@ -21,13 +21,15 @@ const KeyTable: React.FC<KeyTableProps> = ({ keys, fontSize }) => {
       },
       {} as Record<string, number>,
     )
-
     const total = keys.length
-
-    return Object.entries(frequencyMap).map(([key, count]) => ({
-      key,
-      frequency: Number(((count / total) * 100).toFixed(2)),
-    }))
+    return Object.entries(frequencyMap)
+      .map(([key, count]) => ({
+        key,
+        frequency: Number(((count / total) * 100).toFixed(2)),
+      }))
+      .sort((a, b) => {
+        return a.key.localeCompare(b.key)
+      })
   }, [keys])
 
   const columns: ColumnsType<DataType> = [

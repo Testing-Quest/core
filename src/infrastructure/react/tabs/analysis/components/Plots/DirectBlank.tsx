@@ -5,6 +5,7 @@ import { Spin } from 'antd'
 import spinnerStyles from '../../../../App.module.css'
 import { useSettings } from '../../../../context/SettingContext'
 import { Text } from 'recharts'
+import { getCorrelation } from './getCorrelation'
 
 type PanelProps = {
   client: Client
@@ -45,10 +46,8 @@ export const DirectBlank: React.FC<PanelProps> = ({ client }) => {
   }
 
   return (
-    <div style={{ height: '600px', display: 'flex', alignItems: 'center', marginLeft: '50px' }}>
-      {loading ? ( // Mostrar el componente de carga si loading es true
-        <Spin size='large' />
-      ) : (
+    <div>
+      <div style={{ height: '600px', display: 'flex', alignItems: 'center', marginLeft: '50px' }}>
         <ResponsiveContainer width='90%' height={500}>
           <ScatterChart margin={{ bottom: 15 }}>
             <CartesianGrid strokeDasharray='0 0' opacity={0.5} />
@@ -63,7 +62,8 @@ export const DirectBlank: React.FC<PanelProps> = ({ client }) => {
             <Tooltip content={<CustomTooltip />} />
           </ScatterChart>
         </ResponsiveContainer>
-      )}
+      </div>
+      <p>Correlation: {getCorrelation(data)}</p>
     </div>
   )
 }

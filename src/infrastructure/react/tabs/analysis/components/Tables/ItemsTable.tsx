@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from 'react'
+import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import { Spin, Table, Button, Input } from 'antd'
 import spinnerStyles from '../../../../App.module.css'
 import { useSettings } from '../../../../context/SettingContext'
@@ -18,6 +18,24 @@ export const ItemsTable: React.FC<PanelProps> = ({ client, setDeactivatedItems }
   const [keyChanges, setKeyChanges] = useState<Record<number, string>>({})
   const { fontSize } = useSettings()
   const [modalState, setModalState] = useState({ visible: false, selectedItemId: null as number | null })
+  const [modifications, setModifications] = useState<{ keys: string[]; originalKeys: string[] } | null>(null)
+
+  useEffect(() => {
+    const fetchModifications = async () => {
+      try {
+        const response = await client.getModifications()
+        if (response.response) {
+          setModifications({
+            keys: response.response.keys,
+            originalKeys: response.response.originalKeys,
+          })
+        }
+      } catch (error) {
+        console.error('Error fetching modifications:', error)
+      }
+    }
+    fetchModifications()
+  }, [client])
 
   const handleCheckboxToggle = useCallback(
     (index: number) => {
@@ -49,7 +67,7 @@ export const ItemsTable: React.FC<PanelProps> = ({ client, setDeactivatedItems }
     } catch (error) {
       console.error('Error updating items:', error)
     }
-  }, [states, keyChanges, data, client, refreshData])
+  }, [states, keyChanges, data, client, refreshData, setDeactivatedItems])
 
   const handleRowClick = useCallback(
     (record: TableRow) => {
@@ -61,25 +79,35 @@ export const ItemsTable: React.FC<PanelProps> = ({ client, setDeactivatedItems }
   )
 
   const columns = useMemo(() => {
-    if (!data) return []
+    if (!data || !modifications) return []
     return createColumns(data, states, handleCheckboxToggle).map(column =>
       column.key === 'Key'
         ? {
             ...column,
             width: 80,
-            render: (_: any, record: TableRow) => (
-              <Input
-                value={keyChanges[record.key] ?? data.Key[record.key]}
-                onChange={e => handleKeyChange(record.key, e.target.value)}
-                maxLength={1}
-                style={{ width: '100%', minWidth: '50px' }}
-                onClick={e => e.stopPropagation()}
-              />
-            ),
+            render: (_: any, record: TableRow) => {
+              const currentKey = keyChanges[record.key] ?? data.Key[record.key]
+              const originalKey = modifications.originalKeys[record.key]
+              const isModified = currentKey !== originalKey
+              return (
+                <Input
+                  value={currentKey}
+                  onChange={e => handleKeyChange(record.key, e.target.value)}
+                  maxLength={1}
+                  style={{
+                    width: '100%',
+                    minWidth: '50px',
+                    backgroundColor: isModified ? '#ffd54f' : 'transparent',
+                  }}
+                  placeholder={originalKey}
+                  onClick={e => e.stopPropagation()}
+                />
+              )
+            },
           }
         : column,
     )
-  }, [data, states, handleCheckboxToggle, handleKeyChange, keyChanges])
+  }, [data, states, handleCheckboxToggle, handleKeyChange, keyChanges, modifications])
 
   const tableRows: TableRow[] = useMemo(() => {
     if (!data) return []
@@ -107,7 +135,7 @@ export const ItemsTable: React.FC<PanelProps> = ({ client, setDeactivatedItems }
     )
   }
 
-  if (!data) {
+  if (!data || !modifications) {
     return <div>No data available</div>
   }
 
