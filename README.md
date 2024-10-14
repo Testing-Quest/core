@@ -121,7 +121,3 @@ We welcome contributions to the Testing-Quest Core App! Please read our [CONTRIB
 ## License
 
 This code is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-
-## Acknowledgments
-
-- Testing-Quest is developed in collaboration with the Fundació Bosch i Gimpera of the University of Barcelona.
