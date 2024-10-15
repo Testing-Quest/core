@@ -17,6 +17,7 @@ import spinnerStyles from '../../../../App.module.css'
 import { useSettings } from '../../../../context/SettingContext'
 import { Text } from 'recharts'
 import { getCorrelation } from './getCorrelation'
+import { CustomizedLabel } from './CustomizedLabel'
 
 const { Search } = Input
 
@@ -120,13 +121,4 @@ const CustomTooltip: React.FC<any> = ({ active, payload }) => {
     )
   }
   return null
-}
-
-const CustomizedLabel = (props: any) => {
-  const { x, y, value } = props
-  return (
-    <text x={x} y={y} dy={-10} fill='#4f4f4f' fontSize={18} fontWeight='bold' textAnchor='middle'>
-      {value}
-    </text>
-  )
 }

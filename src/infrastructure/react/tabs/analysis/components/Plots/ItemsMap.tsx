@@ -17,6 +17,7 @@ import type { Client } from '../../../../../Client'
 import { Spin, Input, GetProps } from 'antd'
 import spinnerStyles from '../../../../App.module.css'
 import { useSettings } from '../../../../context/SettingContext'
+import { CustomizedLabel } from './CustomizedLabel'
 
 const { Search } = Input
 
@@ -171,7 +172,7 @@ export const ItemsMap: React.FC<PanelProps> = ({ client }) => {
             </text>
             <Scatter name='Items' data={data} fill='#4f4f4f' />
             <Scatter name='Highlighted Item' data={highlightedData} fill='#8884d8' shape='circle' legendType='none'>
-              <LabelList dataKey='hover' position='top' content={<CustomizedLabel />} />
+              <LabelList dataKey='hover' position='top' content={<CustomizedLabel color='#8884d8' />} />
             </Scatter>
             <Tooltip content={<CustomTooltip />} />
           </ScatterChart>
@@ -193,13 +194,4 @@ const CustomTooltip: React.FC<any> = ({ active, payload }) => {
     )
   }
   return null
-}
-
-const CustomizedLabel = (props: any) => {
-  const { x, y, value } = props
-  return (
-    <text x={x} y={y} dy={-10} fill='#8884d8' fontSize={18} fontWeight='bold' textAnchor='middle'>
-      {value}
-    </text>
-  )
 }
