@@ -1,11 +1,11 @@
-import React from 'react'
-import { Menu } from 'antd'
+import React, { useState, useEffect } from 'react'
+import { Menu, Tooltip, Divider } from 'antd'
 import type { MenuProps } from 'antd'
 import { LineChartOutlined, TableOutlined, AppstoreOutlined } from '@ant-design/icons'
-import styles from './AnalysisTab.module.css'
-import type { AnalysisVisualization } from './types'
 import { useVisualization } from './context/VisualizationContext'
 import { useSettings } from '../../context/SettingContext'
+import { AnalysisVisualization } from './types'
+import styles from './AnalysisTab.module.css'
 
 const iconMap = {
   basic: AppstoreOutlined,
@@ -20,6 +20,13 @@ type SidebarProps = {
 const Sidebar: React.FC<SidebarProps> = ({ visualizations }) => {
   const { selectedVisualization, setSelectedVisualization } = useVisualization()
   const { fontSize } = useSettings()
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const handleClick: MenuProps['onClick'] = e => {
     const option = visualizations.find(opt => opt.label === e.key)
@@ -33,20 +40,28 @@ const Sidebar: React.FC<SidebarProps> = ({ visualizations }) => {
     return {
       key: option.label,
       icon: <Icon />,
-      label: option.label,
+      label: (
+        <Tooltip title={option.label} placement='right'>
+          <span className={styles['menu-item-label']}>
+            {windowWidth < 768 ? option.label.slice(0, 3) + (option.label.length > 3 ? '...' : '') : option.label}
+          </span>
+        </Tooltip>
+      ),
     }
   })
 
   return (
     <div className={styles.sidebar}>
-      <img src='/tqLogo.jpeg' alt='Testing Quest' className={styles.logo} />
+      <div className={styles['logo-container']}>
+        <img src='/tqLogo.jpeg' alt='Testing Quest' className={styles.logo} />
+      </div>
+      <Divider style={{ margin: '0' }} />
       <Menu
-        mode='vertical'
+        mode='inline'
         theme='light'
         selectedKeys={[selectedVisualization?.label || '']}
         onClick={handleClick}
         items={menuItems}
-        className={styles.menu}
         style={{ fontSize }}
       />
     </div>

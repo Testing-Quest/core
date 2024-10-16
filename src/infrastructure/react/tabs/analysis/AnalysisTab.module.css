@@ -87,3 +87,28 @@
 .menu :global(.ant-menu-item:hover) {
   color: #1890ff;
 }
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  transition: all 0.3s;
+}
+.logo-container {
+  padding: 16px;
+  text-align: center;
+}
+.logo {
+  max-width: 100%;
+  height: auto;
+}
+.menu-item-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 768px) {
+  .sidebar {
+    width: 80px;
+  }
+}
