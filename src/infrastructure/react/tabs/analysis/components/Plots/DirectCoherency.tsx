@@ -88,7 +88,7 @@ export const DirectCoherency: React.FC<PanelProps> = ({ client }) => {
         <ResponsiveContainer width='90%' height={500}>
           <ScatterChart margin={{ bottom: 15 }}>
             <CartesianGrid strokeDasharray='0 0' opacity={0.5} />
-            <XAxis type='number' dataKey='x' name='X'>
+            <XAxis type='number' dataKey='x' name='X' domain={['auto', 'auto']}>
               <Label value='Direct Score' position='insideBottom' offset={-8} fontSize={fontSize} fill='' />
               <Text />
             </XAxis>

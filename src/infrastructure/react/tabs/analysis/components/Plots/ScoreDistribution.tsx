@@ -43,14 +43,12 @@ export const ScoreDistribution: React.FC<PanelProps> = ({ client }) => {
       </div>
     )
   }
-  const min = Math.floor(Math.min(...data!.map(d => d.x)))
-  const max = Math.ceil(Math.max(...data!.map(d => d.x)))
   return (
     <div style={{ height: '600px', display: 'flex', alignItems: 'center', marginLeft: '50px' }}>
       <ResponsiveContainer width='90%' height={500}>
         <BarChart data={data} margin={{ bottom: 15 }}>
           <CartesianGrid strokeDasharray='0 0' opacity={0.5} />
-          <XAxis type='number' dataKey='x' name='X' domain={[min - 1, max]} fontSize={fontSize}>
+          <XAxis type='number' dataKey='x' name='X' domain={['auto', 'auto']} fontSize={fontSize}>
             <Text />
           </XAxis>
           <YAxis type='number' dataKey='y' name='Y'></YAxis>
