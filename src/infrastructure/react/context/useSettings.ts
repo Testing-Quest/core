@@ -1,5 +1,13 @@
-import { useContext } from 'react'
-import { SettingsContext } from './SettingContext'
+import { createContext, useContext } from 'react'
+
+type SettingsContextType = {
+  fontSize: string
+  highContrast: boolean
+  setFontSize(size: string): void
+  setHighContrast(highContrast: boolean): void
+}
+
+export const SettingsContext = createContext<SettingsContextType | undefined>(undefined)
 
 export const useSettings = () => {
   const context = useContext(SettingsContext)

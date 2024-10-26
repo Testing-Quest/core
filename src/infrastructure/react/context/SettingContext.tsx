@@ -1,14 +1,6 @@
-import React, { createContext, useState } from 'react'
+import React, { useState } from 'react'
 import type { ReactNode } from 'react'
-
-type SettingsContextType = {
-  fontSize: string
-  highContrast: boolean
-  setFontSize(size: string): void
-  setHighContrast(highContrast: boolean): void
-}
-
-export const SettingsContext = createContext<SettingsContextType | undefined>(undefined)
+import { SettingsContext } from './useSettings'
 
 type SettingsProviderProps = {
   children: ReactNode
