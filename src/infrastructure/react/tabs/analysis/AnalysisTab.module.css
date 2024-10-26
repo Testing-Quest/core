@@ -1,0 +1,114 @@
+.card {
+  width: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.cardTitle {
+  margin: 0;
+}
+
+.cardContent {
+  display: flex;
+  align-items: center;
+}
+
+.cardText {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.moreButton {
+  margin-left: 8px;
+}
+
+.popoverContent {
+  max-width: 250px;
+}
+
+.layout {
+  min-height: 100vh;
+}
+
+.sider {
+  background: #fff;
+}
+
+.content {
+  padding: 24px;
+  background: #f0f2f5;
+}
+
+.deactivatedListContainer {
+  display: flex;
+  margin-bottom: 24px;
+}
+
+.visualizationCard {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.visualizationContent {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #fff;
+  border-right: 1px solid #f0f0f0;
+}
+
+.logo {
+  width: 80%;
+  height: auto;
+  margin: 16px auto;
+  display: block;
+}
+
+.menu {
+  border-right: none;
+}
+
+.menu :global(.ant-menu-item-selected) {
+  background-color: #e6f7ff;
+}
+
+.menu :global(.ant-menu-item:hover) {
+  color: #1890ff;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  transition: all 0.3s;
+}
+.logo-container {
+  padding: 16px;
+  text-align: center;
+}
+.logo {
+  max-width: 100%;
+  height: auto;
+}
+.menu-item-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 768px) {
+  .sidebar {
+    width: 80px;
+  }
+}

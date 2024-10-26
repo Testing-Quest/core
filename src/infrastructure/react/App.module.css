@@ -1,0 +1,104 @@
+.appLayout {
+  min-height: 100vh;
+  background-color: white;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.appContent {
+  justify-content: center;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  padding-left: 48px;
+  padding-right: 48px;
+}
+
+.tabsContainer {
+  background-color: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.tabPane {
+  padding: 24px;
+}
+
+.tabIcon {
+  margin-right: 8px;
+}
+
+.dynamicTab {
+  display: flex;
+  align-items: center;
+}
+
+.closeButton {
+  margin-left: 8px;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.closeButton:hover {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.tabs :global(.ant-tabs-tab),
+.tabs :global(.ant-tabs-tab-btn) {
+  font-size: inherit;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh; /* Usa la altura total de la ventana */
+  width: 100%;
+}
+
+:global(.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab) {
+  border-color: #d9d9d9;
+  background: #fafafa;
+}
+
+:global(.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active) {
+  border-color: #d9d9d9;
+  border-bottom-color: #fff;
+  background: #fff;
+}
+
+:global(.ant-tabs-card > .ant-tabs-nav::before) {
+  border-bottom: 1px solid #d9d9d9;
+}
+
+:global(.ant-tabs-top > .ant-tabs-nav) {
+  margin-bottom: 0;
+}
+
+:global(.ant-collapse) {
+  width: 100%;
+}
+
+:global(.ant-collapse-content) {
+  transition: none !important;
+}
+
+:global(.high-contrast) {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+:global(.high-contrast) .ant-tabs-tab,
+:global(.high-contrast) .ant-tabs-tab-btn {
+  color: #fff !important;
+}
+
+:global(.high-contrast) .ant-tabs-tab-active {
+  background-color: #333 !important;
+}
+
+:global(.high-contrast) .ant-tabs-content {
+  background-color: #000 !important;
+  color: #fff !important;
+}
