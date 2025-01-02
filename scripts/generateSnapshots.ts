@@ -100,7 +100,6 @@ async function generateSnapshots() {
 
     const filePath = path.join(__dirname, `../test/domain/results/${name}Results.json`);
     fs.writeFileSync(filePath, JSON.stringify(results, null, 2), 'utf-8');
-    console.log(`File saved at: ${filePath}`);
   }
 }
 

@@ -13,10 +13,7 @@ export const App: React.FC = () => {
   const [activeKey, setActiveKey] = useState('1')
   const [dynamicTabs, setDynamicTabs] = useState<AnalysisQuest[]>([])
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false)
-  const { fontSize, highContrast } = useSettings()
-
-  const color = highContrast ? 'black' : 'white'
-  console.log(color)
+  const { fontSize } = useSettings()
 
   const addAnalysisQuest = (quest: AnalysisQuest) => {
     if (!dynamicTabs.find(tab => tab.uuid === quest.uuid)) {
