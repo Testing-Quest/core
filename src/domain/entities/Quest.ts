@@ -17,33 +17,8 @@ export type UpdatePayload = {
   keys: string[] | null
 }
 
-export type BaseQuest = {
-  getUuid(): string
-  getHealth(): Record<string, number>
-  getReliability(): SimpleDataPoint[]
-  getItemsMap(): DataPoint[]
-  getDirectWeight(): DataPoint[]
-  getDirectBlank(): DataPoint[]
-  getDirectCohrency(): DataPoint[]
-  getDirectMci(): DataPoint[]
-  getScoreDistribution(): SimpleDataPoint[]
-  getItemsTable(): Table
-  getUsersTable(): Table
-  getItemFrequency(id: number): StringDataPoint[]
-  getItemDiscrimination(id: number): StringDataPoint[]
-  getItemProfile(id: number): Record<string, SimpleDataPoint[]>
-  update(payload: UpdatePayload): void
-  getNumAlternatives(): number
-  getAlternativeFrequency(): Record<string, number>
-  getModifications(): {
-    keys: string[]
-    originalKeys: string[]
-    users: boolean[]
-    items: boolean[]
-  }
-}
 
-export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
+export class QuestAggregate<T extends keyof QuestTypesMap> {
   private _props: QuestTypesMap[T]
   private readonly _clsStrategy: CalcStrategy<T>
   private readonly _pltStrategy: PlotStrategy<T>
@@ -61,7 +36,7 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
     this._tblStrategy = attrs.tblStrategy
   }
 
-  public static create<T extends keyof QuestTypesMap>(attrs: NewQuestType & { type: T }): Quest<T> {
+  public static create<T extends keyof QuestTypesMap>(attrs: NewQuestType & { type: T }): QuestAggregate<T> {
     const cls = calcFactory<T>(attrs.type)
     const plt = plotFactory<T>(attrs.type)
     const tbl = tableFactory<T>(attrs.type)
@@ -85,7 +60,7 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
       calcs: cls.calculate(attrs.matrix, attrs.keys, attrs.alternatives),
     } as QuestTypesMap[T]
 
-    return new Quest<T>({ props: questProps, clsStrategy: cls, pltStrategy: plt, tblStrategy: tbl })
+    return new QuestAggregate<T>({ props: questProps, clsStrategy: cls, pltStrategy: plt, tblStrategy: tbl })
   }
 
   public getUuid(): string {
@@ -190,3 +165,5 @@ export class Quest<T extends keyof QuestTypesMap> implements BaseQuest {
     return this._clsStrategy.filterMatrix(this._props.matrix, this._props.itemsEnabled, this._props.usersEnabled)
   }
 }
+
+export type BaseQuest = QuestAggregate<keyof QuestTypesMap>;

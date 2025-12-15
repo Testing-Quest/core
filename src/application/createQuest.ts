@@ -1,4 +1,4 @@
-import { Quest } from '../domain/entities/Quest'
+import { QuestAggregate } from '../domain/entities/Quest'
 import type { Repository } from '../domain/repository'
 import loadQuest from '../domain/services/questLoader'
 import type { CreateQuestRequest } from './requests/createQuestRequest'
@@ -8,7 +8,7 @@ async function _createQuest(payload: CreateQuestRequest, repository: Repository)
   const quests = await loadQuest(payload.data)
   const childs: QuestChild[] = []
   for (const quest of quests) {
-    await repository.save(Quest.create(quest))
+    await repository.save(QuestAggregate.create(quest))
     childs.push({
       uuid: quest.uuid,
       scale: quest.scale,
